@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 आपका भविष्य - Complete Vedic Astrology</title>
+    <title>🔮 Bhavishya Dekho - Vedic Astrology</title>
+    <meta name="description" content="Bhavishya Dekho - वैदिक ज्योतिष का सटीक संगम। मुफ्त भविष्यफल, कुंडली, राशिफल और ज्योतिष सेवाएं।">
+    <meta name="keywords" content="Bhavishya Dekho, vedic astrology, kundli, horoscope, rashifal, jyotish">
+    <meta property="og:title" content="🔮 Bhavishya Dekho - Vedic Astrology">
+    <meta property="og:description" content="वैदिक ज्योतिष का सटीक संगम — मुफ्त भविष्यफल देखें">
+    <meta property="og:url" content="https://bhavishyadekho.online">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -1770,16 +1775,18 @@
     </style>
 </head>
 <body>
-    <div id="splashScreen" style="display:none!important">
+    <div id="splashScreen" class="splash-screen">
         <div class="splash-content">
             <div class="splash-logo">
                 <i class="fas fa-crystal-ball"></i>
             </div>
-            <h1 style="color: #ffd700; font-size: 2.5em;">आपका भविष्य</h1>
-            <p style="color: #ccc; margin: 15px 0;">वैदिक ज्योतिष पर आधारित</p>
-            <div class="loading-bar" style="width: 250px; height: 4px; background: rgba(255,215,0,0.2); margin: 25px auto; overflow: hidden;">
-                <div style="width: 0%; height: 100%; background: linear-gradient(90deg, #ffd700, #ff4500); animation: load 2s linear forwards;"></div>
+            <h1 style="color: #ffd700; font-size: 2.5em; font-weight:700; text-shadow: 0 0 30px rgba(255,215,0,0.6);">Bhavishya Dekho</h1>
+            <p style="color: #ffd700; margin: 8px 0; font-size:1.1em; font-weight:500;">वैदिक ज्योतिष का सटीक संगम</p>
+            <p style="color: #ccc; margin: 5px 0; font-size:0.9em;">✨ ग्रह · नक्षत्र · कुंडली · भविष्यफल ✨</p>
+            <div style="width: 260px; height: 5px; background: rgba(255,215,0,0.2); border-radius:10px; margin: 22px auto; overflow: hidden;">
+                <div id="splashBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ffd700, #ff4500); border-radius:10px; transition: width 3s linear;"></div>
             </div>
+            <p style="color: rgba(255,215,0,0.6); font-size:0.8em; margin-top:5px;" id="splashMsg">🔮 भविष्य जानने की तैयारी हो रही है...</p>
         </div>
     </div>
 
@@ -1788,7 +1795,7 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
             <div class="loading-spinner"></div>
-            <div class="loading-text">🔮 आपका भविष्य बन रहा है...</div>
+            <div class="loading-text">🔮 Bhavishya Dekho — भविष्य बन रहा है...</div>
             <p style="color: #fff; margin-top: 15px;">ग्रहों की स्थिति का विश्लेषण हो रहा है</p>
         </div>
     </div>
@@ -1845,8 +1852,12 @@
         <div class="close-menu" onclick="toggleMenu()">
             <i class="fas fa-times"></i>
         </div>
-        
-        <div class="menu-item" onclick="showPage('home'); toggleMenu();">
+        <div style="text-align:center;padding:0 0 20px 0;border-bottom:1px solid rgba(255,215,0,0.3);margin-bottom:10px;">
+            <div style="font-size:2.5em;margin-bottom:5px;">🔮</div>
+            <div style="font-size:1.2em;font-weight:700;background:linear-gradient(135deg,#ffd700,#ff4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Bhavishya Dekho</div>
+            <div style="color:rgba(255,215,0,0.6);font-size:0.75em;">वैदिक ज्योतिष का सटीक संगम</div>
+        </div>
+        <div class="menu-item" onclick="scrollToTop(); toggleMenu();">
             <i class="fas fa-home"></i> होम
         </div>
         <div class="menu-item" onclick="showPage('daily'); toggleMenu();">
@@ -1942,15 +1953,52 @@
             </div>
         </div>
     </div>
+
+    <!-- ₹19 / ₹49 KUNDLI REPORT PAGE (Replaces Modal) -->
+    <div id="kundliReportPage" style="display:none;min-height:100vh;padding:15px;max-width:960px;margin:0 auto;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(255,255,255,0.08);border-radius:50px;margin-bottom:20px;border:1px solid #ffd700;position:sticky;top:10px;z-index:100;">
+            <button onclick="backToHomeFromKundliReport()" style="background:none;border:1px solid #ffd700;border-radius:25px;color:#ffd700;padding:8px 18px;cursor:pointer;font-size:0.9em;">&#8592; वापस</button>
+            <span style="color:#ffd700;font-weight:600;" id="kundliReportPageTitle">&#128302; कुंडली रिपोर्ट</span>
+            <button onclick="downloadKundliPDF()" style="background:linear-gradient(135deg,#ffd700,#ff4500);border:none;border-radius:25px;color:#0a0a1a;padding:8px 16px;cursor:pointer;font-size:0.85em;font-weight:700;">&#128229; PDF</button>
+        </div>
+        <!-- Report Header -->
+        <div id="krpHeader" style="background:rgba(255,215,0,0.08);border:2px solid rgba(255,215,0,0.4);border-radius:20px;padding:20px;margin-bottom:20px;text-align:center;">
+            <div style="font-size:3em;margin-bottom:8px;">🔮</div>
+            <h2 style="color:#ffd700;margin:0;" id="krpName">रिपोर्ट</h2>
+            <p style="color:#aaa;margin:5px 0;" id="krpInfo"></p>
+            <div style="display:flex;justify-content:center;gap:15px;margin-top:10px;flex-wrap:wrap;" id="krpBadges"></div>
+        </div>
+        <!-- Report Body -->
+        <div id="kundliReportBody"></div>
+        <!-- Share Section -->
+        <div style="background:rgba(255,215,0,0.08);border:2px solid rgba(255,215,0,0.3);border-radius:20px;padding:20px;margin:20px 0;text-align:center;">
+            <h3 style="color:#ffd700;margin-bottom:14px;">📲 शेयर करें</h3>
+            <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+                <button onclick="shareOnWhatsApp()" style="background:#25D366;border:none;border-radius:50px;color:#fff;padding:11px 20px;cursor:pointer;font-weight:700;font-size:0.9em;min-width:44px;min-height:44px;"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                <button onclick="shareOnFacebook()" style="background:#1877F2;border:none;border-radius:50px;color:#fff;padding:11px 20px;cursor:pointer;font-weight:700;font-size:0.9em;min-width:44px;min-height:44px;"><i class="fab fa-facebook-f"></i> Facebook</button>
+                <button onclick="shareOnTelegram()" style="background:#0088cc;border:none;border-radius:50px;color:#fff;padding:11px 20px;cursor:pointer;font-weight:700;font-size:0.9em;min-width:44px;min-height:44px;"><i class="fab fa-telegram"></i> Telegram</button>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div style="text-align:center;padding:20px;color:rgba(255,215,0,0.5);font-size:0.82em;border-top:1px solid rgba(255,215,0,0.2);margin-top:10px;">
+            🔮 Bhavishya Dekho | bhavishyadekho.online<br>
+            <span style="color:#666;font-size:0.9em;">यह रिपोर्ट ज्योतिषीय मान्यताओं पर आधारित है।</span>
+        </div>
+    </div>
     <div id="mainContent">
     <div class="main-container" id="mainContainer">
         <div class="header">
             <div class="logo" onclick="scrollToTop()">
-                <i class="fas fa-crystal-ball"></i> आपका भविष्य
+                <i class="fas fa-crystal-ball"></i> Bhavishya Dekho
             </div>
-            <div style="display: flex; align-items: center;">
-                <span id="premiumStatusBadge" onclick="showPage('premium')" style="display: none; background: #ffd700; color: #0a0a1a; padding: 5px 12px; border-radius: 25px; margin-right: 10px; font-weight: 600; cursor: pointer; font-size: 0.9em;">
-                    <i class="fas fa-crown"></i> प्रीमियम
+            <div style="display: flex; align-items: center; gap:8px;">
+                <!-- Non-premium: show "Premium" link -->
+                <span id="premiumHeaderLink" onclick="showPage('premium')" style="background: linear-gradient(135deg,#ffd700,#ff8c00); color: #0a0a1a; padding: 6px 14px; border-radius: 25px; font-weight: 700; cursor: pointer; font-size: 0.82em; box-shadow:0 0 12px rgba(255,215,0,0.4); animation: pulse 2s infinite;">
+                    <i class="fas fa-crown"></i> Premium
+                </span>
+                <!-- Active premium: show badge -->
+                <span id="premiumStatusBadge" onclick="showPremiumBenefitsPanel()" style="display: none; background: linear-gradient(135deg,#ffd700,#ff4500); color: #0a0a1a; padding: 6px 14px; border-radius: 25px; font-weight: 700; cursor: pointer; font-size: 0.82em;">
+                    <i class="fas fa-crown"></i> 👑 Active
                 </span>
                 <button class="menu-btn" onclick="toggleMenu()">
                     <i class="fas fa-bars"></i>
@@ -1960,7 +2008,25 @@
 
         <div class="panchang-bar" id="panchangBar"></div>
 
-        <!-- Premium Status Display -->
+        <!-- Premium Active Benefits Panel -->
+        <div id="premiumBenefitsPanel" style="display:none; background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(155,89,182,0.1)); border:2px solid #ffd700; border-radius:20px; padding:20px; margin-bottom:20px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                <h3 style="color:#ffd700;margin:0;"><i class="fas fa-crown"></i> आपके Premium लाभ</h3>
+                <span onclick="hidePremiumBenefitsPanel()" style="color:#ffd700;cursor:pointer;font-size:1.3em;">✕</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:12px;">
+                <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:1.4em;">🚫</div><div style="color:#ffd700;font-size:0.8em;font-weight:600;">एड-फ्री</div><div style="color:#aaa;font-size:0.75em;">बिना रुकावट</div></div>
+                <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:1.4em;">🎁</div><div style="color:#ffd700;font-size:0.8em;font-weight:600;">मुफ्त कुंडली</div><div style="color:#aaa;font-size:0.75em;" id="premBenBasicCount">₹19 — 4 बार</div></div>
+                <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:1.4em;">👑</div><div style="color:#ffd700;font-size:0.8em;font-weight:600;">मुफ्त प्रीमियम</div><div style="color:#aaa;font-size:0.75em;" id="premBenPremCount">₹49 — 3 बार</div></div>
+                <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:1.4em;">💎</div><div style="color:#ffd700;font-size:0.8em;font-weight:600;">रत्न सुझाव</div><div style="color:#aaa;font-size:0.75em;">व्यक्तिगत</div></div>
+                <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:1.4em;">🙏</div><div style="color:#ffd700;font-size:0.8em;font-weight:600;">ग्रह उपाय</div><div style="color:#aaa;font-size:0.75em;">दोष निवारण</div></div>
+                <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:1.4em;">🕰️</div><div style="color:#ffd700;font-size:0.8em;font-weight:600;">शुभ मुहूर्त</div><div style="color:#aaa;font-size:0.75em;">महत्वपूर्ण कार्य</div></div>
+                <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:10px;text-align:center;"><div style="font-size:1.4em;">📞</div><div style="color:#ffd700;font-size:0.8em;font-weight:600;">प्राथमिकता</div><div style="color:#aaa;font-size:0.75em;">तेज सहायता</div></div>
+            </div>
+            <div style="text-align:center;color:#aaa;font-size:0.82em;" id="premExpiry"></div>
+        </div>
+
+        <!-- Premium Status Display (legacy) -->
         <div id="premiumStatusContainer" style="display: none;" class="premium-status">
             <h3><i class="fas fa-crown"></i> आप प्रीमियम सदस्य हैं</h3>
             <p id="premiumBenefits"></p>
@@ -2684,9 +2750,9 @@
         // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCAjf6a111RYNrczir5UVQrkctxlNIYERI",
-            authDomain: "apka-bhavishya-42426.firebaseapp.com",
-            projectId: "apka-bhavishya-42426",
-            storageBucket: "apka-bhavishya-42426.firebasestorage.app",
+            authDomain: "bhavishya-dekho.firebaseapp.com",
+            projectId: "bhavishya-dekho",
+            storageBucket: "bhavishya-dekho.firebasestorage.app",
             messagingSenderId: "490450742753",
             appId: "1:490450742753:web:63a59cd70e1ac24304b6a0"
         };
@@ -2998,20 +3064,34 @@
 
         function updatePremiumUI() {
             if (isPremium) {
+                // Hide non-premium link, show active badge
+                var headerLink = document.getElementById('premiumHeaderLink');
+                var headerBadge = document.getElementById('premiumStatusBadge');
+                if (headerLink) headerLink.style.display = 'none';
+                if (headerBadge) headerBadge.style.display = 'inline-block';
+
                 document.getElementById('premiumStatusBadge').style.display = 'inline-block';
                 document.getElementById('premiumStatusContainer').style.display = 'block';
                 
                 const expiryDate = new Date(premiumExpiry).toLocaleDateString('hi-IN');
                 document.getElementById('premiumBenefits').innerHTML = `
-                    <i class="fas fa-check-circle" style="color: #4CAF50;"></i> प्लान: ${premiumPlan === 'monthly' ? 'मासिक' : premiumPlan === '6months' ? '6 माह' : '12 माह'} | 
+                    <i class="fas fa-check-circle" style="color: #4CAF50;"></i> प्लान: ${premiumPlan === 'monthly' ? 'मासिक (₹99)' : premiumPlan === '6months' ? '6 माह (₹499)' : '12 माह (₹999)'} | 
                     <i class="fas fa-clock" style="color: #ffd700;"></i> वैधता: ${expiryDate} तक
                 `;
                 
                 document.getElementById('freeKundlisCount').innerHTML = `
-                    <i class="fas fa-star" style="color: #ffd700;"></i> बची हुई मुफ्त कुंडलियां: 
-                    ₹19 वाली: ${maxFreeBasicKundli - freeBasicKundliCount} | 
-                    ₹49 वाली: ${maxFreePremiumKundli - freePremiumKundliCount}
+                    <i class="fas fa-star" style="color: #ffd700;"></i> 🎁 Free Bhavishya बचे: ${getMaxForFeature('pred') - parseInt(localStorage.getItem('cnt_pred')||0)}/${getMaxForFeature('pred')} &nbsp;|&nbsp;
+                    ₹19 कुंडली: ${maxFreeBasicKundli - freeBasicKundliCount} बची | 
+                    ₹49 कुंडली: ${maxFreePremiumKundli - freePremiumKundliCount} बची
                 `;
+
+                // Update premium benefits panel
+                var expEl = document.getElementById('premExpiry');
+                if (expEl) expEl.textContent = '🕐 Premium ' + expiryDate + ' तक वैध है';
+                var basicEl = document.getElementById('premBenBasicCount');
+                if (basicEl) basicEl.textContent = '₹19 — ' + (maxFreeBasicKundli - freeBasicKundliCount) + ' बची';
+                var premEl = document.getElementById('premBenPremCount');
+                if (premEl) premEl.textContent = '₹49 — ' + (maxFreePremiumKundli - freePremiumKundliCount) + ' बची';
                 
                 if (freeBasicKundliCount < maxFreeBasicKundli) {
                     document.getElementById('basicKundliBadge').style.display = 'none';
@@ -3027,7 +3107,41 @@
                 
                 const donationSection = document.getElementById('donationSection');
                 if (donationSection) donationSection.classList.remove('show');
+            } else {
+                // Non-premium: show Premium link, hide badge
+                var headerLink2 = document.getElementById('premiumHeaderLink');
+                var headerBadge2 = document.getElementById('premiumStatusBadge');
+                if (headerLink2) headerLink2.style.display = 'inline-block';
+                if (headerBadge2) headerBadge2.style.display = 'none';
             }
+        }
+
+        // Premium benefits panel toggle
+        function showPremiumBenefitsPanel() {
+            var panel = document.getElementById('premiumBenefitsPanel');
+            if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+        function hidePremiumBenefitsPanel() {
+            var panel = document.getElementById('premiumBenefitsPanel');
+            if (panel) panel.style.display = 'none';
+        }
+
+        // Kundli Report Page navigation
+        function showKundliReportPage(isPrem) {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('freePredResultPage').style.display = 'none';
+            document.getElementById('historyPage').style.display = 'none';
+            var page = document.getElementById('kundliReportPage');
+            if (page) { page.style.display = 'block'; window.scrollTo(0, 0); }
+            var titleEl = document.getElementById('kundliReportPageTitle');
+            if (titleEl) titleEl.textContent = isPrem ? '👑 ₹49 प्रीमियम कुंडली' : '📜 ₹19 विस्तृत कुंडली';
+        }
+
+        function backToHomeFromKundliReport() {
+            var page = document.getElementById('kundliReportPage');
+            if (page) page.style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            window.scrollTo(0, 0);
         }
 
         // Call on load
@@ -3183,7 +3297,11 @@
         }
 
         function closeKundliModal() {
-            document.getElementById('kundliResultModal').classList.remove('show');
+            // Close old modal if exists
+            var modal = document.getElementById('kundliResultModal');
+            if (modal) modal.classList.remove('show');
+            // Also close new page
+            backToHomeFromKundliReport();
         }
 
         function showPage(page) {
@@ -3214,8 +3332,8 @@
                 matching: { title: '💕 कुंडली मिलान', body: '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;"><div style="background:rgba(255,215,0,0.1);padding:14px;border-radius:12px;"><h4 style="color:#ffd700;margin-bottom:8px;">👰 वधू</h4><input id="mBride" placeholder="नाम" style="width:100%;padding:8px;background:rgba(255,255,255,0.1);border:1px solid #ffd700;border-radius:8px;color:#fff;margin-bottom:8px;box-sizing:border-box;"><select id="mBrideR" style="width:100%;padding:8px;background:#1a1a3a;border:1px solid #ffd700;border-radius:8px;color:#fff;box-sizing:border-box;"><option value="">राशि</option>' + rashiList.map(function(r){return '<option>'+r+'</option>';}).join('') + '</select></div><div style="background:rgba(255,215,0,0.1);padding:14px;border-radius:12px;"><h4 style="color:#ffd700;margin-bottom:8px;">🤵 वर</h4><input id="mGroom" placeholder="नाम" style="width:100%;padding:8px;background:rgba(255,255,255,0.1);border:1px solid #ffd700;border-radius:8px;color:#fff;margin-bottom:8px;box-sizing:border-box;"><select id="mGroomR" style="width:100%;padding:8px;background:#1a1a3a;border:1px solid #ffd700;border-radius:8px;color:#fff;box-sizing:border-box;"><option value="">राशि</option>' + rashiList.map(function(r){return '<option>'+r+'</option>';}).join('') + '</select></div></div><button onclick="doKundliMatch()" style="width:100%;padding:13px;background:linear-gradient(135deg,#ffd700,#ff4500);border:none;border-radius:25px;color:#0a0a1a;font-weight:700;cursor:pointer;">💕 मिलान करें</button><div id="matchResult" style="display:none;margin-top:15px;background:rgba(255,215,0,0.1);border:1px solid #ffd700;border-radius:15px;padding:18px;"></div>' },
                 gemstones:{ title: '💎 रत्न सुझाव', body: [['मेष','मूंगा','मंगलवार'],['वृष','हीरा/ओपल','शुक्रवार'],['मिथुन','पन्ना','बुधवार'],['कर्क','मोती','सोमवार'],['सिंह','माणिक्य','रविवार'],['कन्या','पन्ना','बुधवार'],['तुला','हीरा','शुक्रवार'],['वृश्चिक','मूंगा','मंगलवार'],['धनु','पुखराज','गुरुवार'],['मकर','नीलम','शनिवार'],['कुंभ','नीलम','शनिवार'],['मीन','पुखराज','गुरुवार']].map(function(g){return '<div style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:12px;margin-bottom:8px;"><h4 style="color:#ffd700;">'+g[0]+' — 💎 '+g[1]+'</h4><p style="color:#ccc;font-size:0.9em;">धारण दिन: '+g[2]+'</p></div>';}).join('') },
                 remedies: { title: '🕉️ ग्रह उपाय', body: [['☀️ सूर्य','रविवार — गुड़-गेहूं दान, जल अर्घ्य, आदित्य हृदय स्तोत्र'],['🌙 चंद्र','सोमवार व्रत — सफेद वस्तु दान, ॐ सोम सोमाय नमः'],['🔴 मंगल','मंगलवार व्रत — लाल मसूर दान, हनुमान चालीसा'],['💚 बुध','बुधवार — हरी वस्तु दान, विष्णु सहस्रनाम'],['🌟 गुरु','गुरुवार — पीले वस्त्र, केले दान, ॐ बृं बृहस्पतये नमः'],['⚪ शुक्र','शुक्रवार — सफेद वस्तु दान, लक्ष्मी पूजन'],['🔵 शनि','शनिवार — काले तिल-तेल दान, शनि चालीसा']].map(function(r){return '<div style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:12px;margin-bottom:8px;"><h4 style="color:#ffd700;">'+r[0]+'</h4><p style="color:#ccc;font-size:0.9em;line-height:1.7;">'+r[1]+'</p></div>';}).join('') },
-                about:    { title: 'ℹ️ हमारे बारे में', body: '<div style="text-align:center;margin-bottom:18px;"><div style="font-size:3em;">🔮</div><h2 style="color:#ffd700;">आपका भविष्य</h2><p style="color:#ccc;">वैदिक ज्योतिष का पूर्ण प्लेटफॉर्म</p></div><div style="background:rgba(255,215,0,0.08);border-radius:12px;padding:16px;margin-bottom:14px;"><p style="color:#ddd;line-height:1.8;">10+ वर्षों का अनुभव। 1 लाख+ संतुष्ट ग्राहक। वैदिक ज्योतिष की परंपराओं को आधुनिक तकनीक से जोड़कर सटीक भविष्यवाणी।</p></div>' },
-                contact:  { title: '📞 संपर्क करें', body: '<div style="display:grid;gap:12px;"><div style="background:rgba(255,215,0,0.1);border-radius:12px;padding:16px;"><b style="color:#ffd700;">WhatsApp:</b> <span style="color:#ccc;">+91 9876543210</span></div><div style="background:rgba(255,215,0,0.1);border-radius:12px;padding:16px;"><b style="color:#ffd700;">Email:</b> <span style="color:#ccc;">support@aapkabhavishya.com</span></div></div>' },
+                about:    { title: 'ℹ️ हमारे बारे में', body: '<div style="text-align:center;margin-bottom:18px;"><div style="font-size:3em;">🔮</div><h2 style="color:#ffd700;">Bhavishya Dekho</h2><p style="color:#ccc;">वैदिक ज्योतिष का पूर्ण प्लेटफॉर्म</p></div><div style="background:rgba(255,215,0,0.08);border-radius:12px;padding:16px;margin-bottom:14px;"><p style="color:#ddd;line-height:1.8;">10+ वर्षों का अनुभव। 1 लाख+ संतुष्ट ग्राहक। वैदिक ज्योतिष की परंपराओं को आधुनिक तकनीक से जोड़कर सटीक भविष्यवाणी।</p></div>' },
+                contact:  { title: '📞 संपर्क करें', body: '<div style="display:grid;gap:12px;"><div style="background:rgba(255,215,0,0.1);border-radius:12px;padding:16px;"><b style="color:#ffd700;">WhatsApp:</b> <span style="color:#ccc;">+91 9876543210</span></div><div style="background:rgba(255,215,0,0.1);border-radius:12px;padding:16px;"><b style="color:#ffd700;">Email:</b> <span style="color:#ccc;">support@bhavishyadekho.online</span></div></div>' },
                 privacy:  { title: '🔒 गोपनीयता नीति', body: '<div style="background:rgba(255,215,0,0.08);border-radius:12px;padding:16px;color:#ddd;line-height:1.8;"><p>आपकी जानकारी पूर्णतः एन्क्रिप्टेड है। हम किसी को डेटा नहीं बेचते। सुरक्षित payment gateway।</p></div>' },
                 terms:    { title: '📜 नियम और शर्तें', body: '<div style="background:rgba(255,215,0,0.08);border-radius:12px;padding:16px;color:#ddd;line-height:1.8;"><p>सभी भविष्यवाणियां मार्गदर्शन हेतु हैं। भुगतान राशि वापस नहीं होगी। 18 वर्ष+ के लिए।</p></div>' }
             };
@@ -3549,19 +3667,19 @@
 
         function shareOnFacebook() {
             var name = window.lastPredName || 'आप';
-            var txt = '🔮 ' + name + ' का भविष्यफल — FREE में देखें: www.aapkabhavishya.com';
-            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://www.aapkabhavishya.com') + '&quote=' + encodeURIComponent(txt), '_blank');
+            var txt = '🔮 ' + name + ' का भविष्यफल — FREE में देखें: bhavishyadekho.online';
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://bhavishyadekho.online') + '&quote=' + encodeURIComponent(txt), '_blank');
         }
         function shareOnTelegram() {
             var name = window.lastPredName || 'आप';
             var pred = window.lastPredText || '';
-            var txt = '🔮 ' + name + ' का भविष्यफल:\n' + pred.substring(0,120) + '...\n\nFREE में देखें: www.aapkabhavishya.com';
-            window.open('https://t.me/share/url?url=' + encodeURIComponent('https://www.aapkabhavishya.com') + '&text=' + encodeURIComponent(txt), '_blank');
+            var txt = '🔮 ' + name + ' का भविष्यफल:\n' + pred.substring(0,120) + '...\n\nFREE में देखें: bhavishyadekho.online';
+            window.open('https://t.me/share/url?url=' + encodeURIComponent('https://bhavishyadekho.online') + '&text=' + encodeURIComponent(txt), '_blank');
         }
         function shareOnInstagram() {
             var name = window.lastPredName || 'आप';
             var pred = window.lastPredText || '';
-            var txt = '🔮 ' + name + ' का भविष्यफल:\n\n' + pred.substring(0,160) + '...\n\n✨ FREE में देखें: www.aapkabhavishya.com';
+            var txt = '🔮 ' + name + ' का भविष्यफल:\n\n' + pred.substring(0,160) + '...\n\n✨ FREE में देखें: bhavishyadekho.online';
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(txt).then(function(){
                     alert('Instagram Story के लिए text copy हो गया! Instagram खोलें → Story → Paste करें');
@@ -3570,13 +3688,13 @@
         }
         function shareOnTwitter() {
             var name = window.lastPredName || 'आप';
-            var txt = '🔮 ' + name + ' का भविष्यफल — FREE में देखें 👉 www.aapkabhavishya.com ✨';
+            var txt = '🔮 ' + name + ' का भविष्यफल — FREE में देखें 👉 bhavishyadekho.online ✨';
             window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(txt), '_blank');
         }
         function copyLink() {
             var name = window.lastPredName || 'आप';
             var pred = window.lastPredText || '';
-            var txt = '🔮 ' + name + ' का भविष्यफल: ' + pred.substring(0,120) + '... FREE में देखें: www.aapkabhavishya.com';
+            var txt = '🔮 ' + name + ' का भविष्यफल: ' + pred.substring(0,120) + '... FREE में देखें: bhavishyadekho.online';
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(txt).then(function(){ alert('✅ Copy हो गया!'); });
             } else { alert(txt); }
@@ -4167,13 +4285,23 @@
                 </div>
                 
                 <div class="kundli-footer">
-                    <p>www.aapkabhavishya.com</p>
+                    <p>bhavishyadekho.online</p>
                     <p>धन्यवाद! 🙏</p>
                 </div>
             `;
             
             document.getElementById('kundliPremiumResult').innerHTML = kundliHTML;
-            document.getElementById('kundliResultModal').classList.add('show');
+
+            // Show in new separate page instead of modal
+            var rpBody = document.getElementById('kundliReportBody');
+            if (rpBody) rpBody.innerHTML = kundliHTML;
+            var rpName = document.getElementById('krpName');
+            if (rpName) rpName.textContent = data.name + ' की कुंडली';
+            var rpInfo = document.getElementById('krpInfo');
+            if (rpInfo) rpInfo.textContent = data.day + '/' + data.month + '/' + data.year + ' | ' + (data.time||'') + ' | ' + data.place;
+            var rpBadges = document.getElementById('krpBadges');
+            if (rpBadges) rpBadges.innerHTML = '<span style="background:rgba(255,215,0,0.2);border:1px solid #ffd700;border-radius:25px;padding:5px 14px;font-size:0.82em;color:#ffd700;">⭐ ' + data.rashi + '</span><span style="background:rgba(155,89,182,0.2);border:1px solid #9b59b6;border-radius:25px;padding:5px 14px;font-size:0.82em;color:#c39bd3;">🌙 ' + data.nakshatra + '</span><span style="background:rgba(76,175,80,0.2);border:1px solid #4CAF50;border-radius:25px;padding:5px 14px;font-size:0.82em;color:#81c784;">' + data.type + '</span>';
+            showKundliReportPage(isPrem);
             
             window.currentKundliData = data;
         }
@@ -4389,31 +4517,31 @@
 
 
         function shareOnInstagram() {
-            alert('📸 Instagram स्टोरी पर शेयर करने के लिए स्क्रीनशॉट लें और स्टोरी पर शेयर करें।\n\n👉 www.aapkabhavishya.com');
+            alert('📸 Instagram स्टोरी पर शेयर करने के लिए स्क्रीनशॉट लें और स्टोरी पर शेयर करें।\n\n👉 bhavishyadekho.online');
         }
 
         function shareOnFacebook() {
             const name = document.getElementById('name').value.trim() || 'उपयोगकर्ता';
             const prediction = document.getElementById('mainPrediction') ? document.getElementById('mainPrediction').innerText.substring(0, 200) + '...' : 'मेरी कुंडली रिपोर्ट';
             const text = encodeURIComponent(`🔮 ${name} का भविष्यफल:\n\n"${prediction}"`);
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.aapkabhavishya.com')}&quote=${text}`, '_blank');
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://bhavishyadekho.online')}&quote=${text}`, '_blank');
         }
 
         function shareOnTelegram() {
             const name = document.getElementById('name').value.trim() || 'उपयोगकर्ता';
             const prediction = document.getElementById('mainPrediction') ? document.getElementById('mainPrediction').innerText.substring(0, 200) + '...' : 'मेरी कुंडली रिपोर्ट';
-            const text = encodeURIComponent(`🔮 ${name} का भविष्यफल:\n\n"${prediction}"\n\n👉 www.aapkabhavishya.com`);
-            window.open(`https://t.me/share/url?url=${encodeURIComponent('https://www.aapkabhavishya.com')}&text=${text}`, '_blank');
+            const text = encodeURIComponent(`🔮 ${name} का भविष्यफल:\n\n"${prediction}"\n\n👉 bhavishyadekho.online`);
+            window.open(`https://t.me/share/url?url=${encodeURIComponent('https://bhavishyadekho.online')}&text=${text}`, '_blank');
         }
 
         function shareOnTwitter() {
             const name = document.getElementById('name').value.trim() || 'उपयोगकर्ता';
-            const text = encodeURIComponent(`🔮 ${name} का भविष्यफल देखें - आपका भविष्य`);
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent('https://www.aapkabhavishya.com')}`, '_blank');
+            const text = encodeURIComponent(`🔮 ${name} का भविष्यफल देखें - Bhavishya Dekho`);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent('https://bhavishyadekho.online')}`, '_blank');
         }
 
         function copyLink() {
-            const text = `🔮 मेरा भविष्य देखें: www.aapkabhavishya.com`;
+            const text = `🔮 मेरा भविष्य देखें: bhavishyadekho.online`;
             navigator.clipboard.writeText(text).then(() => {
                 alert('लिंक कॉपी हो गया! अब इसे कहीं भी पेस्ट करें।');
             });
@@ -4581,8 +4709,8 @@
             feat = feat || 'pred';
             var pred = window._predText || 'आपका भविष्य शुभ है';
             var name = window._predName || '';
-            var txt = '&#127970; ' + name + ' का भविष्यफल:\n"' + pred.substring(0, 150) + '..."\n\n✨ FREE देखें: www.aapkabhavishya.com';
-            if (navigator.share) navigator.share({ title: 'आपका भविष्य', text: txt });
+            var txt = '&#127970; ' + name + ' का भविष्यफल:\n"' + pred.substring(0, 150) + '..."\n\n✨ FREE देखें: bhavishyadekho.online';
+            if (navigator.share) navigator.share({ title: 'Bhavishya Dekho', text: txt });
             else if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function() { alert('Link copy हो गया!'); });
 
             var b = parseInt(localStorage.getItem('bonus_' + feat) || '0') + 1;
@@ -4613,35 +4741,49 @@
                 document.getElementById('resultSection').style.display = 'block';
                 document.getElementById('resultSection').scrollIntoView({behavior:'smooth'});
             }
-            window._predName = name; window._predText = mainPred;
+            window._predName = name; window._predText = mainPred; window._predRashi = zodiac ? (getRashiNameFromCode ? (getRashiNameFromCode(zodiac)||zodiac) : zodiac) : '';
         }
 
-        // WhatsApp share with actual prediction text
+        // WhatsApp share with proper formatted message (NO screenshot)
         function shareOnWhatsApp() {
-            var name = window._predName || ''; var pred = window._predText || '';
-            if (!pred) { alert('पहले भविष्य देखें'); return; }
-            var msg = '&#127970; *' + name + ' का भविष्यफल* &#127970;\\n\\n' + pred.substring(0,280) + '...\\n\\n&#9670;&#9670;&#9670;&#9670;&#9670;\\n&#10024; *आप भी FREE देखें!*\\n&#128073; www.aapkabhavishya.com\\n&#127809; करियर &#9670; प्रेम &#9670; धन &#9670; स्वास्थ्य';
+            var name = window._predName || 'आप';
+            var pred = window._predText || '';
+            var rashi = window._predRashi || '';
+            var date = new Date().toLocaleDateString('hi-IN');
+            if (!pred && !name) { alert('पहले भविष्य देखें'); return; }
+            var lines = pred.split('।');
+            var line1 = (lines[0] || pred.substring(0,100)).trim();
+            var line2 = (lines[1] || pred.substring(100,200)).trim();
+            var msg = '🔮 *Bhavishya Dekho* - आपका भविष्यफल\n\n'
+                + '👤 नाम: ' + name + '\n'
+                + '📅 तिथि: ' + date + '\n'
+                + (rashi ? '⭐ राशि: ' + rashi + '\n' : '')
+                + '✨ भविष्य: ' + line1 + (line1.endsWith('।') ? '' : '।') + '\n'
+                + '💫 ' + line2 + (line2 ? (line2.endsWith('।') ? '' : '।') : '') + '\n\n'
+                + '⭐ *पूरा भविष्य मुफ्त में देखें:*\n'
+                + '👉 bhavishyadekho.online\n\n'
+                + '🙏 शेयर करें और दूसरों को भी उनका भविष्य जानने का मौका दें!';
             window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
         }
         function shareOnFacebook() {
             var name = window._predName || ''; var pred = window._predText || '';
-            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://www.aapkabhavishya.com') + '&quote=' + encodeURIComponent(name + ': ' + pred.substring(0,100)), '_blank');
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://bhavishyadekho.online') + '&quote=' + encodeURIComponent(name + ': ' + pred.substring(0,100)), '_blank');
         }
         function shareOnTelegram() {
             var name = window._predName || ''; var pred = window._predText || '';
-            window.open('https://t.me/share/url?url=' + encodeURIComponent('https://www.aapkabhavishya.com') + '&text=' + encodeURIComponent(name + ' का भविष्यफल: ' + pred.substring(0,100) + '... FREE देखें'), '_blank');
+            window.open('https://t.me/share/url?url=' + encodeURIComponent('https://bhavishyadekho.online') + '&text=' + encodeURIComponent(name + ' का भविष्यफल: ' + pred.substring(0,100) + '... FREE देखें'), '_blank');
         }
         function shareOnInstagram() {
-            var txt = (window._predName||'') + ' का भविष्यफल: ' + (window._predText||'').substring(0,150) + '... www.aapkabhavishya.com';
+            var txt = (window._predName||'') + ' का भविष्यफल: ' + (window._predText||'').substring(0,150) + '... bhavishyadekho.online';
             if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ alert('Story text copy हो गया! Instagram खोलें → Story → Paste करें'); });
             else alert(txt);
         }
         function shareOnTwitter() {
             var name = window._predName || '';
-            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(name + ' का भविष्यफल — FREE देखें: www.aapkabhavishya.com'), '_blank');
+            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(name + ' का भविष्यफल — FREE देखें: bhavishyadekho.online'), '_blank');
         }
         function copyLink() {
-            var txt = (window._predName||'') + ' का भविष्यफल: ' + (window._predText||'').substring(0,150) + '... www.aapkabhavishya.com';
+            var txt = (window._predName||'') + ' का भविष्यफल: ' + (window._predText||'').substring(0,150) + '... bhavishyadekho.online';
             if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ alert('✅ Copy हो गया!'); });
             else alert(txt);
         }
@@ -4779,33 +4921,110 @@
                 + '</div></div>';
 
             document.getElementById('kundliPremiumResult').innerHTML = html;
-            document.getElementById('kundliResultModal').classList.add('show');
+
+            // Show in new separate page
+            var rpBody2 = document.getElementById('kundliReportBody');
+            if (rpBody2) rpBody2.innerHTML = html;
+            var rpName2 = document.getElementById('krpName');
+            if (rpName2) rpName2.textContent = name + ' की कुंडली';
+            var rpInfo2 = document.getElementById('krpInfo');
+            if (rpInfo2) rpInfo2.textContent = day + '/' + month + '/' + year + ' | ' + time + ' | ' + place;
+            var rpBadges2 = document.getElementById('krpBadges');
+            if (rpBadges2) rpBadges2.innerHTML = '<span style="background:rgba(255,215,0,0.2);border:1px solid #ffd700;border-radius:25px;padding:5px 14px;font-size:0.82em;color:#ffd700;">⭐ ' + rashi + '</span><span style="background:rgba(155,89,182,0.2);border:1px solid #9b59b6;border-radius:25px;padding:5px 14px;font-size:0.82em;color:#c39bd3;">🌙 ' + nakshatra + '</span><span style="background:rgba(76,175,80,0.2);border:1px solid #4CAF50;border-radius:25px;padding:5px 14px;font-size:0.82em;color:#81c784;">' + reportLabel + '</span>';
+            showKundliReportPage(isPrem);
+            // Set WhatsApp share data
+            window._predName = name; window._predText = sets.main[Math.floor(rng*100)%sets.main.length]; window._predRashi = rashi;
             window.currentKundliData = { name:name, gender:gText, day:day, month:month, year:year, time:time, place:place, rashi:rashi, nakshatra:nakshatra, type:reportLabel, mainPred:sets.main[Math.floor(rng*100)%sets.main.length], isPremium:isPrem };
         }
 
-        // PDF download (printable HTML)
+        // PDF download - Complete Report
         function downloadKundliPDF() {
             var data = window.currentKundliData;
             if (!data) { alert('कोई रिपोर्ट नहीं'); return; }
-            var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Kundli</title>'
-                + '<style>body{font-family:Arial,sans-serif;padding:28px;max-width:780px;margin:auto;color:#222}'
-                + 'h1{color:#8B0000;text-align:center}h2{color:#8B0000;border-bottom:2px solid gold;margin-top:14px}'
-                + 'table{width:100%;border-collapse:collapse;margin:7px 0}td{padding:7px 10px;border:1px solid #ddd}'
-                + 'td:first-child{background:#fff8e1;font-weight:bold;width:38%}.pred{background:#fff8e1;border:1px solid gold;border-radius:6px;padding:12px;margin:7px 0;line-height:1.8}'
-                + 'footer{text-align:center;margin-top:18px;color:#888;border-top:1px solid #ddd;padding-top:9px;font-size:0.84em}</style></head><body>'
-                + '<h1>&#128302; ' + data.type + ' — www.aapkabhavishya.com</h1>'
-                + '<h2>व्यक्तिगत जानकारी</h2><table>'
-                + '<tr><td>नाम</td><td>'+data.name+'</td></tr><tr><td>लिंग</td><td>'+data.gender+'</td></tr>'
+            var isPrem = data.isPremium;
+            var planets = [
+                ['सूर्य','मेष','प्रथम'],['चंद्र','वृष','द्वितीय'],['मंगल','मिथुन','तृतीय'],
+                ['बुध','कर्क','चतुर्थ'],['गुरु','सिंह','पंचम'],['शुक्र','कन्या','षष्ठ'],
+                ['शनि','तुला','सप्तम'],['राहु','वृश्चिक','अष्टम'],['केतु','धनु','नवम']
+            ];
+            var bhav = ['प्रथम भाव: व्यक्तित्व और स्वास्थ्य','द्वितीय भाव: धन और परिवार',
+                'तृतीय भाव: पराक्रम और भाई-बहन','चतुर्थ भाव: माता और सुख',
+                'पंचम भाव: संतान और बुद्धि','षष्ठ भाव: रोग और शत्रु',
+                'सप्तम भाव: विवाह और साझेदारी','अष्टम भाव: आयु और गुप्त',
+                'नवम भाव: भाग्य और धर्म','दशम भाव: करियर और मान-सम्मान',
+                'एकादश भाव: लाभ और इच्छापूर्ति','द्वादश भाव: व्यय और मोक्ष'];
+            var html = '<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><title>Bhavishya Dekho Kundli Report</title>'
+                + '<style>body{font-family:Arial,sans-serif;padding:30px;max-width:800px;margin:auto;color:#1a1a1a;background:#fff}'
+                + 'h1{color:#8B0000;text-align:center;font-size:1.6em;border-bottom:3px solid #DAA520;padding-bottom:10px;margin-bottom:5px}'
+                + '.subtitle{text-align:center;color:#666;font-size:0.9em;margin-bottom:20px}'
+                + 'h2{color:#8B0000;border-bottom:2px solid #DAA520;margin-top:20px;padding-bottom:5px;font-size:1.1em}'
+                + 'table{width:100%;border-collapse:collapse;margin:10px 0}'
+                + 'td,th{padding:8px 12px;border:1px solid #ddd;font-size:0.9em}'
+                + 'td:first-child{background:#fff8e1;font-weight:bold;width:35%}'
+                + 'th{background:#8B0000;color:#fff;text-align:left}'
+                + '.pred{background:#fffde7;border:1px solid #DAA520;border-radius:6px;padding:14px;margin:8px 0;line-height:1.9;font-size:0.92em}'
+                + '.section{background:#fafafa;border-left:4px solid #DAA520;padding:12px;margin:10px 0;border-radius:4px}'
+                + '.badge{display:inline-block;background:#8B0000;color:#fff;padding:3px 10px;border-radius:15px;font-size:0.75em;margin-left:8px}'
+                + 'footer{text-align:center;margin-top:25px;color:#666;border-top:2px solid #DAA520;padding-top:12px;font-size:0.85em}'
+                + '.premium-only{background:#fff3e0;border:1px solid #ff9800;border-radius:6px;padding:12px;margin:8px 0}'
+                + '@media print{body{padding:15px}.no-print{display:none}}</style></head><body>'
+                + '<h1>🔮 BHAVISHYA DEKHO — ' + data.type.toUpperCase() + '</h1>'
+                + '<p class="subtitle">bhavishyadekho.online | ' + new Date().toLocaleDateString('hi-IN') + '</p>'
+                + '<h2>【 व्यक्तिगत जानकारी 】</h2>'
+                + '<table><tr><td>नाम</td><td>'+data.name+'</td></tr>'
+                + '<tr><td>लिंग</td><td>'+data.gender+'</td></tr>'
                 + '<tr><td>जन्म तिथि</td><td>'+data.day+'/'+data.month+'/'+data.year+'</td></tr>'
-                + '<tr><td>जन्म समय</td><td>'+(data.time||'—')+'</td></tr>'
+                + '<tr><td>जन्म समय</td><td>'+(data.time||'ज्ञात नहीं')+'</td></tr>'
                 + '<tr><td>जन्म स्थान</td><td>'+data.place+'</td></tr>'
-                + '<tr><td>राशि</td><td>'+data.rashi+'</td></tr>'
-                + '<tr><td>नक्षत्र</td><td>'+data.nakshatra+'</td></tr></table>'
-                + '<h2>मुख्य भविष्यवाणी</h2><div class="pred">'+(data.mainPred||'')+'</div>'
-                + '<footer>www.aapkabhavishya.com | '+new Date().toLocaleDateString('hi-IN')+'</footer></body></html>';
-            var w = window.open('','_blank');
-            if (w) { w.document.write(html); w.document.close(); setTimeout(function(){w.print();},500); }
-            else alert('Popup allow करें');
+                + '<tr><td>राशि</td><td><strong>'+data.rashi+'</strong></td></tr>'
+                + '<tr><td>नक्षत्र</td><td><strong>'+data.nakshatra+'</strong></td></tr></table>'
+                + '<h2>【 ग्रहों की स्थिति 】</h2>'
+                + '<table><tr><th>ग्रह</th><th>राशि</th><th>भाव</th></tr>'
+                + planets.map(function(p){return '<tr><td>'+p[0]+'</td><td>'+p[1]+'</td><td>'+p[2]+'</td></tr>';}).join('')
+                + '</table>'
+                + '<h2>【 12 भाव फल 】</h2>'
+                + '<table>'+bhav.map(function(b,i){var parts=b.split(':');return '<tr><td>'+(i+1)+'. '+parts[0]+'</td><td>'+(parts[1]||'')+'</td></tr>';}).join('')+'</table>'
+                + '<h2>【 मुख्य भविष्यवाणी 】</h2>'
+                + '<div class="pred">'+data.mainPred+'</div>'
+                + '<h2>【 करियर भविष्यवाणी 】</h2>'
+                + '<div class="section">आपकी कुंडली में दशम भाव में शुभ ग्रहों की स्थिति से करियर में उत्तम प्रगति के योग हैं। आने वाले समय में नए अवसर प्राप्त होंगे।</div>'
+                + '<h2>【 प्रेम और विवाह 】</h2>'
+                + '<div class="section">सप्तम भाव की स्थिति अनुकूल है। विवाह के शुभ योग बन रहे हैं। प्रेम जीवन में मधुरता आएगी।</div>'
+                + '<h2>【 धन और आय 】</h2>'
+                + '<div class="section">द्वितीय और एकादश भाव की स्थिति से धन लाभ के संकेत हैं। आय में वृद्धि की संभावना है।</div>'
+                + '<h2>【 स्वास्थ्य 】</h2>'
+                + '<div class="section">लग्न और षष्ठ भाव के अनुसार स्वास्थ्य सामान्यतः अच्छा रहेगा। नियमित व्यायाम और संतुलित आहार से और बेहतर होगा।</div>'
+                + '<h2>【 शुभ अंक, रंग, दिन, दिशा 】</h2>'
+                + '<table><tr><td>शुभ अंक</td><td>3, 7, 9</td></tr>'
+                + '<tr><td>शुभ रंग</td><td>पीला, सफेद, सुनहरा</td></tr>'
+                + '<tr><td>शुभ दिन</td><td>गुरुवार, सोमवार</td></tr>'
+                + '<tr><td>शुभ दिशा</td><td>उत्तर-पूर्व</td></tr></table>'
+                + (isPrem ? '<h2>【 रत्न सुझाव 】 <span class="badge">Premium</span></h2>'
+                    + '<div class="premium-only"><table>'
+                    + '<tr><td>मुख्य रत्न</td><td>पुखराज (Yellow Sapphire)</td></tr>'
+                    + '<tr><td>अन्य रत्न</td><td>मोती, मूंगा, पन्ना</td></tr>'
+                    + '<tr><td>धारण दिन</td><td>गुरुवार, प्रातःकाल</td></tr>'
+                    + '<tr><td>मंत्र</td><td>ॐ ग्रां ग्रीं ग्रौं सः गुरवे नमः</td></tr>'
+                    + '</table></div>'
+                    + '<h2>【 ग्रह उपाय 】 <span class="badge">Premium</span></h2>'
+                    + '<div class="premium-only"><table>'
+                    + '<tr><td>शनि</td><td>काले तिल का दान करें, हनुमान चालीसा पढ़ें</td></tr>'
+                    + '<tr><td>गुरु</td><td>केले के पेड़ की पूजा, पीला वस्त्र धारण</td></tr>'
+                    + '<tr><td>मंगल</td><td>मंगलवार व्रत, लाल चना दान</td></tr>'
+                    + '<tr><td>चंद्र</td><td>सोमवार उपवास, दूध का दान</td></tr>'
+                    + '<tr><td>बुध</td><td>हरी वस्तुएं दान, विष्णु सहस्रनाम पाठ</td></tr>'
+                    + '</table></div>'
+                    + '<h2>【 दशा विश्लेषण 】 <span class="badge">Premium</span></h2>'
+                    + '<div class="premium-only"><p><strong>वर्तमान महादशा:</strong> गुरु महादशा (2022–2038)</p>'
+                    + '<p><strong>अंतर्दशा:</strong> शनि अंतर्दशा — विशेष परिश्रम और धैर्य का समय</p>'
+                    + '<p><strong>अगले 5 साल:</strong> करियर में उन्नति, विवाह के योग, यात्रा के अवसर।</p></div>'
+                    : '')
+                + '<footer>🔮 Bhavishya Dekho | bhavishyadekho.online | ' + new Date().toLocaleDateString('hi-IN')
+                + '<br>⚠️ यह रिपोर्ट ज्योतिषीय मान्यताओं पर आधारित है। महत्वपूर्ण निर्णयों के लिए विशेषज्ञ से परामर्श लें।</footer>'
+                + '</body></html>';
+            var w = window.open('', '_blank');
+            if (w) { w.document.write(html); w.document.close(); setTimeout(function(){ w.print(); }, 600); }
+            else alert('Popup allow करें और फिर से कोशिश करें');
         }
 
         // Back button prevention
@@ -4826,11 +5045,34 @@
 
         // DOMContentLoaded init
         document.addEventListener('DOMContentLoaded', function() {
+            // ---- 3-Second Splash Screen ----
+            var splash = document.getElementById('splashScreen');
+            var bar = document.getElementById('splashBar');
+            var msg = document.getElementById('splashMsg');
+            if (splash && !sessionStorage.getItem('splashShown')) {
+                splash.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                // Start bar fill
+                setTimeout(function(){ if(bar) bar.style.width = '100%'; }, 100);
+                // Messages
+                setTimeout(function(){ if(msg) msg.textContent = '⭐ ग्रहों की स्थिति जाँची जा रही है...'; }, 1000);
+                setTimeout(function(){ if(msg) msg.textContent = '🌙 आपकी राशि पहचानी जा रही है...'; }, 2000);
+                setTimeout(function(){
+                    splash.classList.add('hide');
+                    document.body.style.overflow = '';
+                    sessionStorage.setItem('splashShown', '1');
+                    setTimeout(function(){ if(splash) splash.style.display = 'none'; }, 1000);
+                }, 3000);
+            } else {
+                if (splash) splash.style.display = 'none';
+            }
+
             createStars();
             loadKundliHistory();
             loadRashiPurchase();
             checkPremiumStatus();
             updateAllLimitBars();
+            updatePremiumUI();
             var fb = parseInt(localStorage.getItem('freeBonus') || '0');
             if (fb > 0) { /* bonus already set */ }
         });
