@@ -72,15 +72,20 @@
             height: 100%;
             background: linear-gradient(135deg, #0a0a1a, #1a1a3a);
             z-index: 10000;
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
-            transition: opacity 1s ease, visibility 1s ease;
+            opacity: 1;
+            transition: opacity 0.7s ease;
+        }
+
+        .splash-screen.show {
+            display: flex;
         }
 
         .splash-screen.hide {
             opacity: 0;
-            visibility: hidden;
+            pointer-events: none;
         }
 
         .splash-content {
@@ -1775,7 +1780,7 @@
     </style>
 </head>
 <body>
-    <div id="splashScreen" class="splash-screen">
+    <div id="splashScreen" class="splash-screen" style="display:none;">
         <div class="splash-content">
             <div class="splash-logo">
                 <i class="fas fa-crystal-ball"></i>
@@ -1895,6 +1900,12 @@
         </div>
         <div class="menu-item" onclick="showPage('terms'); toggleMenu();">
             <i class="fas fa-file-contract"></i> नियम और शर्तें
+        </div>
+        <div class="menu-item" onclick="showPage('disclaimer'); toggleMenu();">
+            <i class="fas fa-exclamation-circle"></i> Disclaimer
+        </div>
+        <div class="menu-item" onclick="doHistoryBackup(); toggleMenu();">
+            <i class="fas fa-download"></i> History Backup
         </div>
     </div>
 
@@ -2179,9 +2190,9 @@
                     <input type="text" id="kundliNakshatra" placeholder="ऑटो-डिटेक्ट (तिथि से)" readonly style="background:rgba(255,215,0,0.05);color:#aaa;">
                 </div>
             </div>
-            <div class="rashi-info" id="kundliRashiInfo" style="background:rgba(76,175,80,0.1);border-color:rgba(76,175,80,0.4);">
-                <i class="fas fa-check-circle" style="color:#4CAF50;"></i>
-                <span id="detectedKundliRashi">नाम लिखें — राशि ऑटो-डिटेक्ट होगी (रिपोर्ट में दिखेगी)</span>
+            <div class="rashi-info" id="kundliRashiInfo" style="background:rgba(76,175,80,0.05);border-color:rgba(76,175,80,0.2);display:none;">
+                <i class="fas fa-magic" style="color:#4CAF50;"></i>
+                <span id="detectedKundliRashi">Auto Detect — राशि रिपोर्ट में दिखेगी</span>
             </div>
             <button class="predict-btn" onclick="processKundliPayment(19, 'basic')" id="basicKundliBtn">
                 <i class="fas fa-lock"></i> <span id="basicKundliBtnText">₹19 में रिपोर्ट खरीदें</span>
@@ -2297,9 +2308,9 @@
                     <input type="text" id="premiumKundliNakshatra" placeholder="ऑटो-डिटेक्ट (तिथि से)" readonly style="background:rgba(255,215,0,0.05);color:#aaa;">
                 </div>
             </div>
-            <div class="rashi-info" id="premiumKundliRashiInfo" style="background:rgba(76,175,80,0.1);border-color:rgba(76,175,80,0.4);">
-                <i class="fas fa-check-circle" style="color:#4CAF50;"></i>
-                <span id="detectedPremiumKundliRashi">नाम लिखें — राशि ऑटो-डिटेक्ट होगी (रिपोर्ट में दिखेगी)</span>
+            <div class="rashi-info" id="premiumKundliRashiInfo" style="background:rgba(76,175,80,0.05);border-color:rgba(76,175,80,0.2);display:none;">
+                <i class="fas fa-magic" style="color:#4CAF50;"></i>
+                <span id="detectedPremiumKundliRashi">Auto Detect — राशि रिपोर्ट में दिखेगी</span>
             </div>
             <button class="predict-btn" onclick="processKundliPayment(49, 'premium')" id="premiumKundliBtn">
                 <i class="fas fa-lock"></i> <span id="premiumKundliBtnText">₹49 में प्रीमियम रिपोर्ट खरीदें</span>
@@ -2468,7 +2479,14 @@
                     <div class="rashi-info" id="lovePartnerRashiInfo" style="margin-top: 10px; padding: 8px;"></div>
                 </div>
             </div>
-            <div id="loveRashiBuyMsg" style="display:none;"></div>
+            <div id="loveRashiBuyMsg" onclick="triggerRashiPurchase()" style="margin:10px 0;background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(255,69,0,0.08));border:1px solid rgba(255,215,0,0.45);border-radius:14px;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                <span style="font-size:1.5em;">⭐</span>
+                <div>
+                    <div style="color:#ffd700;font-weight:600;font-size:0.88em;">सिर्फ ₹5 में सटीक राशि जानें</div>
+                    <div style="color:#ccc;font-size:0.75em;">नाम से राशि auto-detect • 24 घंटे valid</div>
+                </div>
+                <span style="margin-left:auto;background:linear-gradient(135deg,#ffd700,#ff4500);color:#0a0a1a;font-weight:700;font-size:0.78em;padding:4px 10px;border-radius:20px;">₹5</span>
+            </div>
             <div id="loveLimitBar" style="display:none;background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.25);border-radius:12px;padding:8px 14px;margin-bottom:12px;font-size:0.88em;color:#ddd;"></div>
             <button class="predict-btn small" onclick="calculateLove()">
                 <i class="fas fa-heart"></i> लव परसेंटेज देखें
@@ -2521,7 +2539,14 @@
                 </select>
             </div>
             <div class="rashi-info" id="horoscopeRashiInfo" style="margin-bottom: 15px;"></div>
-            <div id="horoRashiBuyMsg" style="display:none;"></div>
+            <div id="horoRashiBuyMsg" onclick="triggerRashiPurchase()" style="margin:10px 0;background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(255,69,0,0.08));border:1px solid rgba(255,215,0,0.45);border-radius:14px;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                <span style="font-size:1.5em;">⭐</span>
+                <div>
+                    <div style="color:#ffd700;font-weight:600;font-size:0.88em;">सिर्फ ₹5 में सटीक राशि जानें</div>
+                    <div style="color:#ccc;font-size:0.75em;">नाम से राशि auto-detect • 24 घंटे valid</div>
+                </div>
+                <span style="margin-left:auto;background:linear-gradient(135deg,#ffd700,#ff4500);color:#0a0a1a;font-weight:700;font-size:0.78em;padding:4px 10px;border-radius:20px;">₹5</span>
+            </div>
             <div id="horoLimitBar" style="display:none;background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.25);border-radius:12px;padding:8px 14px;margin-bottom:12px;font-size:0.88em;color:#ddd;"></div>
                 <button class="predict-btn small" onclick="showHoroscope()">
                 <i class="fas fa-eye"></i> राशिफल देखें
@@ -2607,7 +2632,7 @@
                 <div class="form-group" id="nameGroup">
                     <label><i class="fas fa-user"></i> नाम *</label>
                     <i class="fas fa-user"></i>
-                    <input type="text" id="name" placeholder="अपना नाम लिखें" >
+                    <input type="text" id="name" placeholder="अपना नाम लिखें" oninput="onFreeNameType(this.value)">
                     <div class="error-msg" id="nameError">नाम दर्ज करना आवश्यक है</div>
                 </div>
                 <div class="form-group" id="genderGroup">
@@ -2665,6 +2690,15 @@
                 </div>
             </div>
             
+            <!-- ₹5 hint - package na hone par dikhao -->
+            <div id="rashiBuyHint" onclick="triggerRashiPurchase()" style="margin-top:10px;background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(255,69,0,0.08));border:1px solid rgba(255,215,0,0.45);border-radius:14px;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                <span style="font-size:1.5em;">⭐</span>
+                <div>
+                    <div style="color:#ffd700;font-weight:600;font-size:0.88em;">सिर्फ ₹5 में सटीक राशि जानें</div>
+                    <div style="color:#ccc;font-size:0.75em;">नाम से राशि auto-detect • 24 घंटे valid</div>
+                </div>
+                <span style="margin-left:auto;background:linear-gradient(135deg,#ffd700,#ff4500);color:#0a0a1a;font-weight:700;font-size:0.78em;padding:4px 10px;border-radius:20px;">₹5</span>
+            </div>
             <!-- ₹5 active होने पर auto-detect status दिखेगा -->
             <div id="rashiInfo" style="display:none; background:rgba(76,175,80,0.1); border:1px solid rgba(76,175,80,0.4); border-radius:12px; padding:10px 14px; margin-top:8px; font-size:0.88em; color:#ccc;">
                 <span id="rashiStatusMsg">✅ राशि auto-detect होगी</span>
@@ -2737,7 +2771,21 @@
 
     </div><!-- end mainContent -->
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js">
+        function doHistoryBackup() {
+            if (!kundliHistory || kundliHistory.length === 0) { alert('कोई history नहीं है'); return; }
+            var data = JSON.stringify({ history: kundliHistory, date: new Date().toISOString() }, null, 2);
+            var blob = new Blob([data], { type: 'application/json' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'bhavishyadekho_history_' + new Date().toISOString().slice(0,10) + '.json';
+            a.click();
+            setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+        }
+
+    
+        // Free form naam type hone par rashi auto-detect (only if ₹5 package active)
+    </script>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -2841,15 +2889,22 @@
             var rashiName = rashiPurchase.rashi ? (' — ' + getRashiNameFromCode(rashiPurchase.rashi)) : '';
             var activeMsg = '\u23f0 \u0930\u093e\u0936\u093f \u092a\u0948\u0915\u0947\u091c \u0938\u0915\u094d\u0930\u093f\u092f' + rashiName + ' | \u0936\u0947\u0937 \u0938\u092e\u092f: <strong style="color:#ffd700;">' + tStr + '</strong>';
 
-            // Free form rashiInfo — only show when active, completely hidden otherwise
+            // Free form rashiInfo — only show when active
             var rashiInfoEl = document.getElementById('rashiInfo');
             if (rashiInfoEl) {
                 rashiInfoEl.style.display = isActive ? 'block' : 'none';
                 var msgEl = document.getElementById('rashiStatusMsg');
                 if (msgEl) msgEl.innerHTML = isActive ? activeMsg : '';
             }
+            // ₹5 buy hints — hide when active, show when not
+            var buyHint = document.getElementById('rashiBuyHint');
+            if (buyHint) buyHint.style.display = isActive ? 'none' : 'flex';
+            var loveBuyMsg = document.getElementById('loveRashiBuyMsg');
+            if (loveBuyMsg) loveBuyMsg.style.display = isActive ? 'none' : 'flex';
+            var horoBuyMsg = document.getElementById('horoRashiBuyMsg');
+            if (horoBuyMsg) horoBuyMsg.style.display = isActive ? 'none' : 'flex';
 
-            // Zodiac dropdown — auto-fill + disable when active; re-enable when not
+            // Zodiac dropdown (free form) — auto-fill + disable when active
             var zEl = document.getElementById('zodiac');
             if (isActive && rashiPurchase.rashi) {
                 if (zEl) { zEl.value = rashiPurchase.rashi; zEl.disabled = true; zEl.style.opacity='0.7'; }
@@ -2857,9 +2912,28 @@
                 if (zEl) { zEl.disabled = false; zEl.style.opacity='1'; }
             }
 
-            // Love calc rashi buy message
-            var loveBuyMsg = document.getElementById('loveRashiBuyMsg');
-            if (loveBuyMsg) loveBuyMsg.style.display = isActive ? 'none' : 'block';
+            // Love calc zodiac — auto-detect from name if active
+            if (isActive && rashiPurchase.rashi) {
+                var lyName = document.getElementById('loveYourName');
+                var lpName = document.getElementById('lovePartnerName');
+                if (lyName && lyName.value.trim()) {
+                    var r1 = autoDetectRashiFromName(lyName.value.trim());
+                    if (r1) { var ly = document.getElementById('loveYourZodiac'); if(ly) ly.value = r1; }
+                }
+                if (lpName && lpName.value.trim()) {
+                    var r2 = autoDetectRashiFromName(lpName.value.trim());
+                    if (r2) { var lp = document.getElementById('lovePartnerZodiac'); if(lp) lp.value = r2; }
+                }
+            }
+
+            // Horoscope zodiac — auto-detect from name if active
+            if (isActive && rashiPurchase.rashi) {
+                var hName = document.getElementById('horoscopeName');
+                if (hName && hName.value.trim()) {
+                    var hr = autoDetectRashiFromName(hName.value.trim());
+                    if (hr) { var hz = document.getElementById('horoscopeZodiac'); if(hz) hz.value = hr; }
+                }
+            }
 
             // Countdown bars in love / horoscope sections
             var loveBar = document.getElementById('loveCountdownBar');
@@ -2888,18 +2962,35 @@
 
         // Load history from Firebase
         function loadKundliHistory() {
-            const userId = 'user_' + (localStorage.getItem('userId') || generateUserId());
-            const historyRef = database.ref('users/' + userId + '/kundliHistory');
-            
-            historyRef.once('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    kundliHistory = Object.values(data).sort((a, b) => b.id - a.id);
-                } else {
-                    kundliHistory = [];
+            // localStorage se pehle load karo (reload pe bhi rehti hai)
+            try {
+                var ls = localStorage.getItem('bd_hist');
+                if (ls) {
+                    var arr = JSON.parse(ls);
+                    if (Array.isArray(arr) && arr.length > 0) {
+                        kundliHistory = arr;
+                        updateKundliHistoryDisplay();
+                    }
                 }
-                updateKundliHistoryDisplay();
-            });
+            } catch(e) {}
+            // Firebase se bhi sync karo (backup)
+            try {
+                const userId = 'user_' + (localStorage.getItem('userId') || generateUserId());
+                const historyRef = database.ref('users/' + userId + '/kundliHistory');
+                historyRef.once('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        var fbArr = Object.values(data).sort((a, b) => b.id - a.id);
+                        var existIds = kundliHistory.map(function(e){ return String(e.id); });
+                        fbArr.forEach(function(e) {
+                            if (!existIds.includes(String(e.id))) kundliHistory.push(e);
+                        });
+                        kundliHistory.sort((a,b) => b.id - a.id);
+                    }
+                    try { localStorage.setItem('bd_hist', JSON.stringify(kundliHistory)); } catch(e2) {}
+                    updateKundliHistoryDisplay();
+                });
+            } catch(e) {}
         }
 
         // Generate user ID
@@ -2909,17 +3000,16 @@
             return userId;
         }
 
-        // Save history to Firebase
+        // Save history - localStorage primary, Firebase backup
         function saveKundliHistory() {
-            const userId = localStorage.getItem('userId') || generateUserId();
-            const historyRef = database.ref('users/' + userId + '/kundliHistory');
-            
-            const historyObj = {};
-            kundliHistory.forEach((item, index) => {
-                historyObj[item.id] = item;
-            });
-            
-            historyRef.set(historyObj);
+            try { localStorage.setItem('bd_hist', JSON.stringify(kundliHistory)); } catch(e) {}
+            try {
+                const userId = localStorage.getItem('userId') || generateUserId();
+                const historyRef = database.ref('users/' + userId + '/kundliHistory');
+                const historyObj = {};
+                kundliHistory.forEach((item) => { historyObj[item.id] = item; });
+                historyRef.set(historyObj);
+            } catch(e) {}
             updateKundliHistoryDisplay();
         }
 
@@ -3102,10 +3192,19 @@
         function clearKundliHistory() {
             if (confirm('क्या आप सच में हिस्ट्री साफ़ करना चाहते हैं?')) {
                 kundliHistory = [];
-                const userId = localStorage.getItem('userId') || generateUserId();
-                database.ref('users/' + userId + '/kundliHistory').remove();
-                database.ref('users/' + userId + '/reports').remove();
+                // localStorage clear
+                try { localStorage.removeItem('bd_hist'); } catch(e) {}
+                try { localStorage.removeItem('kundliHistoryData'); } catch(e) {}
+                // Firebase clear
+                try {
+                    const userId = localStorage.getItem('userId') || generateUserId();
+                    database.ref('users/' + userId + '/kundliHistory').remove();
+                    database.ref('users/' + userId + '/reports').remove();
+                } catch(e) {}
+                // UI update
                 updateKundliHistoryDisplay();
+                renderHistoryPage();
+                alert('✅ हिस्ट्री साफ़ हो गई!');
             }
         }
 
@@ -3456,10 +3555,11 @@
                 matching: { title: '💕 कुंडली मिलान', body: '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;"><div style="background:rgba(255,215,0,0.1);padding:14px;border-radius:12px;"><h4 style="color:#ffd700;margin-bottom:8px;">👰 वधू</h4><input id="mBride" placeholder="नाम" style="width:100%;padding:8px;background:rgba(255,255,255,0.1);border:1px solid #ffd700;border-radius:8px;color:#fff;margin-bottom:8px;box-sizing:border-box;"><select id="mBrideR" style="width:100%;padding:8px;background:#1a1a3a;border:1px solid #ffd700;border-radius:8px;color:#fff;box-sizing:border-box;"><option value="">राशि</option>' + rashiList.map(function(r){return '<option>'+r+'</option>';}).join('') + '</select></div><div style="background:rgba(255,215,0,0.1);padding:14px;border-radius:12px;"><h4 style="color:#ffd700;margin-bottom:8px;">🤵 वर</h4><input id="mGroom" placeholder="नाम" style="width:100%;padding:8px;background:rgba(255,255,255,0.1);border:1px solid #ffd700;border-radius:8px;color:#fff;margin-bottom:8px;box-sizing:border-box;"><select id="mGroomR" style="width:100%;padding:8px;background:#1a1a3a;border:1px solid #ffd700;border-radius:8px;color:#fff;box-sizing:border-box;"><option value="">राशि</option>' + rashiList.map(function(r){return '<option>'+r+'</option>';}).join('') + '</select></div></div><button onclick="doKundliMatch()" style="width:100%;padding:13px;background:linear-gradient(135deg,#ffd700,#ff4500);border:none;border-radius:25px;color:#0a0a1a;font-weight:700;cursor:pointer;">💕 मिलान करें</button><div id="matchResult" style="display:none;margin-top:15px;background:rgba(255,215,0,0.1);border:1px solid #ffd700;border-radius:15px;padding:18px;"></div>' },
                 gemstones:{ title: '💎 रत्न सुझाव', body: [['मेष','मूंगा','मंगलवार'],['वृष','हीरा/ओपल','शुक्रवार'],['मिथुन','पन्ना','बुधवार'],['कर्क','मोती','सोमवार'],['सिंह','माणिक्य','रविवार'],['कन्या','पन्ना','बुधवार'],['तुला','हीरा','शुक्रवार'],['वृश्चिक','मूंगा','मंगलवार'],['धनु','पुखराज','गुरुवार'],['मकर','नीलम','शनिवार'],['कुंभ','नीलम','शनिवार'],['मीन','पुखराज','गुरुवार']].map(function(g){return '<div style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:12px;margin-bottom:8px;"><h4 style="color:#ffd700;">'+g[0]+' — 💎 '+g[1]+'</h4><p style="color:#ccc;font-size:0.9em;">धारण दिन: '+g[2]+'</p></div>';}).join('') },
                 remedies: { title: '🕉️ ग्रह उपाय', body: [['☀️ सूर्य','रविवार — गुड़-गेहूं दान, जल अर्घ्य, आदित्य हृदय स्तोत्र'],['🌙 चंद्र','सोमवार व्रत — सफेद वस्तु दान, ॐ सोम सोमाय नमः'],['🔴 मंगल','मंगलवार व्रत — लाल मसूर दान, हनुमान चालीसा'],['💚 बुध','बुधवार — हरी वस्तु दान, विष्णु सहस्रनाम'],['🌟 गुरु','गुरुवार — पीले वस्त्र, केले दान, ॐ बृं बृहस्पतये नमः'],['⚪ शुक्र','शुक्रवार — सफेद वस्तु दान, लक्ष्मी पूजन'],['🔵 शनि','शनिवार — काले तिल-तेल दान, शनि चालीसा']].map(function(r){return '<div style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:12px;margin-bottom:8px;"><h4 style="color:#ffd700;">'+r[0]+'</h4><p style="color:#ccc;font-size:0.9em;line-height:1.7;">'+r[1]+'</p></div>';}).join('') },
-                about:    { title: 'ℹ️ हमारे बारे में', body: '<div style="text-align:center;margin-bottom:18px;"><div style="font-size:3em;">🔮</div><h2 style="color:#ffd700;">Bhavishya Dekho</h2><p style="color:#ccc;">वैदिक ज्योतिष का पूर्ण प्लेटफॉर्म</p></div><div style="background:rgba(255,215,0,0.08);border-radius:12px;padding:16px;margin-bottom:14px;"><p style="color:#ddd;line-height:1.8;">10+ वर्षों का अनुभव। 1 लाख+ संतुष्ट ग्राहक। वैदिक ज्योतिष की परंपराओं को आधुनिक तकनीक से जोड़कर सटीक भविष्यवाणी।</p></div>' },
+                about:    { title: 'ℹ️ हमारे बारे में', body: '<div style="text-align:center;margin-bottom:18px;"><div style="font-size:3em;">🔮</div><h2 style="color:#ffd700;">Bhavishya Dekho</h2><p style="color:#ccc;">वैदिक ज्योतिष का सटीक संगम</p></div><div style="background:rgba(255,215,0,0.08);border-radius:12px;padding:16px;margin-bottom:10px;"><p style="color:#ddd;line-height:1.8;">यह website एक astrology-based platform है, जहाँ user अपनी basic जानकारी भरकर अपना भविष्य देख सकते हैं। हमारा उद्देश्य users को एक simple और easy way में personalized भविष्य से जुड़ी जानकारी देना है।</p></div><div style="background:rgba(255,215,0,0.08);border-radius:12px;padding:16px;"><p style="color:#ddd;line-height:1.8;">यह platform एक student द्वारा बनाया गया है। यहाँ दी गई सभी predictions केवल calculation और logic के आधार पर बनाई जाती हैं और 100% सटीक होने का दावा नहीं करतीं।</p></div>' },
                 contact:  { title: '📞 संपर्क करें', body: '<div style="display:grid;gap:12px;"><div style="background:rgba(255,215,0,0.1);border-radius:12px;padding:16px;"><b style="color:#ffd700;">WhatsApp:</b> <span style="color:#ccc;">+91 9876543210</span></div><div style="background:rgba(255,215,0,0.1);border-radius:12px;padding:16px;"><b style="color:#ffd700;">Email:</b> <span style="color:#ccc;">support@bhavishyadekho.online</span></div></div>' },
-                privacy:  { title: '🔒 गोपनीयता नीति', body: '<div style="background:rgba(255,215,0,0.08);border-radius:12px;padding:16px;color:#ddd;line-height:1.8;"><p>आपकी जानकारी पूर्णतः एन्क्रिप्टेड है। हम किसी को डेटा नहीं बेचते। सुरक्षित payment gateway।</p></div>' },
-                terms:    { title: '📜 नियम और शर्तें', body: '<div style="background:rgba(255,215,0,0.08);border-radius:12px;padding:16px;color:#ddd;line-height:1.8;"><p>सभी भविष्यवाणियां मार्गदर्शन हेतु हैं। भुगतान राशि वापस नहीं होगी। 18 वर्ष+ के लिए।</p></div>' }
+                privacy:  { title: '🔒 गोपनीयता नीति', body: '<div style="background:rgba(255,215,0,0.08);border-radius:12px;padding:16px;color:#ddd;line-height:1.8;"><h4 style="color:#ffd700;margin-bottom:8px;">Data Collection</h4><p style="margin-bottom:10px;">हम आपकी basic जानकारी जैसे नाम, जन्म तिथि, समय और स्थान collect करते हैं ताकि आपको personalized prediction दी जा सके।</p><h4 style="color:#ffd700;margin-bottom:8px;">Data Usage</h4><p style="margin-bottom:10px;">आपकी जानकारी केवल prediction generate करने के लिए उपयोग की जाती है।</p><h4 style="color:#ffd700;margin-bottom:8px;">Data Storage</h4><p style="margin-bottom:10px;">आपका data secure Firebase backend पर store किया जाता है।</p><h4 style="color:#ffd700;margin-bottom:8px;">Third-Party Sharing</h4><p style="margin-bottom:10px;">हम आपकी जानकारी किसी भी third-party के साथ share नहीं करते।</p><h4 style="color:#ffd700;margin-bottom:8px;">Payment Security</h4><p>सभी payments पूरी तरह सुरक्षित payment gateway के माध्यम से किए जाते हैं।</p></div>' },
+                terms:    { title: '📜 नियम और शर्तें', body: '<div style="background:rgba(255,215,0,0.08);border-radius:12px;padding:16px;color:#ddd;line-height:1.8;"><ul style="list-style:none;padding:0;"><li style="padding:6px 0;border-bottom:1px solid rgba(255,215,0,0.15);">✦ यह service केवल digital report के रूप में प्रदान की जाती है</li><li style="padding:6px 0;border-bottom:1px solid rgba(255,215,0,0.15);">✦ सभी payments एक बार के होते हैं</li><li style="padding:6px 0;border-bottom:1px solid rgba(255,215,0,0.15);">✦ Report generate होने के बाद refund नहीं होगा</li><li style="padding:6px 0;border-bottom:1px solid rgba(255,215,0,0.15);">✦ User को अपनी सही जानकारी भरनी जरूरी है</li><li style="padding:6px 0;">✦ हम किसी भी गलत उपयोग के लिए जिम्मेदार नहीं होंगे</li></ul></div>' },
+                disclaimer: { title: '⚠️ Disclaimer', body: '<div style="background:rgba(255,100,0,0.08);border:1px solid rgba(255,100,0,0.3);border-radius:12px;padding:16px;color:#ddd;line-height:1.8;"><p style="margin-bottom:10px;">यह website केवल मनोरंजन और सामान्य मार्गदर्शन के उद्देश्य से बनाई गई है।</p><p style="margin-bottom:10px;">यहाँ दी गई भविष्यवाणियाँ logic और calculation पर आधारित हैं और 100% सटीक होने की गारंटी नहीं देतीं।</p><p>किसी भी महत्वपूर्ण निर्णय के लिए केवल इस prediction पर निर्भर न रहें।</p></div>' }
             };
 
             if (pageContent[page]) {
@@ -3579,18 +3679,18 @@
         };
 
         const rashiMapData = [
-            { rashi: 'aries', akshar: ['च', 'ला'] },
-            { rashi: 'taurus', akshar: ['ई', 'ऊ', 'ए', 'ओ', 'व'] },
-            { rashi: 'gemini', akshar: ['क', 'घ', 'छ', 'ह'] },
-            { rashi: 'cancer', akshar: ['ह', 'ड'] },
-            { rashi: 'leo', akshar: ['म', 'ट'] },
-            { rashi: 'virgo', akshar: ['ट', 'प', 'ष', 'ण', 'ठ'] },
-            { rashi: 'libra', akshar: ['र', 'त'] },
-            { rashi: 'scorpio', akshar: ['त', 'न', 'य'] },
-            { rashi: 'sagittarius', akshar: ['य', 'भ', 'ध', 'फ', 'ढ'] },
-            { rashi: 'capricorn', akshar: ['भ', 'ज', 'ख', 'ग'] },
-            { rashi: 'aquarius', akshar: ['ग', 'स', 'द'] },
-            { rashi: 'pisces', akshar: ['द', 'थ', 'झ', 'ञ', 'च'] }
+            { rashi: 'aries',       akshar: ['अ','आ','च','चू','चे','चा','ची','ला','ली','लू','ले','लो'] },
+            { rashi: 'taurus',      akshar: ['ई','ऊ','ए','ओ','वा','वी','वू','वे','वो','व'] },
+            { rashi: 'gemini',      akshar: ['क','छ','घ','ही','हू','हे','हो','डा','डी','डु','डे','डो','ड'] },
+            { rashi: 'cancer',      akshar: ['ही','हू','हे','हो','डा','डी','डू','डे','डो','ह'] },
+            { rashi: 'leo',         akshar: ['म','मे','मी','मो','टा','टी','टू','टे','ट'] },
+            { rashi: 'virgo',       akshar: ['ढो','प','पी','पू','ष','ण','ठ','पे','पो'] },
+            { rashi: 'libra',       akshar: ['रे','रो','रा','ता','ती','तू','ते','र','त'] },
+            { rashi: 'scorpio',     akshar: ['लो','ने','नी','नू','या','यी','न','य'] },
+            { rashi: 'sagittarius', akshar: ['ये','यो','भा','भी','भू','धा','फा','ढा','भे','ध','फ','ढ'] },
+            { rashi: 'capricorn',   akshar: ['भो','जा','जी','खी','खू','खे','खो','गा','गी','ज','ख','ग'] },
+            { rashi: 'aquarius',    akshar: ['गू','गे','गो','सा','सी','सू','से','सो','दा','स','द'] },
+            { rashi: 'pisces',      akshar: ['दी','दू','थ','झ','ञ','दे','दो','चा','ची','था','थी'] }
         ];
 
         function getRashiNameFromCode(rashiCode) {
@@ -3739,11 +3839,31 @@
         // === HELPERS (defined after rashiMapData) ===
 
         function autoDetectRashiFromName(name) {
-            if (!name) return null;
-            var fc = convertEnglishToHindiFirstChar(name);
+            if (!name || !name.trim()) return null;
+            var n = name.trim();
+            // Try Hindi name directly (multi-char syllable match first)
             for (var i = 0; i < rashiMapData.length; i++) {
-                for (var j = 0; j < rashiMapData[i].akshar.length; j++) {
-                    if (fc === rashiMapData[i].akshar[j]) return rashiMapData[i].rashi;
+                var aksharList = rashiMapData[i].akshar;
+                // Sort by length desc to match longest syllable first
+                var sorted = aksharList.slice().sort(function(a,b){ return b.length - a.length; });
+                for (var j = 0; j < sorted.length; j++) {
+                    if (n.startsWith(sorted[j])) return rashiMapData[i].rashi;
+                }
+            }
+            // Fallback: English name → Hindi first char mapping
+            var fc = convertEnglishToHindiFirstChar(n);
+            if (fc && fc !== n.charAt(0)) {
+                for (var i2 = 0; i2 < rashiMapData.length; i2++) {
+                    for (var j2 = 0; j2 < rashiMapData[i2].akshar.length; j2++) {
+                        if (fc === rashiMapData[i2].akshar[j2]) return rashiMapData[i2].rashi;
+                    }
+                }
+            }
+            // Single char fallback
+            var fc2 = n.charAt(0);
+            for (var i3 = 0; i3 < rashiMapData.length; i3++) {
+                for (var j3 = 0; j3 < rashiMapData[i3].akshar.length; j3++) {
+                    if (fc2 === rashiMapData[i3].akshar[j3]) return rashiMapData[i3].rashi;
                 }
             }
             return null;
@@ -3774,7 +3894,10 @@
                 rEl.placeholder = r ? ('ऑटो: ' + getRashiNameFromCode(r) + ' (रिपोर्ट में दिखेगी)') : 'ऑटो-डिटेक्ट (नाम से)';
                 rEl.value = ''; // field always empty, result page mein dikhegi
             }
-            if (iEl) iEl.innerHTML = r ? '<i class="fas fa-check-circle" style="color:#4CAF50"></i> राशि पहचानी: <strong>' + getRashiNameFromCode(r) + '</strong> — रिपोर्ट में दिखेगी' : 'नाम लिखें — राशि ऑटो पहचानी जाएगी';
+            // Show only "Auto Detect" - rashi naam result page mein dikhega
+            var premRashiEl2 = document.getElementById('premiumKundliRashiInfo');
+            if (premRashiEl2) premRashiEl2.style.display = r ? 'flex' : 'none';
+            if (iEl) iEl.innerHTML = 'Auto Detect — राशि रिपोर्ट में दिखेगी';
             var nak = getNakshatra(
                 (document.getElementById('kundliDay')||{}).value,
                 (document.getElementById('kundliMonth')||{}).value,
@@ -3799,7 +3922,10 @@
                 rEl.placeholder = r ? ('ऑटो: ' + getRashiNameFromCode(r) + ' (रिपोर्ट में दिखेगी)') : 'ऑटो-डिटेक्ट (नाम से)';
                 rEl.value = '';
             }
-            if (iEl) iEl.innerHTML = r ? '<i class="fas fa-check-circle" style="color:#4CAF50"></i> राशि पहचानी: <strong>' + getRashiNameFromCode(r) + '</strong> — रिपोर्ट में दिखेगी' : 'नाम लिखें — राशि ऑटो पहचानी जाएगी';
+            // Show only "Auto Detect" - rashi naam result page mein dikhega
+            var premRashiEl2 = document.getElementById('premiumKundliRashiInfo');
+            if (premRashiEl2) premRashiEl2.style.display = r ? 'flex' : 'none';
+            if (iEl) iEl.innerHTML = 'Auto Detect — राशि रिपोर्ट में दिखेगी';
             var nak = getNakshatra(
                 (document.getElementById('premiumKundliDay')||{}).value,
                 (document.getElementById('premiumKundliMonth')||{}).value,
@@ -3856,35 +3982,41 @@
 
 
         function detectLoveYourRashi() {
-            if (!rashiPurchase.active) return;
+            if (!rashiPurchase.active || rashiPurchase.expiry <= Date.now()) return;
             var name = (document.getElementById('loveYourName') || {}).value || '';
-            var r = autoDetectFromName(name.trim());
+            var r = autoDetectRashiFromName(name.trim()) || autoDetectFromName(name.trim());
+            var el = document.getElementById('loveYourRashiInfo');
             if (r) {
                 document.getElementById('loveYourZodiac').value = r;
-                var el = document.getElementById('loveYourRashiInfo');
-                if (el) el.innerHTML = '&#11088; <strong>' + getRashiNameFromCode(r) + '</strong>';
+                if (el) el.innerHTML = '✅ <strong style="color:#ffd700;">' + getRashiNameFromCode(r) + '</strong>';
+            } else {
+                if (el) el.innerHTML = '';
             }
         }
 
         function detectLovePartnerRashi() {
-            if (!rashiPurchase.active) return;
+            if (!rashiPurchase.active || rashiPurchase.expiry <= Date.now()) return;
             var name = (document.getElementById('lovePartnerName') || {}).value || '';
-            var r = autoDetectFromName(name.trim());
+            var r = autoDetectRashiFromName(name.trim()) || autoDetectFromName(name.trim());
+            var el = document.getElementById('lovePartnerRashiInfo');
             if (r) {
                 document.getElementById('lovePartnerZodiac').value = r;
-                var el = document.getElementById('lovePartnerRashiInfo');
-                if (el) el.innerHTML = '&#11088; <strong>' + getRashiNameFromCode(r) + '</strong>';
+                if (el) el.innerHTML = '✅ <strong style="color:#ffd700;">' + getRashiNameFromCode(r) + '</strong>';
+            } else {
+                if (el) el.innerHTML = '';
             }
         }
 
         function detectHoroscopeRashi() {
-            if (!rashiPurchase.active) return;
+            if (!rashiPurchase.active || rashiPurchase.expiry <= Date.now()) return;
             var name = (document.getElementById('horoscopeName') || {}).value || '';
-            var r = autoDetectFromName(name.trim());
+            var r = autoDetectRashiFromName(name.trim()) || autoDetectFromName(name.trim());
+            var el = document.getElementById('horoscopeRashiInfo');
             if (r) {
                 document.getElementById('horoscopeZodiac').value = r;
-                var el = document.getElementById('horoscopeRashiInfo');
-                if (el) el.innerHTML = '&#11088; <strong>' + getRashiNameFromCode(r) + '</strong>';
+                if (el) el.innerHTML = '✅ <strong style="color:#ffd700;">' + getRashiNameFromCode(r) + '</strong>';
+            } else {
+                if (el) el.innerHTML = '';
             }
         }
 
@@ -4908,18 +5040,13 @@
             var rashi = window._predRashi || '';
             var date = new Date().toLocaleDateString('hi-IN');
             if (!pred && !name) { alert('पहले भविष्य देखें'); return; }
-            var lines = pred.split('।');
-            var line1 = (lines[0] || pred.substring(0,100)).trim();
-            var line2 = (lines[1] || pred.substring(100,200)).trim();
-            var msg = '🔮 *Bhavishya Dekho* - आपका भविष्यफल\n\n'
-                + '👤 नाम: ' + name + '\n'
-                + '📅 तिथि: ' + date + '\n'
-                + (rashi ? '⭐ राशि: ' + rashi + '\n' : '')
-                + '✨ भविष्य: ' + line1 + (line1.endsWith('।') ? '' : '।') + '\n'
-                + '💫 ' + line2 + (line2 ? (line2.endsWith('।') ? '' : '।') : '') + '\n\n'
-                + '⭐ *पूरा भविष्य मुफ्त में देखें:*\n'
-                + '👉 bhavishyadekho.online\n\n'
-                + '🙏 शेयर करें और दूसरों को भी उनका भविष्य जानने का मौका दें!';
+            var msg = '🔮 *Bhavishya Dekho* - आपका भविष्यफल'
+                + '\n\n👤 नाम: ' + name
+                + '\n📅 तिथि: ' + date
+                + (rashi ? '\n⭐ राशि: ' + rashi : '')
+                + '\n\n✨ *भविष्यफल:*\n' + pred
+                + '\n\n👉 bhavishyadekho.online'
+                + '\n🙏 शेयर करें और दूसरों को भी उनका भविष्य जानने का मौका दें!';
             window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
         }
         function shareOnFacebook() {
@@ -5206,19 +5333,30 @@
             var splash = document.getElementById('splashScreen');
             var bar = document.getElementById('splashBar');
             var msg = document.getElementById('splashMsg');
-            if (splash && !sessionStorage.getItem('splashShown')) {
+            var today = new Date().toDateString();
+            var splashDone = localStorage.getItem('bd_splash') === today;
+            if (splash && !splashDone) {
+                // Show splash
                 splash.style.display = 'flex';
+                splash.style.opacity = '1';
                 document.body.style.overflow = 'hidden';
-                // Start bar fill
-                setTimeout(function(){ if(bar) bar.style.width = '100%'; }, 100);
-                // Messages
+                // Fill loading bar over 3 seconds
+                setTimeout(function(){ if(bar) bar.style.width = '100%'; }, 50);
+                // Animated status messages
                 setTimeout(function(){ if(msg) msg.textContent = '⭐ ग्रहों की स्थिति जाँची जा रही है...'; }, 1000);
-                setTimeout(function(){ if(msg) msg.textContent = '🌙 आपकी राशि पहचानी जा रही है...'; }, 2000);
+                setTimeout(function(){ if(msg) msg.textContent = '🌙 आपकी राशि पहचानी जा रही है...'; }, 2200);
+                // After 3 seconds: fade out
                 setTimeout(function(){
-                    splash.classList.add('hide');
+                    splash.style.transition = 'opacity 0.7s ease';
+                    splash.style.opacity = '0';
                     document.body.style.overflow = '';
-                    sessionStorage.setItem('splashShown', '1');
-                    setTimeout(function(){ if(splash) splash.style.display = 'none'; }, 1000);
+                    localStorage.setItem('bd_splash', today);
+                    // After fade: completely hide
+                    setTimeout(function(){
+                        splash.style.display = 'none';
+                        splash.style.opacity = '1';
+                        splash.style.transition = '';
+                    }, 750);
                 }, 3000);
             } else {
                 if (splash) splash.style.display = 'none';
@@ -5306,6 +5444,36 @@
                 if (curBonus < bonus) localStorage.setItem('bonus_' + f, bonus);
             });
             updateAllLimitBars();
+        }
+
+    
+        // FREE FORM: naam type karne par rashi auto-detect (₹5 package active hone par)
+        function onFreeNameType(nameVal) {
+            var name = (nameVal || '').trim();
+            if (!name) return;
+            // Sirf tab auto-detect karo jab ₹5 package active ho
+            if (!rashiPurchase || !rashiPurchase.active || rashiPurchase.expiry <= Date.now()) return;
+            var detectedCode = autoDetectRashiFromName(name);
+            if (!detectedCode) detectedCode = autoDetectFromName(name);
+            if (detectedCode) {
+                var zEl = document.getElementById('zodiac');
+                if (zEl) { zEl.value = detectedCode; zEl.disabled = true; zEl.style.opacity = '0.7'; }
+                rashiPurchase.rashi = detectedCode;
+                saveRashiPurchase();
+                // Show active status, hide buy hint
+                var rashiEl = document.getElementById('rashiInfo');
+                if (rashiEl) rashiEl.style.display = 'block';
+                var buyHint = document.getElementById('rashiBuyHint');
+                if (buyHint) buyHint.style.display = 'none';
+                var msgEl = document.getElementById('rashiStatusMsg');
+                if (msgEl) {
+                    var rem = rashiPurchase.expiry - Date.now();
+                    var h = Math.floor(rem / 3600000);
+                    var m2 = Math.floor((rem % 3600000) / 60000);
+                    var s2 = Math.floor((rem % 60000) / 1000);
+                    msgEl.innerHTML = '✅ Auto-detect: <strong style="color:#ffd700;">' + getRashiNameFromCode(detectedCode) + '</strong> &nbsp;|&nbsp; ⏰ ' + h + ':' + String(m2).padStart(2, '0') + ':' + String(s2).padStart(2, '0');
+                }
+            }
         }
 
     </script>
