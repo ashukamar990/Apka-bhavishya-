@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔮 Bhavishya Dekho - Vedic Astrology</title>
-    !-- Monetag Verification Code -->
-    !-- Monetag Verification Code -->
-    !-- Monetag Verification Code -->
-    <meta name="monetag" content="50beea4e0f2a186e497fe71ffde096da"> 
+   <meta name="monetag" content="50beea4e0f2a186e497fe71ffde096da"> 
     <meta name="description" content="Bhavishya Dekho - वैदिक ज्योतिष का सटीक संगम। मुफ्त भविष्यफल, कुंडली, राशिफल और ज्योतिष सेवाएं।">
     <meta name="keywords" content="Bhavishya Dekho, vedic astrology, kundli, horoscope, rashifal, jyotish">
     <meta property="og:title" content="🔮 Bhavishya Dekho - Vedic Astrology">
@@ -3627,45 +3624,47 @@
         }
 
         function showKundliSection() {
-            // Ensure all other pages hidden
+            // Ensure mainContent is visible (could be hidden if result page was showing)
             var mc = document.getElementById('mainContent');
             if (mc) mc.style.display = 'block';
-            ['freePredResultPage','kundliReportPage','historyPage'].forEach(function(id){
-                var el = document.getElementById(id); if(el) el.style.display = 'none';
-            });
-            // Force show kundli section (classList + inline style for hosting compatibility)
-            var ks = document.getElementById('kundliSection');
-            if (ks) { ks.classList.add('active'); ks.style.display = 'block'; }
-            // Hide others
-            ['loveCalculatorSection','horoscopeSection','premiumKundliSection','premiumPageSection'].forEach(function(id){
-                var el = document.getElementById(id);
-                if (el) { el.classList.remove('active'); el.style.display = ''; }
-            });
+            var rp = document.getElementById('freePredResultPage');
+            if (rp) rp.style.display = 'none';
+            var kp = document.getElementById('kundliReportPage');
+            if (kp) kp.style.display = 'none';
+            var hp = document.getElementById('historyPage');
+            if (hp) hp.style.display = 'none';
+            // Show kundli section
+            var _ks = document.getElementById('kundliSection');
+            if (_ks) { _ks.classList.add('active'); _ks.style.display = 'block'; }
+            document.getElementById('loveCalculatorSection').classList.remove('active');
+            document.getElementById('horoscopeSection').classList.remove('active');
+            document.getElementById('premiumKundliSection').classList.remove('active');
+            document.getElementById('premiumPageSection').classList.remove('active');
             setTimeout(function() {
-                var el = document.getElementById('kundliSection');
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 150);
+                document.getElementById('kundliSection').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
         }
 
         function showPremiumKundliSection() {
-            // Ensure all other pages hidden
+            // Ensure mainContent is visible
             var mc = document.getElementById('mainContent');
             if (mc) mc.style.display = 'block';
-            ['freePredResultPage','kundliReportPage','historyPage'].forEach(function(id){
-                var el = document.getElementById(id); if(el) el.style.display = 'none';
-            });
-            // Force show premium kundli section
-            var pks = document.getElementById('premiumKundliSection');
-            if (pks) { pks.classList.add('active'); pks.style.display = 'block'; }
-            // Hide others
-            ['loveCalculatorSection','horoscopeSection','kundliSection','premiumPageSection'].forEach(function(id){
-                var el = document.getElementById(id);
-                if (el) { el.classList.remove('active'); el.style.display = ''; }
-            });
+            var rp = document.getElementById('freePredResultPage');
+            if (rp) rp.style.display = 'none';
+            var kp = document.getElementById('kundliReportPage');
+            if (kp) kp.style.display = 'none';
+            var hp = document.getElementById('historyPage');
+            if (hp) hp.style.display = 'none';
+            // Show premium kundli section
+            var _pks = document.getElementById('premiumKundliSection');
+            if (_pks) { _pks.classList.add('active'); _pks.style.display = 'block'; }
+            document.getElementById('loveCalculatorSection').classList.remove('active');
+            document.getElementById('horoscopeSection').classList.remove('active');
+            document.getElementById('kundliSection').classList.remove('active');
+            document.getElementById('premiumPageSection').classList.remove('active');
             setTimeout(function() {
-                var el = document.getElementById('premiumKundliSection');
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 150);
+                document.getElementById('premiumKundliSection').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
         }
 
         function showPremiumPayment(amount, plan) {
@@ -4987,7 +4986,15 @@
                 overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.93);z-index:30000;display:flex;align-items:center;justify-content:center;';
                 document.body.appendChild(overlay);
             }
-            overlay.innerHTML = '<div style="background:linear-gradient(135deg,#0a0a1a,#1a1a3a);border:2px solid #ffd700;border-radius:22px;padding:25px;max-width:380px;width:92%;text-align:center;">'                + '<div style="font-size:2.5em;margin-bottom:10px;">&#128274;</div>'                + '<h3 style="color:#ffd700;margin-bottom:8px;">' + label + ' की सीमा समाप्त!</h3>'                + '<p style="color:#ccc;font-size:0.9em;margin-bottom:6px;">आपने ' + max + ' में से ' + used + ' बार उपयोग किया</p>'                + '<p style="color:#aaa;font-size:0.85em;margin-bottom:16px;line-height:1.6;">नीचे से 1 और मुफ्त पाएं</p>'                + '<button onclick="watchAdForBonus(\'' + feat + '\')" style="width:100%;padding:12px;background:linear-gradient(135deg,#e91e63,#c2185b);border:none;border-radius:18px;color:#fff;font-weight:700;cursor:pointer;margin-bottom:9px;font-size:0.95em;">&#127916; Ad देखें — 1 और मुफ्त पाएं</button>'                + '<button onclick="doShareForBonus(\'' + feat + '\');document.getElementById(\'freeLimitOverlay\').style.display=\'none\';" style="width:100%;padding:12px;background:linear-gradient(135deg,#25D366,#128C7E);border:none;border-radius:18px;color:#fff;font-weight:700;cursor:pointer;margin-bottom:9px;">&#128257; Share करें — 1 और मुफ्त</button>'                + '<button onclick="document.getElementById(\'freeLimitOverlay\').style.display=\'none\';showPage(\'premium\');" style="width:100%;padding:12px;background:linear-gradient(135deg,#ffd700,#ff4500);border:none;border-radius:18px;color:#0a0a1a;font-weight:700;cursor:pointer;margin-bottom:9px;">&#128081; Premium खरीदें</button>'                + '<button onclick="document.getElementById(\'freeLimitOverlay\').style.display=\'none\';" style="width:100%;padding:9px;background:none;border:1px solid #555;border-radius:18px;color:#aaa;cursor:pointer;font-size:0.88em;">बाद में</button>'                + '</div>';
+            overlay.innerHTML = '<div style="background:linear-gradient(135deg,#0a0a1a,#1a1a3a);border:2px solid #ffd700;border-radius:22px;padding:25px;max-width:380px;width:92%;text-align:center;">'
+                + '<div style="font-size:2.5em;margin-bottom:10px;">&#128274;</div>'
+                + '<h3 style="color:#ffd700;margin-bottom:8px;">' + label + ' की सीमा समाप्त!</h3>'
+                + '<p style="color:#ccc;font-size:0.9em;margin-bottom:6px;">आपने ' + max + ' में से ' + used + ' बार उपयोग किया</p>'
+                + '<p style="color:#aaa;font-size:0.85em;margin-bottom:16px;line-height:1.6;">Share करें और 1 और मुफ्त पाएं</p>'
+                + '<button onclick="watchAdForBonus(\'' + feat + '\')" style="width:100%;padding:12px;background:linear-gradient(135deg,#e91e63,#c2185b);border:none;border-radius:18px;color:#fff;font-weight:700;cursor:pointer;margin-bottom:9px;">&#127916; Ad देखें — 1 और मुफ्त पाएं</button>'                + '<button onclick="doShareForBonus(\'' + feat + '\');document.getElementById(\'freeLimitOverlay\').style.display=\'none\';" style="width:100%;padding:12px;background:linear-gradient(135deg,#25D366,#128C7E);border:none;border-radius:18px;color:#fff;font-weight:700;cursor:pointer;margin-bottom:9px;">&#128257; Share करें — 1 और मुफ्त</button>'
+                + '<button onclick="document.getElementById(\'freeLimitOverlay\').style.display=\'none\';showPage(\'premium\');" style="width:100%;padding:12px;background:linear-gradient(135deg,#ffd700,#ff4500);border:none;border-radius:18px;color:#0a0a1a;font-weight:700;cursor:pointer;margin-bottom:9px;">&#128081; Premium खरीदें</button>'
+                + '<button onclick="document.getElementById(\'freeLimitOverlay\').style.display=\'none\';" style="width:100%;padding:9px;background:none;border:1px solid #555;border-radius:18px;color:#aaa;cursor:pointer;font-size:0.88em;">बाद में</button>'
+                + '</div>';
             overlay.style.display = 'flex';
         }
         function doShareForBonus(feat) {
@@ -5221,24 +5228,167 @@
         function downloadKundliPDF() {
             var data = window.currentKundliData;
             if (!data) { alert('कोई रिपोर्ट नहीं'); return; }
-            // Get the actual result HTML shown on screen
-            var resultEl = document.getElementById('kundliReportBody') || document.getElementById('kundliPremiumResult');
-            var resultHTML = resultEl ? resultEl.innerHTML : '';
-            var name = data.name || 'Report';
-            var date = new Date().toLocaleDateString('hi-IN');
-            // Build PDF HTML from actual result content
-            var html = '<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8">'                + '<title>Bhavishya Dekho - ' + name + '</title>'                + '<style>'                + 'body{font-family:Arial,sans-serif;padding:20px;max-width:800px;margin:auto;color:#1a1a1a;background:#fff;}'                + 'h1,h2,h3{color:#8B0000;}'                + 'h1{text-align:center;border-bottom:3px solid #DAA520;padding-bottom:10px;}'                + 'table{width:100%;border-collapse:collapse;margin:8px 0;}'                + 'td,th{padding:7px 10px;border:1px solid #ccc;font-size:0.9em;}'                + 'td:first-child{background:#fff8e1;font-weight:bold;}'                + 'th{background:#8B0000;color:#fff;}'                + '.subtitle{text-align:center;color:#666;margin-bottom:15px;}'                + 'footer{text-align:center;margin-top:20px;color:#666;border-top:2px solid #DAA520;padding-top:10px;font-size:0.85em;}'                + '/* Reset dark theme styles from result */'                + '*{color:inherit!important;background:transparent!important;border-color:#ccc!important;}'                + 'strong{color:#8B0000!important;}'                + 'h1,h2,h3{color:#8B0000!important;}'                + '.kundli-download-btn,.kundli-share-section,.kundli-share-buttons{display:none!important;}'                + '</style></head><body>'                + '<h1>🔮 Bhavishya Dekho — कुंडली रिपोर्ट</h1>'                + '<p class="subtitle"><strong>' + name + '</strong> | ' + date + ' | bhavishyadekho.online</p>'                + resultHTML                + '<footer>🔮 Bhavishya Dekho | bhavishyadekho.online | ' + date + '</footer>'                + '</body></html>';
-            // Download as file directly (no print dialog)
-            var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = 'BhavishyaDekho_' + name.replace(/\s+/g,'_') + '_' + new Date().toISOString().slice(0,10) + '.html';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+            var isPrem = data.isPremium;
+            var planets = [
+                ['सूर्य','मेष','प्रथम'],['चंद्र','वृष','द्वितीय'],['मंगल','मिथुन','तृतीय'],
+                ['बुध','कर्क','चतुर्थ'],['गुरु','सिंह','पंचम'],['शुक्र','कन्या','षष्ठ'],
+                ['शनि','तुला','सप्तम'],['राहु','वृश्चिक','अष्टम'],['केतु','धनु','नवम']
+            ];
+            var bhav = ['प्रथम भाव: व्यक्तित्व और स्वास्थ्य','द्वितीय भाव: धन और परिवार',
+                'तृतीय भाव: पराक्रम और भाई-बहन','चतुर्थ भाव: माता और सुख',
+                'पंचम भाव: संतान और बुद्धि','षष्ठ भाव: रोग और शत्रु',
+                'सप्तम भाव: विवाह और साझेदारी','अष्टम भाव: आयु और गुप्त',
+                'नवम भाव: भाग्य और धर्म','दशम भाव: करियर और मान-सम्मान',
+                'एकादश भाव: लाभ और इच्छापूर्ति','द्वादश भाव: व्यय और मोक्ष'];
+            var html = '<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><title>Bhavishya Dekho Kundli Report</title>'
+                + '<style>body{font-family:Arial,sans-serif;padding:30px;max-width:800px;margin:auto;color:#1a1a1a;background:#fff}'
+                + 'h1{color:#8B0000;text-align:center;font-size:1.6em;border-bottom:3px solid #DAA520;padding-bottom:10px;margin-bottom:5px}'
+                + '.subtitle{text-align:center;color:#666;font-size:0.9em;margin-bottom:20px}'
+                + 'h2{color:#8B0000;border-bottom:2px solid #DAA520;margin-top:20px;padding-bottom:5px;font-size:1.1em}'
+                + 'table{width:100%;border-collapse:collapse;margin:10px 0}'
+                + 'td,th{padding:8px 12px;border:1px solid #ddd;font-size:0.9em}'
+                + 'td:first-child{background:#fff8e1;font-weight:bold;width:35%}'
+                + 'th{background:#8B0000;color:#fff;text-align:left}'
+                + '.pred{background:#fffde7;border:1px solid #DAA520;border-radius:6px;padding:14px;margin:8px 0;line-height:1.9;font-size:0.92em}'
+                + '.section{background:#fafafa;border-left:4px solid #DAA520;padding:12px;margin:10px 0;border-radius:4px}'
+                + '.badge{display:inline-block;background:#8B0000;color:#fff;padding:3px 10px;border-radius:15px;font-size:0.75em;margin-left:8px}'
+                + 'footer{text-align:center;margin-top:25px;color:#666;border-top:2px solid #DAA520;padding-top:12px;font-size:0.85em}'
+                + '.premium-only{background:#fff3e0;border:1px solid #ff9800;border-radius:6px;padding:12px;margin:8px 0}'
+                + '@media print{body{padding:15px}.no-print{display:none}}</style></head><body>'
+                + '<h1>🔮 BHAVISHYA DEKHO — ' + data.type.toUpperCase() + '</h1>'
+                + '<p class="subtitle">bhavishyadekho.online | ' + new Date().toLocaleDateString('hi-IN') + '</p>'
+                + '<h2>【 व्यक्तिगत जानकारी 】</h2>'
+                + '<table><tr><td>नाम</td><td>'+data.name+'</td></tr>'
+                + '<tr><td>लिंग</td><td>'+data.gender+'</td></tr>'
+                + '<tr><td>जन्म तिथि</td><td>'+data.day+'/'+data.month+'/'+data.year+'</td></tr>'
+                + '<tr><td>जन्म समय</td><td>'+(data.time||'ज्ञात नहीं')+'</td></tr>'
+                + '<tr><td>जन्म स्थान</td><td>'+data.place+'</td></tr>'
+                + '<tr><td>राशि</td><td><strong>'+data.rashi+'</strong></td></tr>'
+                + '<tr><td>नक्षत्र</td><td><strong>'+data.nakshatra+'</strong></td></tr></table>'
+                + '<h2>【 ग्रहों की स्थिति 】</h2>'
+                + '<table><tr><th>ग्रह</th><th>राशि</th><th>भाव</th></tr>'
+                + planets.map(function(p){return '<tr><td>'+p[0]+'</td><td>'+p[1]+'</td><td>'+p[2]+'</td></tr>';}).join('')
+                + '</table>'
+                + '<h2>【 12 भाव फल 】</h2>'
+                + '<table>'+bhav.map(function(b,i){var parts=b.split(':');return '<tr><td>'+(i+1)+'. '+parts[0]+'</td><td>'+(parts[1]||'')+'</td></tr>';}).join('')+'</table>'
+                + '<h2>【 मुख्य भविष्यवाणी 】</h2>'
+                + '<div class="pred">'+data.mainPred+'</div>'
+                + '<h2>【 करियर भविष्यवाणी 】</h2>'
+                + '<div class="section">आपकी कुंडली में दशम भाव में शुभ ग्रहों की स्थिति से करियर में उत्तम प्रगति के योग हैं। आने वाले समय में नए अवसर प्राप्त होंगे।</div>'
+                + '<h2>【 प्रेम और विवाह 】</h2>'
+                + '<div class="section">सप्तम भाव की स्थिति अनुकूल है। विवाह के शुभ योग बन रहे हैं। प्रेम जीवन में मधुरता आएगी।</div>'
+                + '<h2>【 धन और आय 】</h2>'
+                + '<div class="section">द्वितीय और एकादश भाव की स्थिति से धन लाभ के संकेत हैं। आय में वृद्धि की संभावना है।</div>'
+                + '<h2>【 स्वास्थ्य 】</h2>'
+                + '<div class="section">लग्न और षष्ठ भाव के अनुसार स्वास्थ्य सामान्यतः अच्छा रहेगा। नियमित व्यायाम और संतुलित आहार से और बेहतर होगा।</div>'
+                + '<h2>【 शुभ अंक, रंग, दिन, दिशा 】</h2>'
+                + '<table><tr><td>शुभ अंक</td><td>3, 7, 9</td></tr>'
+                + '<tr><td>शुभ रंग</td><td>पीला, सफेद, सुनहरा</td></tr>'
+                + '<tr><td>शुभ दिन</td><td>गुरुवार, सोमवार</td></tr>'
+                + '<tr><td>शुभ दिशा</td><td>उत्तर-पूर्व</td></tr></table>'
+                + (isPrem ? '<h2>【 रत्न सुझाव 】 <span class="badge">Premium</span></h2>'
+                    + '<div class="premium-only"><table>'
+                    + '<tr><td>मुख्य रत्न</td><td>पुखराज (Yellow Sapphire)</td></tr>'
+                    + '<tr><td>अन्य रत्न</td><td>मोती, मूंगा, पन्ना</td></tr>'
+                    + '<tr><td>धारण दिन</td><td>गुरुवार, प्रातःकाल</td></tr>'
+                    + '<tr><td>मंत्र</td><td>ॐ ग्रां ग्रीं ग्रौं सः गुरवे नमः</td></tr>'
+                    + '</table></div>'
+                    + '<h2>【 ग्रह उपाय 】 <span class="badge">Premium</span></h2>'
+                    + '<div class="premium-only"><table>'
+                    + '<tr><td>शनि</td><td>काले तिल का दान करें, हनुमान चालीसा पढ़ें</td></tr>'
+                    + '<tr><td>गुरु</td><td>केले के पेड़ की पूजा, पीला वस्त्र धारण</td></tr>'
+                    + '<tr><td>मंगल</td><td>मंगलवार व्रत, लाल चना दान</td></tr>'
+                    + '<tr><td>चंद्र</td><td>सोमवार उपवास, दूध का दान</td></tr>'
+                    + '<tr><td>बुध</td><td>हरी वस्तुएं दान, विष्णु सहस्रनाम पाठ</td></tr>'
+                    + '</table></div>'
+                    + '<h2>【 दशा विश्लेषण 】 <span class="badge">Premium</span></h2>'
+                    + '<div class="premium-only"><p><strong>वर्तमान महादशा:</strong> गुरु महादशा (2022–2038)</p>'
+                    + '<p><strong>अंतर्दशा:</strong> शनि अंतर्दशा — विशेष परिश्रम और धैर्य का समय</p>'
+                    + '<p><strong>अगले 5 साल:</strong> करियर में उन्नति, विवाह के योग, यात्रा के अवसर।</p></div>'
+                    : '')
+                + '<footer>🔮 Bhavishya Dekho | bhavishyadekho.online | ' + new Date().toLocaleDateString('hi-IN')
+                + '<br>⚠️ यह रिपोर्ट ज्योतिषीय मान्यताओं पर आधारित है। महत्वपूर्ण निर्णयों के लिए विशेषज्ञ से परामर्श लें।</footer>'
+                + '</body></html>';
+            var _blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+            var _url = URL.createObjectURL(_blob);
+            var _a = document.createElement('a');
+            _a.href = _url;
+            _a.download = 'BhavishyaDekho_' + (data.name||'Report').replace(/\s+/g,'_') + '_' + new Date().toISOString().slice(0,10) + '.html';
+            document.body.appendChild(_a);
+            _a.click();
+            document.body.removeChild(_a);
+            setTimeout(function(){ URL.revokeObjectURL(_url); }, 2000);
         }
+
+        // Back button prevention
+        history.pushState(null, '', location.href);
+        window.addEventListener('popstate', function() {
+            var pages = ['freePredResultPage','historyPage'];
+            pages.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el && el.style.display === 'block') {
+                    el.style.display = 'none';
+                    var mc = document.getElementById('mainContent');
+                    if (mc) mc.style.display = 'block';
+                    window.scrollTo(0,0);
+                }
+            });
+            history.pushState(null, '', location.href);
+        });
+
+        // DOMContentLoaded init
+        document.addEventListener('DOMContentLoaded', function() {
+            // ---- 3-Second Splash Screen ----
+            var splash = document.getElementById('splashScreen');
+            var bar = document.getElementById('splashBar');
+            var msg = document.getElementById('splashMsg');
+            var today = new Date().toDateString();
+            var splashDone = localStorage.getItem('bd_splash') === today;
+            if (splash && !splashDone) {
+                // Show splash
+                splash.style.display = 'flex';
+                splash.style.opacity = '1';
+                document.body.style.overflow = 'hidden';
+                // Fill loading bar over 3 seconds
+                setTimeout(function(){ if(bar) bar.style.width = '100%'; }, 50);
+                // Animated status messages
+                setTimeout(function(){ if(msg) msg.textContent = '⭐ ग्रहों की स्थिति जाँची जा रही है...'; }, 1000);
+                setTimeout(function(){ if(msg) msg.textContent = '🌙 आपकी राशि पहचानी जा रही है...'; }, 2200);
+                // After 3 seconds: fade out
+                setTimeout(function(){
+                    splash.style.transition = 'opacity 0.7s ease';
+                    splash.style.opacity = '0';
+                    document.body.style.overflow = '';
+                    localStorage.setItem('bd_splash', today);
+                    // After fade: completely hide
+                    setTimeout(function(){
+                        splash.style.display = 'none';
+                        splash.style.opacity = '1';
+                        splash.style.transition = '';
+                    }, 750);
+                }, 3000);
+            } else {
+                if (splash) splash.style.display = 'none';
+            }
+
+            createStars();
+            loadKundliHistory();
+            loadRashiPurchase();
+            checkPremiumStatus();
+            updateAllLimitBars();
+            updatePremiumUI();
+            var fb = parseInt(localStorage.getItem('freeBonus') || '0');
+            if (fb > 0) { /* bonus already set */ }
+        });
+
+
+
+        // ============================================================
+        // PER-FEATURE FREE LIMIT SYSTEM
+        // pred=bhavishya, love=love calc, horo=horoscope
+        // Base: 5 each. Premium: 99->10, 499->20, 999->30
+        // Share: +1 for that specific feature
+        // ============================================================
 
         function getMaxForFeature(feat) {
             // Check premium bonus
@@ -5336,45 +5486,35 @@
         }
 
     
-        // Watch Ad for bonus bhavishya
         function watchAdForBonus(feat) {
             feat = feat || 'pred';
             var labels = { pred: 'भविष्यफल', love: 'लव कैलकुलेटर', horo: 'दैनिक राशिफल' };
             var label = labels[feat] || 'सुविधा';
-            // Show ad watching simulation (5 seconds)
             var overlay = document.getElementById('freeLimitOverlay');
-            if (overlay) {
-                overlay.innerHTML = '<div style="background:linear-gradient(135deg,#0a0a1a,#1a1a3a);border:2px solid #e91e63;border-radius:22px;padding:25px;max-width:380px;width:92%;text-align:center;">'
-                    + '<div style="font-size:2.5em;margin-bottom:10px;">📺</div>'
-                    + '<h3 style="color:#e91e63;margin-bottom:8px;">Ad देख रहे हैं...</h3>'
-                    + '<p style="color:#ccc;font-size:0.9em;margin-bottom:16px;">कृपया प्रतीक्षा करें</p>'
-                    + '<div style="background:rgba(255,255,255,0.1);border-radius:10px;height:8px;overflow:hidden;margin-bottom:16px;">'
-                    + '<div id="adProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#e91e63,#ff4500);transition:width 5s linear;border-radius:10px;"></div>'
-                    + '</div>'
-                    + '<p id="adCountdown" style="color:#ffd700;font-size:1.2em;font-weight:700;">5</p>'
-                    + '</div>';
-                // Start progress bar
-                setTimeout(function(){
-                    var bar = document.getElementById('adProgressBar');
-                    if (bar) bar.style.width = '100%';
-                }, 100);
-                // Countdown
-                var secs = 5;
-                var timer = setInterval(function(){
-                    secs--;
-                    var cd = document.getElementById('adCountdown');
-                    if (cd) cd.textContent = secs;
-                    if (secs <= 0) {
-                        clearInterval(timer);
-                        // Give bonus
-                        var b = parseInt(localStorage.getItem('bonus_' + feat) || '0') + 1;
-                        localStorage.setItem('bonus_' + feat, b);
-                        updateAllLimitBars();
-                        if (overlay) overlay.style.display = 'none';
-                        alert('✅ 1 मुफ्त ' + label + ' मिला! अब आगे देखें।');
-                    }
-                }, 1000);
-            }
+            if (!overlay) return;
+            overlay.innerHTML = '<div style="background:linear-gradient(135deg,#0a0a1a,#1a1a3a);border:2px solid #e91e63;border-radius:22px;padding:25px;max-width:380px;width:92%;text-align:center;">'
+                + '<div style="font-size:2.5em;margin-bottom:10px;">📺</div>'
+                + '<h3 style="color:#e91e63;margin-bottom:8px;">Ad देख रहे हैं...</h3>'
+                + '<p style="color:#ccc;font-size:0.9em;margin-bottom:16px;">5 सेकंड प्रतीक्षा करें</p>'
+                + '<div style="background:rgba(255,255,255,0.1);border-radius:10px;height:8px;overflow:hidden;margin-bottom:16px;">'
+                + '<div id="adBar" style="height:100%;width:0%;background:linear-gradient(90deg,#e91e63,#ff4500);transition:width 5s linear;border-radius:10px;"></div>'
+                + '</div>'
+                + '<p id="adCount" style="color:#ffd700;font-size:1.4em;font-weight:700;">5</p>'
+                + '</div>';
+            setTimeout(function(){ var b=document.getElementById('adBar'); if(b) b.style.width='100%'; }, 80);
+            var s = 5;
+            var t = setInterval(function(){
+                s--;
+                var c=document.getElementById('adCount'); if(c) c.textContent=s;
+                if(s<=0){
+                    clearInterval(t);
+                    var b2=parseInt(localStorage.getItem('bonus_'+feat)||'0')+1;
+                    localStorage.setItem('bonus_'+feat, b2);
+                    updateAllLimitBars();
+                    if(overlay) overlay.style.display='none';
+                    alert('✅ 1 मुफ्त '+label+' मिला!');
+                }
+            }, 1000);
         }
 
     </script>
