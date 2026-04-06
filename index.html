@@ -1887,7 +1887,7 @@
             <i class="fas fa-history"></i> मेरी रिपोर्ट्स (हिस्ट्री)
         </div>
         <div class="menu-item" onclick="showPage('premium'); toggleMenu();">
-            <i class="fas fa-crown"></i> प्रीमियम प्लान
+            <i class="fas fa-crown"></i> Premium Plan
         </div>
         <div class="menu-item" onclick="showPage('about'); toggleMenu();">
             <i class="fas fa-info-circle"></i> हमारे बारे में
@@ -2336,9 +2336,9 @@
                     <div class="premium-price">₹99<small>/माह</small></div>
                     <ul class="premium-features">
                         <li><i class="fas fa-check-circle"></i> एड-फ्री अनुभव</li>
-                        <li><i class="fas fa-check-circle"></i> ₹19 वाली कुंडली <span style="color: #ffd700;">4 बार मुफ्त</span></li>
-                        <li><i class="fas fa-check-circle"></i> विशेष रत्न सुझाव</li>
-                        <li><i class="fas fa-check-circle"></i> दैनिक राशिफल नोटिफिकेशन</li>
+                        <li><i class="fas fa-check-circle"></i> मुफ्त भविष्य — <span style="color:#ffd700;">10 बार</span></li>
+                        <li><i class="fas fa-check-circle"></i> लव कैलकुलेटर — <span style="color:#ffd700;">10 बार</span></li>
+                        <li><i class="fas fa-check-circle"></i> दैनिक राशिफल — <span style="color:#ffd700;">10 बार</span></li>
                         <li><i class="fas fa-check-circle"></i> प्राथमिकता समर्थन</li>
                     </ul>
                     <button class="premium-btn">सब्सक्राइब करें</button>
@@ -2350,11 +2350,10 @@
                     <div class="premium-price">₹499<small>/6 माह</small></div>
                     <ul class="premium-features">
                         <li><i class="fas fa-check-circle"></i> एड-फ्री अनुभव</li>
-                        <li><i class="fas fa-check-circle"></i> ₹19 वाली कुंडली <span style="color: #ffd700;">5 बार मुफ्त</span></li>
-                        <li><i class="fas fa-check-circle"></i> ₹49 वाली कुंडली <span style="color: #ffd700;">3 बार मुफ्त</span></li>
-                        <li><i class="fas fa-check-circle"></i> विशेष उपाय सुझाव</li>
+                        <li><i class="fas fa-check-circle"></i> मुफ्त भविष्य — <span style="color:#ffd700;">20 बार</span></li>
+                        <li><i class="fas fa-check-circle"></i> लव कैलकुलेटर — <span style="color:#ffd700;">20 बार</span></li>
+                        <li><i class="fas fa-check-circle"></i> दैनिक राशिफल — <span style="color:#ffd700;">20 बार</span></li>
                         <li><i class="fas fa-check-circle"></i> प्राथमिकता समर्थन</li>
-                        <li><i class="fas fa-check-circle"></i> मासिक राशिफल रिपोर्ट</li>
                     </ul>
                     <button class="premium-btn">सब्सक्राइब करें</button>
                 </div>
@@ -2365,11 +2364,10 @@
                     <div class="premium-price">₹999<small>/साल</small></div>
                     <ul class="premium-features">
                         <li><i class="fas fa-check-circle"></i> एड-फ्री अनुभव</li>
-                        <li><i class="fas fa-check-circle"></i> ₹19 वाली कुंडली <span style="color: #ffd700;">8 बार मुफ्त</span></li>
-                        <li><i class="fas fa-check-circle"></i> ₹49 वाली कुंडली <span style="color: #ffd700;">5 बार मुफ्त</span></li>
-                        <li><i class="fas fa-check-circle"></i> विशेषज्ञ ज्योतिषी से सलाह</li>
-                        <li><i class="fas fa-check-circle"></i> वार्षिक राशिफल रिपोर्ट</li>
-                        <li><i class="fas fa-check-circle"></i> सभी प्रीमियम सुविधाएं</li>
+                        <li><i class="fas fa-check-circle"></i> मुफ्त भविष्य — <span style="color:#ffd700;">30 बार</span></li>
+                        <li><i class="fas fa-check-circle"></i> लव कैलकुलेटर — <span style="color:#ffd700;">30 बार</span></li>
+                        <li><i class="fas fa-check-circle"></i> दैनिक राशिफल — <span style="color:#ffd700;">30 बार</span></li>
+                        <li><i class="fas fa-check-circle"></i> प्राथमिकता समर्थन</li>
                     </ul>
                     <button class="premium-btn">सब्सक्राइब करें</button>
                 </div>
@@ -5181,20 +5179,49 @@
                 + '<h3 style="color:#ffd700;margin-bottom:8px;">' + label + ' की सीमा समाप्त!</h3>'
                 + '<p style="color:#ccc;font-size:0.9em;margin-bottom:6px;">आपने ' + max + ' में से ' + used + ' बार उपयोग किया</p>'
                 + '<p style="color:#aaa;font-size:0.85em;margin-bottom:16px;line-height:1.6;">Share करें और 1 और मुफ्त पाएं</p>'
-                + '<button onclick="watchAdForBonus(\'' + feat + '\')" style="width:100%;padding:12px;background:linear-gradient(135deg,#e91e63,#c2185b);border:none;border-radius:18px;color:#fff;font-weight:700;cursor:pointer;margin-bottom:9px;">&#127916; Ad देखें — 1 और मुफ्त पाएं</button>'                + '<button onclick="doShareForBonus(\'' + feat + '\');document.getElementById(\'freeLimitOverlay\').style.display=\'none\';" style="width:100%;padding:12px;background:linear-gradient(135deg,#25D366,#128C7E);border:none;border-radius:18px;color:#fff;font-weight:700;cursor:pointer;margin-bottom:9px;">&#128257; Share करें — 1 और मुफ्त</button>'
+                + '<button onclick="doShareForBonus(\'' + feat + '\');document.getElementById(\'freeLimitOverlay\').style.display=\'none\';" style="width:100%;padding:12px;background:linear-gradient(135deg,#25D366,#128C7E);border:none;border-radius:18px;color:#fff;font-weight:700;cursor:pointer;margin-bottom:9px;">&#128257; Share करें — 1 और मुफ्त</button>'
                 + '<button onclick="document.getElementById(\'freeLimitOverlay\').style.display=\'none\';showPage(\'premium\');" style="width:100%;padding:12px;background:linear-gradient(135deg,#ffd700,#ff4500);border:none;border-radius:18px;color:#0a0a1a;font-weight:700;cursor:pointer;margin-bottom:9px;">&#128081; Premium खरीदें</button>'
                 + '<button onclick="document.getElementById(\'freeLimitOverlay\').style.display=\'none\';" style="width:100%;padding:9px;background:none;border:1px solid #555;border-radius:18px;color:#aaa;cursor:pointer;font-size:0.88em;">बाद में</button>'
                 + '</div>';
             overlay.style.display = 'flex';
         }
+
+        // Generate unique referral code for this user/device
+        function getUserReferralCode() {
+            var code = localStorage.getItem('myReferralCode');
+            if (!code) {
+                code = 'BD' + Math.random().toString(36).substr(2, 7).toUpperCase();
+                localStorage.setItem('myReferralCode', code);
+            }
+            return code;
+        }
+
+        // Check if opened via referral link and grant bonus
+        (function checkReferral() {
+            var params = new URLSearchParams(window.location.search);
+            var ref = params.get('ref');
+            if (ref && !sessionStorage.getItem('refBonusGiven')) {
+                sessionStorage.setItem('refBonusGiven', 'yes');
+                // Grant +1 bonus to all features for the new user
+                ['pred', 'love', 'horo'].forEach(function(f) {
+                    var b = parseInt(localStorage.getItem('bonus_' + f) || '0') + 1;
+                    localStorage.setItem('bonus_' + f, b);
+                });
+            }
+        })();
+
         function doShareForBonus(feat) {
             feat = feat || 'pred';
-            var pred = window._predText || 'आपका भविष्य शुभ है';
-            var name = window._predName || '';
-            var txt = '&#127970; ' + name + ' का भविष्यफल:\n"' + pred.substring(0, 150) + '..."\n\n✨ FREE देखें: bhavishyadekho.online';
-            if (navigator.share) navigator.share({ title: 'Bhavishya Dekho', text: txt });
-            else if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function() { alert('Link copy हो गया!'); });
-
+            var refCode = getUserReferralCode();
+            var shareUrl = 'https://bhavishyadekho.online?ref=' + refCode;
+            var txt = '🔮 Bhavishya Dekho — मुफ्त ज्योतिष!\n✨ भविष्यफल, लव कैलकुलेटर, राशिफल सब मुफ्त!\n\n👉 ' + shareUrl + '\n\n(इस link से join करें — आपको 1 extra free मिलेगा!)';
+            if (navigator.share) {
+                navigator.share({ title: 'Bhavishya Dekho', text: txt, url: shareUrl });
+            } else if (navigator.clipboard) {
+                navigator.clipboard.writeText(txt).then(function() { alert('Link copy हो गया! दोस्तों को भेजें।'); });
+            } else {
+                prompt('यह link copy करें:', shareUrl);
+            }
             var b = parseInt(localStorage.getItem('bonus_' + feat) || '0') + 1;
             localStorage.setItem('bonus_' + feat, b);
             updateAllLimitBars();
@@ -5601,6 +5628,14 @@
         })();
 
         function showAdThenAction(actionFunction) {
+            // Premium users: no ad, direct result
+            var pd = null;
+            try { pd = JSON.parse(localStorage.getItem('premiumData') || 'null'); } catch(e) {}
+            if (pd && pd.expiry && pd.expiry > Date.now()) {
+                actionFunction();
+                return;
+            }
+
             // Open ad in new tab
             window.open("https://omg10.com/4/10834444", "_blank");
 
