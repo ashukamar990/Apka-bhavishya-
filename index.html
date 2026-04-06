@@ -1963,7 +1963,12 @@
         <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(255,255,255,0.08);border-radius:50px;margin-bottom:20px;border:1px solid #ffd700;position:sticky;top:10px;z-index:100;">
             <button onclick="backToHome()" style="background:none;border:1px solid #ffd700;border-radius:25px;color:#ffd700;padding:8px 18px;cursor:pointer;font-size:0.9em;">&#8592; वापस</button>
             <span style="color:#ffd700;font-weight:600;">&#128302; भविष्यफल</span>
-            <button onclick="shareOnWhatsApp()" style="background:#25D366;border:none;border-radius:25px;color:#fff;padding:8px 18px;cursor:pointer;font-size:0.9em;">WhatsApp शेयर</button>
+            <div style="display:flex;gap:6px;">
+                <button onclick="shareOnWhatsApp()" style="background:#25D366;border:none;border-radius:50%;color:#fff;width:36px;height:36px;cursor:pointer;font-size:1em;display:flex;align-items:center;justify-content:center;"><i class="fab fa-whatsapp"></i></button>
+                <button onclick="shareOnFacebook()" style="background:#1877F2;border:none;border-radius:50%;color:#fff;width:36px;height:36px;cursor:pointer;font-size:1em;display:flex;align-items:center;justify-content:center;"><i class="fab fa-facebook-f"></i></button>
+                <button onclick="shareOnInstagram()" style="background:linear-gradient(135deg,#f09433,#dc2743,#bc1888);border:none;border-radius:50%;color:#fff;width:36px;height:36px;cursor:pointer;font-size:1em;display:flex;align-items:center;justify-content:center;"><i class="fab fa-instagram"></i></button>
+                <button onclick="shareOnSnapchat()" style="background:#FFFC00;border:none;border-radius:50%;color:#000;width:36px;height:36px;cursor:pointer;font-size:1em;display:flex;align-items:center;justify-content:center;"><i class="fab fa-snapchat-ghost"></i></button>
+            </div>
         </div>
         <div id="fprHeader" style="background:rgba(255,255,255,0.08);border:2px solid #ffd700;border-radius:20px;padding:20px;margin-bottom:20px;"></div>
         <div id="fprMain" style="background:rgba(255,215,0,0.1);border:2px solid rgba(255,215,0,0.5);border-radius:20px;padding:25px;margin-bottom:20px;font-size:1.05em;line-height:1.9;color:#fff;"></div>
@@ -1993,7 +1998,13 @@
         <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(255,255,255,0.08);border-radius:50px;margin-bottom:20px;border:1px solid #ffd700;position:sticky;top:10px;z-index:100;">
             <button onclick="backToHomeFromKundliReport()" style="background:none;border:1px solid #ffd700;border-radius:25px;color:#ffd700;padding:8px 18px;cursor:pointer;font-size:0.9em;">&#8592; वापस</button>
             <span style="color:#ffd700;font-weight:600;" id="kundliReportPageTitle">&#128302; कुंडली रिपोर्ट</span>
-            <button onclick="downloadKundliPDF()" style="background:linear-gradient(135deg,#ffd700,#ff4500);border:none;border-radius:25px;color:#0a0a1a;padding:8px 16px;cursor:pointer;font-size:0.85em;font-weight:700;">&#128229; PDF</button>
+            <div style="display:flex;gap:5px;align-items:center;">
+                <button onclick="shareOnWhatsApp()" style="background:#25D366;border:none;border-radius:50%;color:#fff;width:34px;height:34px;cursor:pointer;font-size:0.95em;display:flex;align-items:center;justify-content:center;"><i class="fab fa-whatsapp"></i></button>
+                <button onclick="shareOnFacebook()" style="background:#1877F2;border:none;border-radius:50%;color:#fff;width:34px;height:34px;cursor:pointer;font-size:0.95em;display:flex;align-items:center;justify-content:center;"><i class="fab fa-facebook-f"></i></button>
+                <button onclick="shareOnInstagram()" style="background:linear-gradient(135deg,#f09433,#dc2743,#bc1888);border:none;border-radius:50%;color:#fff;width:34px;height:34px;cursor:pointer;font-size:0.95em;display:flex;align-items:center;justify-content:center;"><i class="fab fa-instagram"></i></button>
+                <button onclick="shareOnSnapchat()" style="background:#FFFC00;border:none;border-radius:50%;color:#000;width:34px;height:34px;cursor:pointer;font-size:0.95em;display:flex;align-items:center;justify-content:center;"><i class="fab fa-snapchat-ghost"></i></button>
+                <button onclick="downloadKundliPDF()" style="background:linear-gradient(135deg,#ffd700,#ff4500);border:none;border-radius:25px;color:#0a0a1a;padding:8px 14px;cursor:pointer;font-size:0.85em;font-weight:700;">&#128229; PDF</button>
+            </div>
         </div>
         <!-- Report Header -->
         <div id="krpHeader" style="background:rgba(255,215,0,0.08);border:2px solid rgba(255,215,0,0.4);border-radius:20px;padding:20px;margin-bottom:20px;text-align:center;">
@@ -4106,40 +4117,7 @@
         }
 
 
-        function shareOnFacebook() {
-            var name = window.lastPredName || 'आप';
-            var txt = '🔮 ' + name + ' का भविष्यफल — FREE में देखें: bhavishyadekho.online';
-            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://bhavishyadekho.online') + '&quote=' + encodeURIComponent(txt), '_blank');
-        }
-        function shareOnTelegram() {
-            var name = window.lastPredName || 'आप';
-            var pred = window.lastPredText || '';
-            var txt = '🔮 ' + name + ' का भविष्यफल:\n' + pred.substring(0,120) + '...\n\nFREE में देखें: bhavishyadekho.online';
-            window.open('https://t.me/share/url?url=' + encodeURIComponent('https://bhavishyadekho.online') + '&text=' + encodeURIComponent(txt), '_blank');
-        }
-        function shareOnInstagram() {
-            var name = window.lastPredName || 'आप';
-            var pred = window.lastPredText || '';
-            var txt = '🔮 ' + name + ' का भविष्यफल:\n\n' + pred.substring(0,160) + '...\n\n✨ FREE में देखें: bhavishyadekho.online';
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(txt).then(function(){
-                    alert('Instagram Story के लिए text copy हो गया! Instagram खोलें → Story → Paste करें');
-                });
-            } else { alert(txt); }
-        }
-        function shareOnTwitter() {
-            var name = window.lastPredName || 'आप';
-            var txt = '🔮 ' + name + ' का भविष्यफल — FREE में देखें 👉 bhavishyadekho.online ✨';
-            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(txt), '_blank');
-        }
-        function copyLink() {
-            var name = window.lastPredName || 'आप';
-            var pred = window.lastPredText || '';
-            var txt = '🔮 ' + name + ' का भविष्यफल: ' + pred.substring(0,120) + '... FREE में देखें: bhavishyadekho.online';
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(txt).then(function(){ alert('✅ Copy हो गया!'); });
-            } else { alert(txt); }
-        }
+        // share functions defined at end of script
 
 
 
@@ -5034,44 +5012,7 @@
 
 
 
-        function shareOnInstagram() {
-            var refCode = getUserReferralCode();
-            var shareUrl = 'https://bhavishyadekho.online?ref=' + refCode;
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(shareUrl).then(function() {
-                    alert('📸 Link copy हो गया!\nInstagram Bio या Story में paste करें:\n' + shareUrl);
-                });
-            } else {
-                prompt('यह link copy करके Instagram पर शेयर करें:', shareUrl);
-            }
-        }
-
-        function shareOnFacebook() {
-            const name = document.getElementById('name').value.trim() || 'उपयोगकर्ता';
-            const prediction = document.getElementById('mainPrediction') ? document.getElementById('mainPrediction').innerText.substring(0, 200) + '...' : 'मेरी कुंडली रिपोर्ट';
-            const text = encodeURIComponent(`🔮 ${name} का भविष्यफल:\n\n"${prediction}"`);
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://bhavishyadekho.online')}&quote=${text}`, '_blank');
-        }
-
-        function shareOnTelegram() {
-            const name = document.getElementById('name').value.trim() || 'उपयोगकर्ता';
-            const prediction = document.getElementById('mainPrediction') ? document.getElementById('mainPrediction').innerText.substring(0, 200) + '...' : 'मेरी कुंडली रिपोर्ट';
-            const text = encodeURIComponent(`🔮 ${name} का भविष्यफल:\n\n"${prediction}"\n\n👉 bhavishyadekho.online`);
-            window.open(`https://t.me/share/url?url=${encodeURIComponent('https://bhavishyadekho.online')}&text=${text}`, '_blank');
-        }
-
-        function shareOnTwitter() {
-            const name = document.getElementById('name').value.trim() || 'उपयोगकर्ता';
-            const text = encodeURIComponent(`🔮 ${name} का भविष्यफल देखें - Bhavishya Dekho`);
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent('https://bhavishyadekho.online')}`, '_blank');
-        }
-
-        function copyLink() {
-            const text = `🔮 मेरा भविष्य देखें: bhavishyadekho.online`;
-            navigator.clipboard.writeText(text).then(() => {
-                alert('लिंक कॉपी हो गया! अब इसे कहीं भी पेस्ट करें।');
-            });
-        }
+        // share functions defined at end of script
 
 
         // ======================================
@@ -5292,12 +5233,7 @@
             // NO instant bonus — bonus only when referred user opens the link
         }
 
-        // Add shareOnSnapchat function
-        function shareOnSnapchat() {
-            var refCode = getUserReferralCode();
-            var shareUrl = 'https://bhavishyadekho.online?ref=' + refCode;
-            window.open('https://www.snapchat.com/scan?attachmentUrl=' + encodeURIComponent(shareUrl), '_blank');
-        }
+        // share functions defined below (single source of truth)
 
         // Free result page navigation
         function showFreeResultPage(name, age, gender, zodiac, birthPlace, mainPred, cats) {
@@ -5325,47 +5261,67 @@
         }
 
         // WhatsApp share with proper formatted message (NO screenshot)
-        function shareOnWhatsApp() {
-            var name = window._predName || 'आप';
-            var pred = window._predText || '';
-            var rashi = window._predRashi || '';
-            var date = new Date().toLocaleDateString('hi-IN');
+        // ===== CENTRAL SHARE FUNCTIONS =====
+        function _getShareData() {
+            var name = window._predName || '';
+            var pred = (window._predText || '').substring(0, 120);
             var refCode = getUserReferralCode();
             var refUrl = 'https://bhavishyadekho.online?ref=' + refCode;
-            if (!pred && !name) { alert('पहले भविष्य देखें'); return; }
-            var msg = '🔮 *Bhavishya Dekho* - आपका भविष्यफल'
-                + '\n\n👤 नाम: ' + name
-                + '\n📅 तिथि: ' + date
-                + (rashi ? '\n⭐ राशि: ' + rashi : '')
-                + '\n\n✨ *भविष्यफल:*\n' + pred
-                + '\n\n━━━━━━━━━━━━━━━━'
-                + '\n🔗 मुफ्त भविष्य देखें 👇'
-                + '\n' + refUrl
-                + '\n🎁 इस link से join करें — आपको 1 extra free मिलेगा!'
-                + '\n🙏 शेयर करें और दूसरों को भी उनका भविष्य जानने का मौका दें!';
+            return { name: name, pred: pred, refUrl: refUrl };
+        }
+
+        function shareOnWhatsApp() {
+            var d = _getShareData();
+            // Short message under 700 chars / 10 lines for WhatsApp status compatibility
+            var msg = '🔮 *Bhavishya Dekho*'
+                + (d.name ? '\n👤 ' + d.name : '')
+                + (d.pred ? '\n✨ ' + d.pred + '...' : '')
+                + '\n\n🔗 ' + d.refUrl
+                + '\n🎁 Link से join करें — 1 extra free मिलेगा!';
             window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
         }
+
         function shareOnFacebook() {
-            var name = window._predName || ''; var pred = window._predText || '';
-            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://bhavishyadekho.online') + '&quote=' + encodeURIComponent(name + ': ' + pred.substring(0,100)), '_blank');
+            var d = _getShareData();
+            var txt = (d.name ? d.name + ' का भविष्यफल | ' : '') + 'Bhavishya Dekho — मुफ्त ज्योतिष 🔮';
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(d.refUrl) + '&quote=' + encodeURIComponent(txt), '_blank');
         }
-        function shareOnTelegram() {
-            var name = window._predName || ''; var pred = window._predText || '';
-            window.open('https://t.me/share/url?url=' + encodeURIComponent('https://bhavishyadekho.online') + '&text=' + encodeURIComponent(name + ' का भविष्यफल: ' + pred.substring(0,100) + '... FREE देखें'), '_blank');
-        }
+
         function shareOnInstagram() {
-            var txt = (window._predName||'') + ' का भविष्यफल: ' + (window._predText||'').substring(0,150) + '... bhavishyadekho.online';
-            if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ alert('Story text copy हो गया! Instagram खोलें → Story → Paste करें'); });
-            else alert(txt);
+            var d = _getShareData();
+            var txt = '🔮 Bhavishya Dekho\n' + (d.name ? d.name + ' का भविष्यफल\n' : '') + d.refUrl + '\n🎁 Link से join करें — 1 extra free!';
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(txt).then(function() {
+                    alert('📸 Copy हो गया!\nInstagram खोलें → Story/Bio → Paste करें');
+                });
+            } else {
+                prompt('Copy करें:', txt);
+            }
         }
+
+        function shareOnSnapchat() {
+            var d = _getShareData();
+            window.open('https://www.snapchat.com/scan?attachmentUrl=' + encodeURIComponent(d.refUrl), '_blank');
+        }
+
+        function shareOnTelegram() {
+            var d = _getShareData();
+            var txt = '🔮 Bhavishya Dekho — मुफ्त भविष्यफल' + (d.name ? ' | ' + d.name : '');
+            window.open('https://t.me/share/url?url=' + encodeURIComponent(d.refUrl) + '&text=' + encodeURIComponent(txt), '_blank');
+        }
+
         function shareOnTwitter() {
-            var name = window._predName || '';
-            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(name + ' का भविष्यफल — FREE देखें: bhavishyadekho.online'), '_blank');
+            var d = _getShareData();
+            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('🔮 Bhavishya Dekho — मुफ्त ज्योतिष') + '&url=' + encodeURIComponent(d.refUrl), '_blank');
         }
+
         function copyLink() {
-            var txt = (window._predName||'') + ' का भविष्यफल: ' + (window._predText||'').substring(0,150) + '... bhavishyadekho.online';
-            if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ alert('✅ Copy हो गया!'); });
-            else alert(txt);
+            var d = _getShareData();
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(d.refUrl).then(function() { alert('✅ Link copy हो गया!'); });
+            } else {
+                prompt('Link copy करें:', d.refUrl);
+            }
         }
 
         // ₹19/₹49 RESULT BUILDER — shows in kundliResultModal (existing V6 modal)
@@ -5495,9 +5451,10 @@
                 + '<button class="kundli-download-btn" onclick="downloadKundliPDF()"><i class="fas fa-download"></i> PDF डाउनलोड करें</button></div>'
                 + '<div class="kundli-share-section"><h3 style="color:#ffd700;margin-bottom:15px;">&#128242; शेयर करें</h3>'
                 + '<div class="kundli-share-buttons">'
-                + '<button class="kundli-share-btn whatsapp" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i></button>'
-                + '<button class="kundli-share-btn" onclick="shareOnFacebook()" style="background:#1877F2;"><i class="fab fa-facebook-f"></i></button>'
-                + '<button class="kundli-share-btn" onclick="shareOnTelegram()" style="background:#0088cc;"><i class="fab fa-telegram"></i></button>'
+                + '<button class="kundli-share-btn whatsapp" onclick="shareOnWhatsApp()" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>'
+                + '<button class="kundli-share-btn facebook" onclick="shareOnFacebook()" title="Facebook" style="background:#1877F2;"><i class="fab fa-facebook-f"></i></button>'
+                + '<button class="kundli-share-btn instagram" onclick="shareOnInstagram()" title="Instagram" style="background:linear-gradient(135deg,#f09433,#dc2743,#bc1888);"><i class="fab fa-instagram"></i></button>'
+                + '<button class="kundli-share-btn snapchat" onclick="shareOnSnapchat()" title="Snapchat" style="background:#FFFC00;"><i class="fab fa-snapchat-ghost" style="color:#000;"></i></button>'
                 + '</div></div>';
 
             document.getElementById('kundliPremiumResult').innerHTML = html;
