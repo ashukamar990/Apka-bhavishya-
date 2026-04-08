@@ -1885,21 +1885,47 @@
             <div class="payment-title">भुगतान विकल्प</div>
             <div class="payment-amount" id="paymentAmount">₹19</div>
             <div class="payment-options">
-                <div class="payment-option" onclick="startPayment()">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/512px-Google_Pay_Logo.svg.png" style="width:38px;height:38px;object-fit:contain;display:block;margin:0 auto 4px;" onerror="this.outerHTML='<i class='fab fa-google-pay' style='font-size:2em;color:#4285F4'></i>'">
-                    <span style="font-size:0.7em;color:#ccc;">GPay</span>
+                <div class="payment-option" onclick="doUPIPay('gpay')">
+                    <div style="width:44px;height:44px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;">
+                        <svg viewBox="0 0 48 48" width="44" height="44" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="48" height="48" rx="10" fill="#fff"/>
+                            <text x="24" y="20" text-anchor="middle" font-size="9" font-family="Arial" font-weight="700" fill="#4285F4">G</text>
+                            <text x="24" y="30" text-anchor="middle" font-size="7" font-family="Arial" font-weight="700" fill="#34A853">Pay</text>
+                            <circle cx="10" cy="24" r="5" fill="#4285F4"/>
+                            <circle cx="22" cy="24" r="5" fill="#EA4335"/>
+                            <circle cx="34" cy="24" r="5" fill="#FBBC05"/>
+                            <circle cx="46" cy="24" r="5" fill="#34A853"/>
+                        </svg>
+                    </div>
+                    <span style="font-size:0.72em;color:#ccc;display:block;text-align:center;">GPay</span>
                 </div>
-                <div class="payment-option" onclick="startPayment()">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/PhonePe_Logo.svg/512px-PhonePe_Logo.svg.png" style="width:38px;height:38px;object-fit:contain;display:block;margin:0 auto 4px;" onerror="this.outerHTML='<i class='fas fa-mobile-alt' style='font-size:2em;color:#5f259f'></i>'">
-                    <span style="font-size:0.7em;color:#ccc;">PhonePe</span>
+                <div class="payment-option" onclick="doUPIPay('phonepe')">
+                    <div style="width:44px;height:44px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;background:#5f259f;border-radius:10px;">
+                        <svg viewBox="0 0 48 48" width="38" height="38" xmlns="http://www.w3.org/2000/svg">
+                            <text x="24" y="28" text-anchor="middle" font-size="11" font-family="Arial" font-weight="900" fill="#fff">Ph</text>
+                            <text x="24" y="40" text-anchor="middle" font-size="7" font-family="Arial" fill="#fff">Pe</text>
+                        </svg>
+                    </div>
+                    <span style="font-size:0.72em;color:#ccc;display:block;text-align:center;">PhonePe</span>
                 </div>
-                <div class="payment-option" onclick="startPayment()">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/512px-Paytm_Logo_%28standalone%29.svg.png" style="width:38px;height:38px;object-fit:contain;display:block;margin:0 auto 4px;" onerror="this.outerHTML='<i class='fas fa-wallet' style='font-size:2em;color:#00BAF2'></i>'">
-                    <span style="font-size:0.7em;color:#ccc;">Paytm</span>
+                <div class="payment-option" onclick="doUPIPay('paytm')">
+                    <div style="width:44px;height:44px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;background:#00BAF2;border-radius:10px;">
+                        <svg viewBox="0 0 48 48" width="38" height="38" xmlns="http://www.w3.org/2000/svg">
+                            <text x="24" y="22" text-anchor="middle" font-size="8" font-family="Arial" font-weight="900" fill="#fff">pay</text>
+                            <text x="24" y="35" text-anchor="middle" font-size="8" font-family="Arial" font-weight="900" fill="#fff">tm</text>
+                        </svg>
+                    </div>
+                    <span style="font-size:0.72em;color:#ccc;display:block;text-align:center;">Paytm</span>
                 </div>
-                <div class="payment-option" onclick="startPayment()">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/512px-UPI-Logo-vector.svg.png" style="width:38px;height:38px;object-fit:contain;display:block;margin:0 auto 4px;" onerror="this.outerHTML='<i class='fas fa-university' style='font-size:2em;color:#ffd700'></i>'">
-                    <span style="font-size:0.7em;color:#ccc;">Any UPI</span>
+                <div class="payment-option" onclick="doUPIPay('upi')">
+                    <div style="width:44px;height:44px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ff6600,#ff9900);border-radius:10px;">
+                        <svg viewBox="0 0 48 48" width="38" height="38" xmlns="http://www.w3.org/2000/svg">
+                            <text x="24" y="22" text-anchor="middle" font-size="11" font-family="Arial" font-weight="900" fill="#fff">UPI</text>
+                            <rect x="8" y="27" width="32" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                            <text x="24" y="40" text-anchor="middle" font-size="7" font-family="Arial" fill="#fff">Any App</text>
+                        </svg>
+                    </div>
+                    <span style="font-size:0.72em;color:#ccc;display:block;text-align:center;">Any UPI</span>
                 </div>
             </div>
             <div style="background:rgba(76,175,80,0.12);border:1px solid rgba(76,175,80,0.3);border-radius:10px;padding:9px;margin:10px 0;text-align:center;font-size:0.82em;color:#ddd;">
@@ -4879,6 +4905,26 @@
             return age;
         }
 
+        // Returns age in months for babies under 12 months
+        function calculateAgeInMonths(dob) {
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let months = (today.getFullYear() - birthDate.getFullYear()) * 12;
+            months += today.getMonth() - birthDate.getMonth();
+            if (today.getDate() < birthDate.getDate()) months--;
+            return Math.max(0, months);
+        }
+
+        // Returns display string like "8 महीने", "2 वर्ष 3 महीने", "5 वर्ष"
+        function getAgeDisplay(dob) {
+            const ageYears = calculateAge(dob);
+            if (ageYears < 1) {
+                const m = calculateAgeInMonths(dob);
+                return m <= 0 ? 'नवजात' : m + ' महीने';
+            }
+            return ageYears + ' वर्ष';
+        }
+
         function seededRandom(seed) {
             let t = seed + 0x6D2B79F5;
             t = Math.imul(t ^ t >>> 15, t | 1);
@@ -5255,12 +5301,38 @@ ${age < 18 ? 'Future mein financial awareness aur savings ki aadat ke baare mein
 
             var age = calculateAge(dob);
 
+            // Always show loading with fresh message
+            var loadingMsg = document.querySelector('.loading-text');
+            if (loadingMsg) loadingMsg.textContent = '🔮 ग्रहों की स्थिति देखी जा रही है...';
+
             // Try cache first
             var mainPred, cats;
             try {
                 var cached = localStorage.getItem(cacheKey);
                 if (cached) { var c = JSON.parse(cached); mainPred = c.m; cats = c.c; }
             } catch(e) {}
+
+            // Minimum loading time so user always sees animation (even from cache)
+            var loadStart = Date.now();
+            var MIN_LOADING_MS = 2000;
+
+            async function finishPredict(mainPred, cats) {
+                var elapsed = Date.now() - loadStart;
+                var wait = Math.max(0, MIN_LOADING_MS - elapsed);
+                await new Promise(function(r){ setTimeout(r, wait); });
+                window._predName = name; window._predText = mainPred;
+                window._freePredData = {
+                    name: name, age: age, gender: gender,
+                    zodiac: zodiac, birthPlace: birthPlace,
+                    dob: dob, mainPred: mainPred, cats: cats,
+                    date: new Date().toLocaleDateString('hi-IN')
+                };
+                document.getElementById('loadingOverlay').style.display = 'none';
+                document.getElementById('predictBtn').disabled = false;
+                useFeature('pred');
+                showFreeResultPage(name, age, gender, zodiac, birthPlace, mainPred, cats, dob);
+                addToKundliHistory(name, 'मुफ्त भविष्य', { mainPred: mainPred, cats: cats, gender: gender, dob: dob, zodiac: zodiac, birthPlace: birthPlace });
+            }
 
             if (!mainPred) {
                 try {
@@ -5327,19 +5399,8 @@ ${age < 18 ? 'Future mein financial awareness aur savings ki aadat ke baare mein
                 }
             }
 
-            window._predName = name; window._predText = mainPred;
-            // Store complete free result data for download
-            window._freePredData = {
-                name: name, age: age, gender: gender,
-                zodiac: zodiac, birthPlace: birthPlace,
-                dob: dob, mainPred: mainPred, cats: cats,
-                date: new Date().toLocaleDateString('hi-IN')
-            };
-            document.getElementById('loadingOverlay').style.display = 'none';
-            document.getElementById('predictBtn').disabled = false;
-            useFeature('pred');
-            showFreeResultPage(name, age, gender, zodiac, birthPlace, mainPred, cats);
-            addToKundliHistory(name, 'मुफ्त भविष्य', { mainPred: mainPred, cats: cats, gender: gender, dob: dob, zodiac: zodiac, birthPlace: birthPlace });
+            // Always call via finishPredict — ensures minimum loading time (2s) even from cache
+            finishPredict(mainPred, cats);
         }
 
         // Generate timeline stages using AI
@@ -5395,19 +5456,20 @@ LONG_FUTURE:`;
             };
         }
 
-        async function showFreeResultPage(name, age, gender, zodiac, birthPlace, mainPred, cats) {
+        async function showFreeResultPage(name, age, gender, zodiac, birthPlace, mainPred, cats, dob) {
             document.getElementById('mainContent').style.display = 'none';
             document.getElementById('freePredResultPage').style.display = 'block';
             window.scrollTo(0, 0);
             var rashiName = getRashiNameFromCode(zodiac) || zodiac;
             var gText = gender === 'male' ? 'पुरुष' : gender === 'female' ? 'महिला' : 'अन्य';
+            var ageDisplay = dob ? getAgeDisplay(dob) : (age + ' वर्ष');
 
             // Header
             document.getElementById('fprHeader').innerHTML =
                 '<div style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;">' +
                 '<div style="width:60px;height:60px;background:linear-gradient(135deg,#ffd700,#ff4500);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8em;flex-shrink:0;">&#9728;</div>' +
                 '<div><h2 style="color:#ffd700;margin:0;font-size:1.4em;">🔮 ' + name + ' का भविष्यफल</h2>' +
-                '<p style="color:#aaa;margin:4px 0;font-size:0.85em;">' + age + ' वर्ष | ' + gText + ' | ' + rashiName + ' | ' + birthPlace + '</p>' +
+                '<p style="color:#aaa;margin:4px 0;font-size:0.85em;">' + ageDisplay + ' | ' + gText + ' | ' + rashiName + ' | ' + birthPlace + '</p>' +
                 '<span style="background:linear-gradient(135deg,#ffd700,#ff4500);color:#0a0a1a;padding:2px 10px;border-radius:20px;font-size:0.75em;font-weight:600;">✨ वैदिक ज्योतिष</span></div></div>';
 
             // Main prediction
@@ -6334,21 +6396,30 @@ LONG_FUTURE:`;
 
         // DOMContentLoaded init
         document.addEventListener('DOMContentLoaded', function() {
-            // === 3-SECOND SPLASH ANIMATION (har baar dikhao) ===
+            // === SMART SPLASH ANIMATION ===
+            // Show: First visit ever, OR tab closed & reopened (new session)
+            // Hide: Browser reload (same session stays)
             var splash = document.getElementById('splashScreen');
             var bar = document.getElementById('splashBar');
             var msgs = ['🔮 भविष्य जानने की तैयारी हो रही है...','⭐ ग्रहों की स्थिति जांची जा रही है...','✨ कुंडली तैयार हो रही है...'];
             var msgEl = document.getElementById('splashMsg');
-            if (splash) {
-                // splash already visible via CSS
+
+            // sessionStorage is cleared when tab is closed. localStorage persists.
+            // So: if sessionStorage has 'splashShown', user reloaded (don't show)
+            // If not in sessionStorage, it's a fresh open (show splash, set sessionStorage)
+            var isReload = sessionStorage.getItem('splashShown') === '1';
+            var mc = document.getElementById('mainContent');
+
+            if (!isReload && splash) {
+                // Mark as shown for this browser session (clears on tab close)
+                sessionStorage.setItem('splashShown', '1');
+                // Show splash
                 setTimeout(function() { if (bar) bar.style.width = '100%'; }, 80);
                 var mi = 0;
                 var mTimer = setInterval(function() { mi++; if (msgEl && msgs[mi]) msgEl.textContent = msgs[mi]; }, 1000);
                 setTimeout(function() {
                     clearInterval(mTimer);
                     splash.classList.add('hide');
-                    // Show main content as splash fades
-                    var mc = document.getElementById('mainContent');
                     if (mc) mc.classList.add('ready');
                     setTimeout(function() {
                         splash.style.display = 'none';
@@ -6357,8 +6428,8 @@ LONG_FUTURE:`;
                     }, 700);
                 }, 3000);
             } else {
-                // No splash - show content immediately
-                var mc = document.getElementById('mainContent');
+                // Reload — skip splash, show content immediately
+                if (splash) splash.style.display = 'none';
                 if (mc) mc.classList.add('ready');
             }
             // =====================================================
@@ -6551,7 +6622,7 @@ LONG_FUTURE:`;
             } catch(e) { console.log("Firebase save failed:", e); }
 
             var options = {
-                key: "rzp_live_Sat4IKe6FGzFBA",
+                key: "YOUR_RAZORPAY_KEY",
                 amount: amt,
                 currency: "INR",
                 name: "Bhavishya Dekho",
