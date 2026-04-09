@@ -4742,6 +4742,7 @@
                 hash |= 0;
             }
             const percentage = 50 + (Math.abs(hash) % 46);
+            trackLoveCalculator(yourName, partnerName, percentage);
 
             document.getElementById('lovePercentage').innerText = percentage + '%';
             document.getElementById('loveProgress').style.width = percentage + '%';
@@ -4789,6 +4790,7 @@
             }
 
             useFeature('horo');
+            trackHoroscopeView(finalZodiac, 'daily');
 
             const stored = getStoredHoroscope(name + finalZodiac);
             if (stored) {
@@ -4964,6 +4966,8 @@
                         localStorage.setItem('premiumData', JSON.stringify({ plan:plan, expiry:expiry, freeBasicKundliCount:0, freePremiumKundliCount:0, maxFreeBasicKundli:maxB, maxFreePremiumKundli:maxP }));
                         var curB = parseInt(localStorage.getItem('freeBonus')||'0');
                         localStorage.setItem('freeBonus', Math.max(curB, pb));
+                        var pAmt = plan==='monthly' ? 99 : plan==='6months' ? 499 : 999;
+                        trackPremiumPurchase(window._predName || '', plan, pAmt);
                         applyPremiumLimitBonus(plan);
                         checkPremiumStatus();
                         alert('✅ Premium ' + plan + ' सक्रिय! ' + pb + ' मुफ्त भविष्य जुड़े।');
@@ -5031,6 +5035,8 @@
                 document.getElementById('loadingOverlay').style.display = 'none';
                 paymentCompleted = false;
                 addToKundliHistory(name, type, { name:name, gender:gender, gText:gText, day:day, month:month, year:year, time:time, place:place, rashi:rashi, nakshatra:nakshatra, mainPred:mainPred, type:reportLabel, isPremium:isPrem, seed:seed });
+                if (isPrem) trackPremiumKundli(name, rashi, 49);
+                else trackBasicKundli(name, rashi, 19);
                 buildAndShowKundliResult(name, age, gText, rashi, nakshatra, place, time, day, month, year, seed, rng, sets, isPrem, reportLabel);
             }, 1500);
         }
@@ -5741,6 +5747,8 @@ ${age < 18 ? 'Future mein financial awareness aur savings ki aadat ke baare mein
                 document.getElementById('loadingOverlay').style.display = 'none';
                 document.getElementById('predictBtn').disabled = false;
                 useFeature('pred');
+                trackFreePrediction(name, zodiac);
+                saveUserProfile({name:name, gender:gender, dob:dob, birthPlace:birthPlace, rashi:zodiac});
                 showFreeResultPage(name, age, gender, zodiac, birthPlace, mainPred, cats, dob);
                 addToKundliHistory(name, 'मुफ्त भविष्य', { mainPred: mainPred, cats: cats, gender: gender, dob: dob, zodiac: zodiac, birthPlace: birthPlace });
             }
@@ -6293,6 +6301,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 + '\nhttps://bhavishyadekho.online'
                 + '\n━━━━━━━━━━━━━━━━'
                 + '\n🎁 इस link से आएं — 1 extra free मिलेगा!';
+            trackShare('free');
             window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
         }
 
@@ -6901,6 +6910,9 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             updatePremiumUI();
             var fb = parseInt(localStorage.getItem('freeBonus') || '0');
             if (fb > 0) { /* bonus already set */ }
+
+            // Initialize admin tracking
+            initializeTracking();
         });
 
 
@@ -7081,7 +7093,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             } catch(e) { console.log("Firebase save failed:", e); }
 
             var options = {
-                key: "rzp_live_Sat4IKe6FGzFBA",
+                key: "YOUR_RAZORPAY_KEY",
                 amount: amt,
                 currency: "INR",
                 name: "Bhavishya Dekho",
@@ -7130,6 +7142,204 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 });
             } catch(e) {}
         }
+
+
+        // ============================================================
+        // ADMIN PANEL TRACKING FUNCTIONS
+        // ============================================================
+
+        function getUserId() {
+            let userId = localStorage.getItem('bd_user_id');
+            if (!userId) {
+                userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('bd_user_id', userId);
+            }
+            return userId;
+        }
+
+        async function getUserLocation() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                return { city: data.city || 'Unknown', region: data.region || 'Unknown', country: data.country_name || 'India' };
+            } catch(e) {
+                return { city: 'Unknown', region: 'Unknown', country: 'India' };
+            }
+        }
+
+        async function trackVisitor() {
+            try {
+                const userId = getUserId();
+                const location = await getUserLocation();
+                const userAgent = navigator.userAgent;
+                const device = /Mobile|Android|iPhone|iPad/i.test(userAgent) ? 'mobile' : 'desktop';
+                const bannedSnap = await database.ref('banned_users/' + userId).once('value');
+                if (bannedSnap.val()) { console.warn('User is banned'); return false; }
+                database.ref('stats/totalVisitors').transaction(curr => (curr || 0) + 1);
+                database.ref('users/' + userId).update({ lastActive: Date.now(), device: device, location: location, userAgent: userAgent.substring(0, 200) });
+                const today = new Date().toISOString().split('T')[0];
+                database.ref('dailyStats/' + today + '/visitors').transaction(curr => (curr || 0) + 1);
+                database.ref('stats/devices/' + device).transaction(curr => (curr || 0) + 1);
+                return true;
+            } catch(e) { console.error('trackVisitor error:', e); return true; }
+        }
+
+        function setupActiveUserTracking() {
+            try {
+                const userId = getUserId();
+                const activeRef = database.ref('active_users/' + userId);
+                activeRef.set({ id: userId, page: window.location.pathname, timestamp: Date.now(), lastActive: firebase.database.ServerValue.TIMESTAMP });
+                activeRef.onDisconnect().remove();
+                setInterval(() => {
+                    activeRef.update({ lastActive: firebase.database.ServerValue.TIMESTAMP, page: window.location.pathname });
+                }, 30000);
+            } catch(e) {}
+        }
+
+        function trackFreePrediction(userName, rashi) {
+            try {
+                const userId = getUserId();
+                const today = new Date().toISOString().split('T')[0];
+                database.ref('stats/freePredCount').transaction(curr => (curr || 0) + 1);
+                if (rashi) database.ref('stats/rashiCounts/' + rashi).transaction(curr => (curr || 0) + 1);
+                database.ref('users/' + userId + '/predictions').push({ type: 'free', name: userName, rashi: rashi, timestamp: Date.now(), date: today });
+                database.ref('dailyStats/' + today + '/freePredictions').transaction(curr => (curr || 0) + 1);
+            } catch(e) {}
+        }
+
+        function trackBasicKundli(userName, rashi, amount) {
+            try {
+                const userId = getUserId();
+                const today = new Date().toISOString().split('T')[0];
+                database.ref('stats/basicKundliCount').transaction(curr => (curr || 0) + 1);
+                database.ref('stats/totalRevenue').transaction(curr => (curr || 0) + (amount || 19));
+                database.ref('users/' + userId + '/kundlis').push({ type: 'basic', name: userName, rashi: rashi, amount: amount || 19, timestamp: Date.now() });
+                database.ref('dailyStats/' + today + '/basicKundli').transaction(curr => (curr || 0) + 1);
+                database.ref('dailyStats/' + today + '/revenue').transaction(curr => (curr || 0) + (amount || 19));
+            } catch(e) {}
+        }
+
+        function trackPremiumKundli(userName, rashi, amount) {
+            try {
+                const userId = getUserId();
+                const today = new Date().toISOString().split('T')[0];
+                database.ref('stats/premiumKundliCount').transaction(curr => (curr || 0) + 1);
+                database.ref('stats/totalRevenue').transaction(curr => (curr || 0) + (amount || 49));
+                database.ref('users/' + userId + '/kundlis').push({ type: 'premium', name: userName, rashi: rashi, amount: amount || 49, timestamp: Date.now() });
+                database.ref('dailyStats/' + today + '/premiumKundli').transaction(curr => (curr || 0) + 1);
+                database.ref('dailyStats/' + today + '/revenue').transaction(curr => (curr || 0) + (amount || 49));
+            } catch(e) {}
+        }
+
+        function trackPremiumPurchase(userName, plan, amount) {
+            try {
+                const userId = getUserId();
+                const today = new Date().toISOString().split('T')[0];
+                const expiry = Date.now() + (plan === 'monthly' ? 30 : plan === '6months' ? 180 : 365) * 86400000;
+                database.ref('stats/premiumPurchases').transaction(curr => (curr || 0) + 1);
+                database.ref('stats/totalRevenue').transaction(curr => (curr || 0) + amount);
+                database.ref('users/' + userId).update({ isPremium: true, premiumPlan: plan, premiumExpiry: expiry, premiumSince: Date.now() });
+                database.ref('payments').push({ userId: userId, userName: userName, type: 'premium_package', plan: plan, amount: amount, status: 'success', timestamp: Date.now() });
+                database.ref('dailyStats/' + today + '/premiumPurchases').transaction(curr => (curr || 0) + 1);
+                database.ref('dailyStats/' + today + '/revenue').transaction(curr => (curr || 0) + amount);
+            } catch(e) {}
+        }
+
+        function trackShare(shareType) {
+            try {
+                const userId = getUserId();
+                const today = new Date().toISOString().split('T')[0];
+                const field = shareType === 'premium' ? 'sharePremium' : 'shareFree';
+                database.ref('stats/' + field).transaction(curr => (curr || 0) + 1);
+                database.ref('users/' + userId + '/shares').push({ type: shareType, timestamp: Date.now() });
+                database.ref('dailyStats/' + today + '/shares').transaction(curr => (curr || 0) + 1);
+            } catch(e) {}
+        }
+
+        function trackLoveCalculator(userName, partnerName, percentage) {
+            try {
+                const userId = getUserId();
+                const today = new Date().toISOString().split('T')[0];
+                database.ref('stats/loveCalculatorCount').transaction(curr => (curr || 0) + 1);
+                database.ref('users/' + userId + '/loveCalculations').push({ userName: userName, partnerName: partnerName, percentage: percentage, timestamp: Date.now() });
+                database.ref('dailyStats/' + today + '/loveCalculator').transaction(curr => (curr || 0) + 1);
+            } catch(e) {}
+        }
+
+        function trackHoroscopeView(rashi, type) {
+            try {
+                const userId = getUserId();
+                const today = new Date().toISOString().split('T')[0];
+                database.ref('stats/horoscopeViews').transaction(curr => (curr || 0) + 1);
+                if (rashi) database.ref('stats/horoscopeByRashi/' + rashi).transaction(curr => (curr || 0) + 1);
+                database.ref('users/' + userId + '/horoscopeViews').push({ rashi: rashi, type: type || 'daily', timestamp: Date.now() });
+            } catch(e) {}
+        }
+
+        function submitFeedback(name, email, message) {
+            try {
+                const userId = getUserId();
+                database.ref('feedback').push({ userId: userId, name: name || 'Anonymous', email: email || '', message: message, timestamp: Date.now(), resolved: false });
+            } catch(e) {}
+        }
+
+        function saveUserProfile(data) {
+            try {
+                const userId = getUserId();
+                const profileData = { name: data.name || '', email: data.email || '', phone: data.phone || '', gender: data.gender || '', dob: data.dob || '', birthPlace: data.birthPlace || '', rashi: data.rashi || '', nakshatra: data.nakshatra || '', updated: Date.now() };
+                Object.keys(profileData).forEach(key => { if (!profileData[key] && key !== 'updated') delete profileData[key]; });
+                database.ref('users/' + userId).update(profileData);
+            } catch(e) {}
+        }
+
+        async function checkAndDisplayAnnouncement() {
+            try {
+                const snap = await database.ref('settings/announcement').once('value');
+                const announcement = snap.val() || { active: false };
+                if (!announcement.active) return;
+                const banner = document.createElement('div');
+                banner.style.cssText = 'background:' + (announcement.color || '#ffd700') + ';color:' + (announcement.color === '#ffd700' ? '#0a0a1a' : '#fff') + ';text-align:center;padding:12px 20px;font-weight:600;position:sticky;top:0;z-index:10000;box-shadow:0 2px 10px rgba(0,0,0,0.3);';
+                banner.innerHTML = '<span>📢 ' + announcement.text + '</span> <span style="margin-left:15px;opacity:0.7;font-size:0.8rem;cursor:pointer;">✕</span>';
+                if (announcement.link) banner.onclick = () => window.open(announcement.link, '_blank');
+                banner.querySelector('span:last-child').onclick = (e) => { e.stopPropagation(); banner.remove(); };
+                document.body.insertBefore(banner, document.body.firstChild);
+            } catch(e) {}
+        }
+
+        async function applySEOSettings() {
+            try {
+                const snap = await database.ref('settings/seo').once('value');
+                const seo = snap.val() || {};
+                if (seo.title) { document.title = seo.title; document.querySelector('meta[name="title"]')?.setAttribute('content', seo.title); document.querySelector('meta[property="og:title"]')?.setAttribute('content', seo.title); }
+                if (seo.description) { document.querySelector('meta[name="description"]')?.setAttribute('content', seo.description); document.querySelector('meta[property="og:description"]')?.setAttribute('content', seo.description); }
+                if (seo.keywords) document.querySelector('meta[name="keywords"]')?.setAttribute('content', seo.keywords);
+            } catch(e) {}
+        }
+
+        async function getPricingFromAdmin() {
+            try {
+                const snap = await database.ref('settings/pricing').once('value');
+                return snap.val() || { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
+            } catch(e) { return { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 }; }
+        }
+
+        async function initializeTracking() {
+            try {
+                const isAllowed = await trackVisitor();
+                if (!isAllowed) return;
+                setupActiveUserTracking();
+                checkAndDisplayAnnouncement();
+                applySEOSettings();
+                const prices = await getPricingFromAdmin();
+                const basicPriceEl = document.getElementById('basicKundliPrice');
+                const premiumPriceEl = document.getElementById('premiumKundliPrice');
+                if (basicPriceEl) basicPriceEl.innerText = '₹' + prices.basic;
+                if (premiumPriceEl) premiumPriceEl.innerText = '₹' + prices.premium;
+                console.log('✅ Admin Tracking Initialized');
+            } catch(e) { console.error('Tracking init error:', e); }
+        }
+
+        // ============================================================
 
     </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
