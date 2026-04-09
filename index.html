@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <title>🔮 Bhavishya Dekho - मुफ्त कुंडली, राशिफल और वैदिक ज्योतिष | Free Kundli Online</title>
 
     <!-- Primary SEO Meta Tags -->
@@ -219,6 +219,17 @@
             user-select: text;
         }
 
+        /* ── RESPONSIVE BASE FONT ──
+           clamp(min, preferred, max)
+           Chhote phones (320px) → ~14px
+           Normal phones (390px) → ~15px
+           Bade phones (430px) → ~16px
+           Tablets/Desktop → 16px max
+        */
+        html {
+            font-size: clamp(13px, 3.8vw, 16px);
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #0a0a1a, #1a1a3a);
@@ -226,6 +237,10 @@
             overflow-x: hidden;
             position: relative;
             min-height: 100vh;
+            font-size: 1rem;
+            line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
         }
 
         .cosmic-bg {
@@ -1939,7 +1954,7 @@
             }
 
             .modal-title {
-                font-size: 1.5em;
+                font-size: 1.4em;
             }
 
             .floating-share {
@@ -1957,28 +1972,253 @@
             }
 
             .header {
-                padding: 8px 15px;
+                padding: 8px 12px;
             }
 
             .logo {
-                font-size: 1.3em;
+                font-size: 1.2em;
             }
 
             .menu-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1.3em;
+                width: 38px;
+                height: 38px;
+                font-size: 1.2em;
             }
 
             .predict-btn-top {
-                padding: 15px;
+                padding: 14px;
+                font-size: 1.2em;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .feature-card {
+                padding: 15px 10px;
+            }
+
+            .feature-icon {
+                font-size: 2em;
+            }
+
+            .feature-title {
+                font-size: 1.1em;
+            }
+
+            .form-section {
+                padding: 20px 15px;
+            }
+
+            .form-title {
                 font-size: 1.3em;
+            }
+
+            .payment-content {
+                padding: 20px 15px;
+                max-width: 95vw;
+            }
+
+            .payment-title {
+                font-size: 1.2em;
+            }
+
+            .payment-amount {
+                font-size: 2em;
+            }
+
+            .bhav-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+
+            .panchang-bar {
+                font-size: 0.8em;
+                padding: 8px;
+            }
+
+            .panchang-item {
+                padding: 0 5px;
             }
         }
 
+        /* Small phones: 320px - 480px */
         @media (max-width: 480px) {
             .benefit-list {
                 grid-template-columns: 1fr;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .feature-card {
+                padding: 12px 8px;
+                border-radius: 15px;
+            }
+
+            .feature-icon {
+                font-size: 1.8em;
+                margin-bottom: 6px;
+            }
+
+            .feature-title {
+                font-size: 1em;
+                margin-bottom: 4px;
+            }
+
+            .feature-card p {
+                font-size: 0.8em;
+            }
+
+            .header {
+                padding: 7px 10px;
+                border-radius: 35px;
+            }
+
+            .logo {
+                font-size: 1.1em;
+            }
+
+            .menu-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1.1em;
+            }
+
+            .predict-btn-top {
+                padding: 13px;
+                font-size: 1.1em;
+                border-radius: 40px;
+            }
+
+            .predict-btn {
+                padding: 15px;
+                font-size: 1.2em;
+            }
+
+            .form-section {
+                padding: 16px 12px;
+                border-radius: 20px;
+            }
+
+            .form-title {
+                font-size: 1.2em;
+                margin-bottom: 18px;
+            }
+
+            .form-group input,
+            .form-group select {
+                font-size: 0.88em;
+                padding: 10px 10px 10px 36px;
+            }
+
+            .bhav-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 8px;
+            }
+
+            .bhav-card {
+                padding: 10px 6px;
+            }
+
+            .bhav-number {
+                font-size: 1.4em;
+            }
+
+            .bhav-name {
+                font-size: 0.72em;
+            }
+
+            .bhav-desc {
+                font-size: 0.65em;
+            }
+
+            .panchang-bar {
+                font-size: 0.72em;
+                gap: 4px;
+                border-radius: 30px;
+            }
+
+            .panchang-item {
+                padding: 0 4px;
+            }
+
+            .premium-card {
+                padding: 18px 12px;
+            }
+
+            .donation-options {
+                gap: 6px;
+            }
+
+            .donation-option {
+                padding: 8px 14px;
+                font-size: 0.9em;
+            }
+
+            .payment-content {
+                padding: 18px 12px;
+                border-radius: 20px;
+            }
+
+            .side-menu {
+                padding: 70px 15px;
+            }
+
+            .love-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .love-percentage {
+                font-size: 3em;
+            }
+
+            .modal-content {
+                padding: 12px;
+                border-radius: 20px;
+            }
+        }
+
+        /* Very small phones: under 360px */
+        @media (max-width: 360px) {
+            .feature-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+
+            .logo {
+                font-size: 1em;
+            }
+
+            .predict-btn-top {
+                font-size: 1em;
+                padding: 12px;
+            }
+
+            .bhav-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 5px;
+            }
+
+            .form-section {
+                padding: 14px 10px;
+            }
+
+            .panchang-bar {
+                font-size: 0.68em;
+            }
+        }
+
+        /* Tablets and larger: keep things comfortable */
+        @media (min-width: 769px) {
+            .main-container {
+                padding: 20px;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
     </style>
@@ -6001,24 +6241,27 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         function doShareForBonus(feat) {
             feat = feat || 'pred';
             var refCode = getUserReferralCode();
-            var shareUrl = 'https://bhavishyadekho.online?ref=' + refCode;
-            var txt = '🔮 Bhavishya Dekho — मुफ्त ज्योतिष!\n✨ भविष्यफल, लव कैलकुलेटर, राशिफल सब मुफ्त!\n\n👉 ' + shareUrl + '\n\n(इस link से join करें — आपको 1 extra free मिलेगा!)';
+            var baseUrl = 'https://bhavishyadekho.online';
+            var shareUrl = baseUrl + '/#ref=' + refCode;
+            // URL must be alone on its own line for WhatsApp to render it as clickable link
+            var txt = '🔮 *Bhavishya Dekho* — मुफ्त ज्योतिष!'
+                + '\n✨ भविष्यफल, लव कैलकुलेटर, राशिफल — सब मुफ्त!'
+                + '\n\n🌐 अभी देखें:\n' + baseUrl
+                + '\n\n🎁 मेरे link से join करने पर आपको 1 extra free मिलेगा!';
 
-            // Track which feature this share was for (to give bonus when someone opens via this referral)
             localStorage.setItem('pendingShareFeat', feat);
 
             if (navigator.share) {
-                navigator.share({ title: 'Bhavishya Dekho', text: txt, url: shareUrl })
+                navigator.share({ title: 'Bhavishya Dekho', text: txt, url: baseUrl })
                     .then(function() { alert('✅ Share हो गया! जब कोई आपका link खोलेगा, तो आपको 1 मुफ्त मिलेगा।'); })
                     .catch(function() {});
             } else if (navigator.clipboard) {
                 navigator.clipboard.writeText(txt).then(function() {
-                    alert('✅ Link copy हो गया! दोस्तों को भेजें।\nजब कोई आपका link खोलेगा, तो आपको 1 मुफ्त मिलेगा।');
+                    alert('✅ Copy हो गया! दोस्तों को भेजें।\nजब कोई link खोलेगा, आपको 1 मुफ्त मिलेगा।');
                 });
             } else {
-                prompt('यह link copy करें:', shareUrl);
+                prompt('यह link copy करें:', baseUrl);
             }
-            // NO instant bonus — bonus only when referred user opens the link
         }
 
         // share functions defined below (single source of truth)
@@ -6031,30 +6274,40 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             var name = window._predName || '';
             var pred = (window._predText || '').substring(0, 120);
             var refCode = getUserReferralCode();
-            var refUrl = 'https://bhavishyadekho.online?ref=' + refCode;
-            return { name: name, pred: pred, refUrl: refUrl };
+            // Clean base URL - no query params so WhatsApp/Facebook make it clickable
+            var baseUrl = 'https://bhavishyadekho.online';
+            // Ref URL with hash so it doesn't break link previews
+            var refUrl = baseUrl + '/#ref=' + refCode;
+            return { name: name, pred: pred, refUrl: refUrl, baseUrl: baseUrl, refCode: refCode };
         }
 
         function shareOnWhatsApp() {
             var d = _getShareData();
-            var fullPred = (window._predText || '').substring(0, 300);
-            var msg = '🔮 *Bhavishya Dekho*'
+            var fullPred = (window._predText || '').substring(0, 250);
+            // URL must be on its OWN LINE with no other text on that line for WhatsApp to make it clickable
+            var msg = '🔮 *Bhavishya Dekho* — मुफ्त ज्योतिष'
                 + (d.name ? '\n👤 *' + d.name + '* का भविष्यफल' : '')
-                + (fullPred ? '\n\n✨ ' + fullPred : '')
-                + '\n\n🔗 https://bhavishyadekho.online'
-                + '\nअभी अपना free में भविष्य देखें 👆';
+                + (fullPred ? '\n\n✨ ' + fullPred + '...' : '')
+                + '\n\n━━━━━━━━━━━━━━━━'
+                + '\n🌐 अभी अपना मुफ्त भविष्य देखें:'
+                + '\nhttps://bhavishyadekho.online'
+                + '\n━━━━━━━━━━━━━━━━'
+                + '\n🎁 इस link से आएं — 1 extra free मिलेगा!';
             window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
         }
 
         function shareOnFacebook() {
             var d = _getShareData();
-            var txt = (d.name ? d.name + ' का भविष्यफल | ' : '') + 'Bhavishya Dekho — मुफ्त ज्योतिष 🔮';
-            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(d.refUrl) + '&quote=' + encodeURIComponent(txt), '_blank');
+            // Facebook sharer needs clean URL — query params can break og:image preview
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(d.baseUrl), '_blank');
         }
 
         function shareOnInstagram() {
             var d = _getShareData();
-            var txt = '🔮 Bhavishya Dekho\n' + (d.name ? d.name + ' का भविष्यफल\n' : '') + d.refUrl + '\n🎁 Link से join करें — 1 extra free!';
+            var txt = '🔮 Bhavishya Dekho — मुफ्त ज्योतिष\n'
+                + (d.name ? d.name + ' का भविष्यफल\n' : '')
+                + '\n🌐 ' + d.baseUrl
+                + '\n🎁 अभी अपना मुफ्त भविष्य देखें!';
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(txt).then(function() {
                     alert('📸 Copy हो गया!\nInstagram खोलें → Story/Bio → Paste करें');
@@ -6066,26 +6319,26 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
         function shareOnSnapchat() {
             var d = _getShareData();
-            window.open('https://www.snapchat.com/scan?attachmentUrl=' + encodeURIComponent(d.refUrl), '_blank');
+            window.open('https://www.snapchat.com/scan?attachmentUrl=' + encodeURIComponent(d.baseUrl), '_blank');
         }
 
         function shareOnTelegram() {
             var d = _getShareData();
             var txt = '🔮 Bhavishya Dekho — मुफ्त भविष्यफल' + (d.name ? ' | ' + d.name : '');
-            window.open('https://t.me/share/url?url=' + encodeURIComponent(d.refUrl) + '&text=' + encodeURIComponent(txt), '_blank');
+            window.open('https://t.me/share/url?url=' + encodeURIComponent(d.baseUrl) + '&text=' + encodeURIComponent(txt), '_blank');
         }
 
         function shareOnTwitter() {
             var d = _getShareData();
-            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('🔮 Bhavishya Dekho — मुफ्त ज्योतिष') + '&url=' + encodeURIComponent(d.refUrl), '_blank');
+            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('🔮 Bhavishya Dekho — मुफ्त ज्योतिष') + '&url=' + encodeURIComponent(d.baseUrl), '_blank');
         }
 
         function copyLink() {
             var d = _getShareData();
             if (navigator.clipboard) {
-                navigator.clipboard.writeText(d.refUrl).then(function() { alert('✅ Link copy हो गया!'); });
+                navigator.clipboard.writeText(d.baseUrl).then(function() { alert('✅ Link copy हो गया!\n' + d.baseUrl); });
             } else {
-                prompt('Link copy करें:', d.refUrl);
+                prompt('Link copy करें:', d.baseUrl);
             }
         }
 
@@ -6828,7 +7081,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             } catch(e) { console.log("Firebase save failed:", e); }
 
             var options = {
-                key: "rzp_live_Sat4IKe6FGzFBA",
+                key: "YOUR_RAZORPAY_KEY",
                 amount: amt,
                 currency: "INR",
                 name: "Bhavishya Dekho",
