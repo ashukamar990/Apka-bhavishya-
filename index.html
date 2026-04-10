@@ -3317,9 +3317,10 @@
         // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCAjf6a111RYNrczir5UVQrkctxlNIYERI",
-            authDomain: "bhavishya-dekho.firebaseapp.com",
-            projectId: "bhavishya-dekho",
-            storageBucket: "bhavishya-dekho.firebasestorage.app",
+            authDomain: "apka-bhavishya-42426.firebaseapp.com",
+            databaseURL: "https://apka-bhavishya-42426-default-rtdb.firebaseio.com",
+            projectId: "apka-bhavishya-42426",
+            storageBucket: "apka-bhavishya-42426.appspot.com",
             messagingSenderId: "490450742753",
             appId: "1:490450742753:web:63a59cd70e1ac24304b6a0"
         };
@@ -6944,8 +6945,11 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         }
 
         function getDailyLimit(feat) {
-            // Base: 2 free per day for pred, 2 for love, 2 for horo
+            // Admin se load kiya limit use karo, warna default 2
             var base = 2;
+            if (feat === 'pred' && window._adminDailyFreeLimit) base = window._adminDailyFreeLimit;
+            if (feat === 'love' && window._adminLoveLimit) base = window._adminLoveLimit;
+            if (feat === 'horo' && window._adminHoroLimit) base = window._adminHoroLimit;
             var premiumBonus = 0;
             try {
                 var pd = JSON.parse(localStorage.getItem('premiumData') || 'null');
@@ -7093,7 +7097,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             } catch(e) { console.log("Firebase save failed:", e); }
 
             var options = {
-                key: "rzp_live_Sat4IKe6FGzFBA",
+                key: "YOUR_RAZORPAY_KEY",
                 amount: amt,
                 currency: "INR",
                 name: "Bhavishya Dekho",
@@ -7335,8 +7339,153 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 const premiumPriceEl = document.getElementById('premiumKundliPrice');
                 if (basicPriceEl) basicPriceEl.innerText = '₹' + prices.basic;
                 if (premiumPriceEl) premiumPriceEl.innerText = '₹' + prices.premium;
+
+                // ── Admin se data load karo ──
+                loadRashifalFromAdmin();
+                loadGemstonesFromAdmin();
+                loadRemediesFromAdmin();
+                loadMaintenanceFromAdmin();
+                loadLimitsFromAdmin();
+                loadContentFromAdmin();
+
                 console.log('✅ Admin Tracking Initialized');
             } catch(e) { console.error('Tracking init error:', e); }
+        }
+
+        // ============================================================
+        // FIREBASE SE ADMIN DATA LOAD KARO — REAL SITE PAR DIKHAO
+        // ============================================================
+
+        // 1. RASHIFAL — Admin ne jo likha woh dikhao
+        async function loadRashifalFromAdmin() {
+            try {
+                const snap = await database.ref('rashifal').once('value');
+                const data = snap.val();
+                if (!data) return;
+                const rashiMap = {
+                    'aries':'मेष','taurus':'वृष','gemini':'मिथुन','cancer':'कर्क',
+                    'leo':'सिंह','virgo':'कन्या','libra':'तुला','scorpio':'वृश्चिक',
+                    'sagittarius':'धनु','capricorn':'मकर','aquarius':'कुंभ','pisces':'मीन'
+                };
+                Object.entries(data).forEach(([rashi, val]) => {
+                    if (!val) return;
+                    // Daily rashifal text update
+                    ['daily','weekly','monthly','yearly'].forEach(type => {
+                        const text = val[type] || '';
+                        if (!text) return;
+                        // ID patterns jaise: aries-daily, aries_daily, rashifal-aries etc.
+                        const ids = [
+                            rashi+'-'+type, rashi+'_'+type,
+                            'rashifal-'+rashi+'-'+type, type+'-'+rashi,
+                            rashi+'-horoscope-'+type
+                        ];
+                        ids.forEach(id => {
+                            const el = document.getElementById(id);
+                            if (el) el.innerText = text;
+                        });
+                        // Class-based elements bhi update karo
+                        document.querySelectorAll('[data-rashi="'+rashi+'"][data-type="'+type+'"]').forEach(el => {
+                            el.innerText = text;
+                        });
+                    });
+                });
+                console.log('✅ Rashifal loaded from admin');
+            } catch(e) { console.log('Rashifal load error:', e); }
+        }
+
+        // 2. GEMSTONES — Admin ne jo daala woh dikhao
+        async function loadGemstonesFromAdmin() {
+            try {
+                const snap = await database.ref('gemstones').once('value');
+                const data = snap.val();
+                if (!data) return;
+                Object.entries(data).forEach(([rashi, val]) => {
+                    if (!val) return;
+                    if (val.stone) {
+                        const ids = ['gem-'+rashi, 'stone-'+rashi, rashi+'-stone', rashi+'-gem'];
+                        ids.forEach(id => { const el = document.getElementById(id); if(el) el.innerText = val.stone; });
+                        document.querySelectorAll('[data-rashi="'+rashi+'"][data-gem]').forEach(el => el.innerText = val.stone);
+                    }
+                    if (val.day) {
+                        const ids = ['gemday-'+rashi, rashi+'-gemday', rashi+'-day'];
+                        ids.forEach(id => { const el = document.getElementById(id); if(el) el.innerText = val.day; });
+                    }
+                });
+                console.log('✅ Gemstones loaded from admin');
+            } catch(e) { console.log('Gemstones load error:', e); }
+        }
+
+        // 3. REMEDIES — Admin ne jo likha woh dikhao
+        async function loadRemediesFromAdmin() {
+            try {
+                const snap = await database.ref('remedies').once('value');
+                const data = snap.val();
+                if (!data) return;
+                const grahaMap = {
+                    'Surya':'surya','Chandra':'chandra','Mangal':'mangal',
+                    'Budh':'budh','Guru':'guru','Shukra':'shukra',
+                    'Shani':'shani','Rahu':'rahu','Ketu':'ketu'
+                };
+                Object.entries(data).forEach(([graha, text]) => {
+                    if (!text) return;
+                    const key = grahaMap[graha] || graha.toLowerCase();
+                    const ids = ['remedy-'+key, key+'-remedy', 'upay-'+key, graha.toLowerCase()+'-upay'];
+                    ids.forEach(id => { const el = document.getElementById(id); if(el) el.innerText = text; });
+                    document.querySelectorAll('[data-graha="'+graha+'"]').forEach(el => el.innerText = text);
+                });
+                console.log('✅ Remedies loaded from admin');
+            } catch(e) { console.log('Remedies load error:', e); }
+        }
+
+        // 4. MAINTENANCE MODE — Site band karo agar admin ne on kiya
+        async function loadMaintenanceFromAdmin() {
+            try {
+                const snap = await database.ref('settings/maintenance').once('value');
+                const data = snap.val() || {};
+                if (!data.active) return;
+                // Maintenance overlay dikhao
+                const msg = data.message || 'Website abhi maintenance par hai. Thodi der mein wapas aayein.';
+                const time = data.expectedTime || '';
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed;inset:0;background:linear-gradient(135deg,#07080f,#0d0f1c);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:#e8e8f0;font-family:sans-serif;text-align:center;padding:20px;';
+                overlay.innerHTML = '<div style="font-size:3em;">🔧</div>'
+                    + '<h2 style="color:#ffd700;font-size:1.5rem;">Maintenance Mode</h2>'
+                    + '<p style="color:#aaa;max-width:400px;line-height:1.6;">' + msg + '</p>'
+                    + (time ? '<p style="color:#ffd700;font-size:0.9rem;">⏱ Expected Time: ' + time + '</p>' : '');
+                document.body.appendChild(overlay);
+                console.log('⚠️ Maintenance mode active');
+            } catch(e) {}
+        }
+
+        // 5. DAILY LIMITS — Admin ne jo set kiya
+        async function loadLimitsFromAdmin() {
+            try {
+                const snap = await database.ref('settings/limits').once('value');
+                const data = snap.val();
+                if (!data) return;
+                // Override default limits
+                if (data.dailyFree) window._adminDailyFreeLimit = data.dailyFree;
+                if (data.love) window._adminLoveLimit = data.love;
+                if (data.horo) window._adminHoroLimit = data.horo;
+                console.log('✅ Limits loaded from admin:', data);
+            } catch(e) {}
+        }
+
+        // 6. PAGES CONTENT — About, Contact, Terms, Privacy
+        async function loadContentFromAdmin() {
+            try {
+                const pages = ['about','contact','terms','privacy'];
+                for (const page of pages) {
+                    const snap = await database.ref('content/'+page).once('value');
+                    const data = snap.val();
+                    if (!data) continue;
+                    const titleEl = document.getElementById(page+'-title');
+                    const contentEl = document.getElementById(page+'-content');
+                    if (titleEl && data.title) titleEl.innerText = data.title;
+                    if (contentEl && data.content) contentEl.innerText = data.content;
+                }
+                console.log('✅ Page content loaded from admin');
+            } catch(e) {}
         }
 
         // ============================================================
