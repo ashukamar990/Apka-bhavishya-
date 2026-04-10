@@ -4159,15 +4159,16 @@
         }
 
         // ── RASHIFAL: Firebase se pehle, fallback hardcoded ──
-        var _fbRashifal = null; // Cache
+        // Cache for predictions
+        var _fbPredictions = {};
 
-        async function getFbRashifal() {
-            if (_fbRashifal) return _fbRashifal;
+        async function getFbPredictions(type) {
+            if (_fbPredictions[type]) return _fbPredictions[type];
             try {
-                var snap = await database.ref('rashifal').once('value');
-                _fbRashifal = snap.val() || {};
-            } catch(e) { _fbRashifal = {}; }
-            return _fbRashifal;
+                var snap = await database.ref('predictions/' + type).once('value');
+                _fbPredictions[type] = snap.val() || {};
+            } catch(e) { _fbPredictions[type] = {}; }
+            return _fbPredictions[type];
         }
 
         // Hindi rashi name -> Firebase key map
@@ -4198,8 +4199,9 @@
             var el = document.getElementById('dailyRashiRes');
             el.style.display = 'block';
             el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">☀️ ' + r + ' — आज का राशिफल</h3><p style="color:#ddd;line-height:1.8;">⏳ लोड हो रहा है...</p>';
-            getFbRashifal().then(function(fb) {
-                var fbText = fb[key] && fb[key]['daily'] ? fb[key]['daily'] : '';
+            getFbPredictions('daily').then(function(fb) {
+                // Admin panel saves as: predictions/daily/aries/text
+                var fbText = fb[key] && fb[key].text ? fb[key].text : '';
                 var pred;
                 if (fbText) {
                     pred = fbText;
@@ -4233,8 +4235,8 @@
             var el = document.getElementById('monthlyRashiRes');
             el.style.display = 'block';
             el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📆 ' + r + ' — इस महीने</h3><p style="color:#ddd;line-height:1.8;">⏳ लोड हो रहा है...</p>';
-            getFbRashifal().then(function(fb) {
-                var fbText = fb[key] && fb[key]['monthly'] ? fb[key]['monthly'] : '';
+            getFbPredictions('monthly').then(function(fb) {
+                var fbText = fb[key] && fb[key].text ? fb[key].text : '';
                 var pred = fbText || rashiMonthly[r] || 'इस महीने आपके जीवन में सकारात्मक बदलाव आएंगे।';
                 el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📆 ' + r + ' — इस महीने</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
             });
@@ -4260,8 +4262,8 @@
             var el = document.getElementById('yearlyRashiRes');
             el.style.display = 'block';
             el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📅 ' + r + ' — ' + year + '</h3><p style="color:#ddd;line-height:1.8;">⏳ लोड हो रहा है...</p>';
-            getFbRashifal().then(function(fb) {
-                var fbText = fb[key] && fb[key]['yearly'] ? fb[key]['yearly'] : '';
+            getFbPredictions('yearly').then(function(fb) {
+                var fbText = fb[key] && fb[key].text ? fb[key].text : '';
                 var pred = fbText || rashiYearly[r] || year+' में आपके जीवन में सकारात्मक बदलाव आएंगे।';
                 el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📅 ' + r + ' — ' + year + '</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
             });
@@ -7313,8 +7315,42 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         async function getPricingFromAdmin() {
             try {
                 const snap = await database.ref('settings/pricing').once('value');
-                return snap.val() || { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
-            } catch(e) { return { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 }; }
+                const p = snap.val() || { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
+
+                // Basic & Premium Kundli price
+                const basicPriceEl = document.getElementById('basicKundliPrice');
+                const premiumPriceEl = document.getElementById('premiumKundliPrice');
+                const basicBadge = document.getElementById('basicKundliBadge');
+                const premiumBadge = document.getElementById('premiumKundliBadge');
+                const basicBtnText = document.getElementById('basicKundliBtnText');
+                const premiumBtnText = document.getElementById('premiumKundliBtnText');
+                if (basicPriceEl) basicPriceEl.innerText = '₹' + p.basic;
+                if (premiumPriceEl) premiumPriceEl.innerText = '₹' + p.premium;
+                if (basicBadge) basicBadge.innerText = '₹' + p.basic;
+                if (premiumBadge) premiumBadge.innerText = '₹' + p.premium;
+                if (basicBtnText) basicBtnText.innerText = '₹' + p.basic + ' में रिपोर्ट खरीदें';
+                if (premiumBtnText) premiumBtnText.innerText = '₹' + p.premium + ' में प्रीमियम रिपोर्ट खरीदें';
+
+                // Rashi price — sab jagah update karo
+                const rashiPrice = p.rashi || 5;
+                document.querySelectorAll('[id$="RashiBuyMsg"] span[style*="border-radius:20px"]').forEach(el => {
+                    el.innerText = '₹' + rashiPrice;
+                });
+                document.querySelectorAll('[id$="RashiBuyMsg"] div[style*="ffd700"]').forEach(el => {
+                    if (el.innerText.includes('राशि जानें')) el.innerText = 'सिर्फ ₹' + rashiPrice + ' में सटीक राशि जानें';
+                });
+                // rashiBuyHint bhi
+                const rashiHintPrice = document.querySelector('#rashiBuyHint span[style*="border-radius:20px"]');
+                if (rashiHintPrice) rashiHintPrice.innerText = '₹' + rashiPrice;
+                const rashiHintText = document.querySelector('#rashiBuyHint div[style*="ffd700"]');
+                if (rashiHintText && rashiHintText.innerText.includes('राशि')) rashiHintText.innerText = 'सिर्फ ₹' + rashiPrice + ' में सटीक राशि जानें';
+
+                // Store globally for payment functions
+                window._adminPricing = p;
+                return p;
+            } catch(e) {
+                return { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
+            }
         }
 
         async function initializeTracking() {
@@ -7324,11 +7360,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 setupActiveUserTracking();
                 checkAndDisplayAnnouncement();
                 applySEOSettings();
-                const prices = await getPricingFromAdmin();
-                const basicPriceEl = document.getElementById('basicKundliPrice');
-                const premiumPriceEl = document.getElementById('premiumKundliPrice');
-                if (basicPriceEl) basicPriceEl.innerText = '₹' + prices.basic;
-                if (premiumPriceEl) premiumPriceEl.innerText = '₹' + prices.premium;
+                await getPricingFromAdmin(); // yeh sab prices update kar deta hai
 
                 // ── Admin se data load karo ──
                 loadRashifalFromAdmin();
@@ -7346,40 +7378,18 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         // FIREBASE SE ADMIN DATA LOAD KARO — REAL SITE PAR DIKHAO
         // ============================================================
 
-        // 1. RASHIFAL — Admin ne jo likha woh dikhao
+        // 1. RASHIFAL — Admin ne jo likha woh dikhao (predictions/daily, predictions/monthly etc)
         async function loadRashifalFromAdmin() {
             try {
-                const snap = await database.ref('rashifal').once('value');
-                const data = snap.val();
-                if (!data) return;
-                const rashiMap = {
-                    'aries':'मेष','taurus':'वृष','gemini':'मिथुन','cancer':'कर्क',
-                    'leo':'सिंह','virgo':'कन्या','libra':'तुला','scorpio':'वृश्चिक',
-                    'sagittarius':'धनु','capricorn':'मकर','aquarius':'कुंभ','pisces':'मीन'
-                };
-                Object.entries(data).forEach(([rashi, val]) => {
-                    if (!val) return;
-                    // Daily rashifal text update
-                    ['daily','weekly','monthly','yearly'].forEach(type => {
-                        const text = val[type] || '';
-                        if (!text) return;
-                        // ID patterns jaise: aries-daily, aries_daily, rashifal-aries etc.
-                        const ids = [
-                            rashi+'-'+type, rashi+'_'+type,
-                            'rashifal-'+rashi+'-'+type, type+'-'+rashi,
-                            rashi+'-horoscope-'+type
-                        ];
-                        ids.forEach(id => {
-                            const el = document.getElementById(id);
-                            if (el) el.innerText = text;
-                        });
-                        // Class-based elements bhi update karo
-                        document.querySelectorAll('[data-rashi="'+rashi+'"][data-type="'+type+'"]').forEach(el => {
-                            el.innerText = text;
-                        });
-                    });
-                });
-                console.log('✅ Rashifal loaded from admin');
+                const types = ['daily','monthly','yearly'];
+                for (const type of types) {
+                    const snap = await database.ref('predictions/' + type).once('value');
+                    const data = snap.val();
+                    if (!data) continue;
+                    // Cache karo taaki showXxxRashi instantly use kar sake
+                    _fbPredictions[type] = data;
+                }
+                console.log('✅ Rashifal loaded from admin (predictions path)');
             } catch(e) { console.log('Rashifal load error:', e); }
         }
 
