@@ -196,8 +196,11 @@
       ]
     }
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         * {
@@ -252,13 +255,16 @@
             z-index: -1;
             overflow: hidden;
             pointer-events: none;
+            contain: strict;
+            transform: translateZ(0); /* GPU layer pe daalo */
         }
 
         .star {
             position: absolute;
             background: white;
             border-radius: 50%;
-            will-change: transform, opacity;
+            will-change: opacity;
+            contain: strict;
         }
 
         .shooting-star {
@@ -267,11 +273,12 @@
             height: 2px;
             background: linear-gradient(90deg, transparent, #ffd700, transparent);
             will-change: transform;
+            contain: layout style;
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
         }
 
         @keyframes shoot {
@@ -3331,9 +3338,12 @@
 
         // Optimize AOS initialization
         AOS.init({
-            duration: 800,
+            duration: 500,
             once: true,
-            disable: window.innerWidth < 768
+            disable: window.innerWidth < 768, // Mobile pe disable — bahut smooth hoga
+            offset: 50,
+            delay: 0,
+            throttleDelay: 99
         });
 
         // User premium status
@@ -3472,21 +3482,21 @@
         }
 
 
-        // Star animation with requestAnimationFrame for smoothness (optimized)
         function createStars() {
             const bg = document.getElementById('cosmicBg');
+            if (!bg) return;
             bg.innerHTML = '';
-            
-            for (let i = 0; i < 80; i++) {
+            // Mobile pe kam stars — performance ke liye
+            const isMobile = window.innerWidth < 768;
+            const count = isMobile ? 35 : 60;
+            const frag = document.createDocumentFragment(); // Single DOM update
+            for (let i = 0; i < count; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.width = (Math.random() * 2 + 1) + 'px';
-                star.style.height = star.style.width;
-                star.style.animation = `twinkle ${3 + Math.random() * 2}s infinite ${Math.random() * 3}s`;
-                bg.appendChild(star);
+                star.style.cssText = 'left:' + (Math.random() * 100) + '%;top:' + (Math.random() * 100) + '%;width:' + (Math.random() * 2 + 1) + 'px;height:' + (Math.random() * 2 + 1) + 'px;animation:twinkle ' + (3 + Math.random() * 2) + 's infinite ' + (Math.random() * 3) + 's';
+                frag.appendChild(star);
             }
+            bg.appendChild(frag);
         }
 
         // Load history from Firebase
@@ -4025,7 +4035,7 @@
             }
         }
         updatePanchang();
-        setInterval(updatePanchang, 1000);
+        setInterval(updatePanchang, 60000); // Har minute update kaafi hai
 
         function initDateFields() {
             const daySelects = ['dobDay', 'kundliDay', 'premiumKundliDay'];
@@ -7097,7 +7107,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
             // ── Razorpay Key Check ──
             var RAZORPAY_KEY = "YOUR_RAZORPAY_KEY"; // <-- Yahan apna live key daalo: rzp_live_XXXXXXXX
-            if (!RAZORPAY_KEY || RAZORPAY_KEY === "Ylrzp_live_Sat4IKe6FGzFBA") {
+            if (!RAZORPAY_KEY || RAZORPAY_KEY === "YOUR_RAZORPAY_KEY") {
                 alert("⚠️ Razorpay key setup nahi hai.\n\nAdmin se contact karein.\n\nTest ke liye OK dabayein — payment simulate hogi.");
                 // Test mode: simulate payment success
                 closePaymentModal();
@@ -7224,7 +7234,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 activeRef.onDisconnect().remove();
                 setInterval(() => {
                     activeRef.update({ lastActive: firebase.database.ServerValue.TIMESTAMP, page: window.location.pathname });
-                }, 30000);
+                }, 60000); // 60s kaafi hai — 30s se Firebase calls aadhe honge
             } catch(e) {}
         }
 
