@@ -3391,10 +3391,12 @@
         }
 
         function triggerRashiPurchase() {
-            currentPaymentAmount = 5;
-            window._currentPaymentAmount = 5;
+            const rashiAmt = (window._adminPricing && window._adminPricing.rashi) ? window._adminPricing.rashi : 5;
+            currentPaymentAmount = rashiAmt;
+            window._currentPaymentAmount = rashiAmt;
+            window._currentPaymentType = 'rashi';
             currentPaymentType = 'rashi';
-            document.getElementById('paymentAmount').innerText = '₹5';
+            document.getElementById('paymentAmount').innerText = '₹' + rashiAmt;
             document.getElementById('paymentModal').classList.add('show');
             document.body.style.overflow = 'hidden';
         }
@@ -4350,8 +4352,16 @@
         }
 
         function showPremiumPayment(amount, plan) {
+            // Use admin pricing if available
+            const pricing = window._adminPricing;
+            if (pricing) {
+                if (plan === 'monthly') amount = pricing.monthly || amount;
+                else if (plan === '6months') amount = pricing.sixMonth || amount;
+                else if (plan === 'yearly') amount = pricing.yearly || amount;
+            }
             currentPaymentAmount = amount;
             window._currentPaymentAmount = amount;
+            window._currentPaymentType = 'premium_' + plan;
             currentPaymentType = 'premium_' + plan;
             document.getElementById('paymentAmount').innerText = '₹' + amount;
             document.getElementById('paymentModal').classList.add('show');
@@ -4874,6 +4884,11 @@
         }
 
         function processKundliPayment(amount, type) {
+            // Always use latest admin pricing
+            const pricing = window._adminPricing || { basic: 19, premium: 49, rashi: 5 };
+            if (type === 'basic') amount = pricing.basic || amount;
+            if (type === 'premium') amount = pricing.premium || amount;
+
             if (isPremium) {
                 if (type === 'basic' && freeBasicKundliCount < maxFreeBasicKundli) {
                     generateKundliReport(type, true);
@@ -4915,6 +4930,7 @@
 
             currentPaymentAmount = amount;
             window._currentPaymentAmount = amount;
+            window._currentPaymentType = type;
             currentPaymentType = type;
             document.getElementById('paymentAmount').innerText = '₹' + amount;
             document.getElementById('paymentModal').classList.add('show');
@@ -4959,7 +4975,7 @@
                         localStorage.setItem('premiumData', JSON.stringify({ plan:plan, expiry:expiry, freeBasicKundliCount:0, freePremiumKundliCount:0, maxFreeBasicKundli:maxB, maxFreePremiumKundli:maxP }));
                         var curB = parseInt(localStorage.getItem('freeBonus')||'0');
                         localStorage.setItem('freeBonus', Math.max(curB, pb));
-                        var pAmt = plan==='monthly' ? 99 : plan==='6months' ? 499 : 999;
+                        var pAmt = plan==='monthly' ? (window._adminPricing?.monthly||99) : plan==='6months' ? (window._adminPricing?.sixMonth||499) : (window._adminPricing?.yearly||999);
                         trackPremiumPurchase(window._predName || '', plan, pAmt);
                         applyPremiumLimitBonus(plan);
                         checkPremiumStatus();
@@ -7316,41 +7332,102 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             try {
                 const snap = await database.ref('settings/pricing').once('value');
                 const p = snap.val() || { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
-
-                // Basic & Premium Kundli price
-                const basicPriceEl = document.getElementById('basicKundliPrice');
-                const premiumPriceEl = document.getElementById('premiumKundliPrice');
-                const basicBadge = document.getElementById('basicKundliBadge');
-                const premiumBadge = document.getElementById('premiumKundliBadge');
-                const basicBtnText = document.getElementById('basicKundliBtnText');
-                const premiumBtnText = document.getElementById('premiumKundliBtnText');
-                if (basicPriceEl) basicPriceEl.innerText = '₹' + p.basic;
-                if (premiumPriceEl) premiumPriceEl.innerText = '₹' + p.premium;
-                if (basicBadge) basicBadge.innerText = '₹' + p.basic;
-                if (premiumBadge) premiumBadge.innerText = '₹' + p.premium;
-                if (basicBtnText) basicBtnText.innerText = '₹' + p.basic + ' में रिपोर्ट खरीदें';
-                if (premiumBtnText) premiumBtnText.innerText = '₹' + p.premium + ' में प्रीमियम रिपोर्ट खरीदें';
-
-                // Rashi price — sab jagah update karo
-                const rashiPrice = p.rashi || 5;
-                document.querySelectorAll('[id$="RashiBuyMsg"] span[style*="border-radius:20px"]').forEach(el => {
-                    el.innerText = '₹' + rashiPrice;
-                });
-                document.querySelectorAll('[id$="RashiBuyMsg"] div[style*="ffd700"]').forEach(el => {
-                    if (el.innerText.includes('राशि जानें')) el.innerText = 'सिर्फ ₹' + rashiPrice + ' में सटीक राशि जानें';
-                });
-                // rashiBuyHint bhi
-                const rashiHintPrice = document.querySelector('#rashiBuyHint span[style*="border-radius:20px"]');
-                if (rashiHintPrice) rashiHintPrice.innerText = '₹' + rashiPrice;
-                const rashiHintText = document.querySelector('#rashiBuyHint div[style*="ffd700"]');
-                if (rashiHintText && rashiHintText.innerText.includes('राशि')) rashiHintText.innerText = 'सिर्फ ₹' + rashiPrice + ' में सटीक राशि जानें';
-
-                // Store globally for payment functions
                 window._adminPricing = p;
+                applyPricingEverywhere(p);
                 return p;
             } catch(e) {
                 return { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
             }
+        }
+
+        function applyPricingEverywhere(p) {
+            const b  = p.basic    || 19;
+            const pr = p.premium  || 49;
+            const r  = p.rashi    || 5;
+            const m  = p.monthly  || 99;
+            const s  = p.sixMonth || 499;
+            const y  = p.yearly   || 999;
+
+            // ── 1. Basic Kundli ──
+            const setTxt = (id, txt) => { const el = document.getElementById(id); if(el) el.innerText = txt; };
+            setTxt('basicKundliPrice',   '₹' + b);
+            setTxt('basicKundliBadge',   '₹' + b);
+            setTxt('basicKundliBtnText', '₹' + b + ' में रिपोर्ट खरीदें');
+
+            // Button onclick amount
+            const basicBtn = document.getElementById('basicKundliBtn');
+            if (basicBtn) basicBtn.setAttribute('onclick', 'processKundliPayment(' + b + ", 'basic')");
+
+            // ── 2. Premium Kundli ──
+            setTxt('premiumKundliPrice',   '₹' + pr);
+            setTxt('premiumKundliBadge',   '₹' + pr);
+            setTxt('premiumKundliBtnText', '₹' + pr + ' में प्रीमियम रिपोर्ट खरीदें');
+
+            const premBtn = document.getElementById('premiumKundliBtn');
+            if (premBtn) premBtn.setAttribute('onclick', 'processKundliPayment(' + pr + ", 'premium')");
+
+            // ── 3. Premium Packages (Monthly/6Month/Yearly) ──
+            // Find all premium-card divs and update them
+            const premCards = document.querySelectorAll('.premium-card');
+            premCards.forEach(card => {
+                const onclick = card.getAttribute('onclick') || '';
+                const priceEl = card.querySelector('.premium-price');
+                if (onclick.includes("'monthly'")) {
+                    if (priceEl) priceEl.innerHTML = '₹' + m + '<small>/माह</small>';
+                    card.setAttribute('onclick', "showPremiumPayment(" + m + ", 'monthly')");
+                } else if (onclick.includes("'6months'")) {
+                    if (priceEl) priceEl.innerHTML = '₹' + s + '<small>/6 माह</small>';
+                    card.setAttribute('onclick', "showPremiumPayment(" + s + ", '6months')");
+                } else if (onclick.includes("'yearly'")) {
+                    if (priceEl) priceEl.innerHTML = '₹' + y + '<small>/साल</small>';
+                    card.setAttribute('onclick', "showPremiumPayment(" + y + ", 'yearly')");
+                }
+            });
+
+            // ── 4. Comparison section prices ──
+            document.querySelectorAll('.comparison-price').forEach(el => {
+                if (el.innerText.includes('19') || el.innerText.includes('' + b)) el.innerText = '₹' + b;
+                if (el.innerText.includes('49') || el.innerText.includes('' + pr)) el.innerText = '₹' + pr;
+            });
+
+            // ── 5. Upsell buttons ──
+            document.querySelectorAll('.upsell-btn').forEach(el => {
+                if (el.getAttribute('onclick') && el.getAttribute('onclick').includes('showKundliSection') && el.innerText.includes('विस्तृत')) {
+                    el.innerText = '📜 ₹' + b + ' विस्तृत कुंडली';
+                }
+                if (el.getAttribute('onclick') && el.getAttribute('onclick').includes('showPremiumKundliSection')) {
+                    el.innerText = '👑 ₹' + pr + ' प्रीमियम कुंडली';
+                }
+            });
+
+            // ── 6. Rashi price ──
+            document.querySelectorAll('#loveRashiBuyMsg, #horoRashiBuyMsg, #rashiBuyHint').forEach(container => {
+                const badge = container.querySelector('span[style*="border-radius:20px"]');
+                const text  = container.querySelector('div[style*="ffd700"]');
+                if (badge) badge.innerText = '₹' + r;
+                if (text && text.innerText.includes('राशि')) text.innerText = 'सिर्फ ₹' + r + ' में सटीक राशि जानें';
+                // Update onclick amount
+                container.setAttribute('onclick', 'triggerRashiPurchase()');
+            });
+
+            // ── 7. Payment modal amount display ──
+            // paymentAmount div update (shown in payment modal)
+            const payAmt = document.getElementById('paymentAmount');
+            if (payAmt && window._currentPaymentType) {
+                const type = window._currentPaymentType;
+                if (type === 'basic') payAmt.innerText = '₹' + b;
+                else if (type === 'premium') payAmt.innerText = '₹' + pr;
+                else if (type === 'rashi') payAmt.innerText = '₹' + r;
+            }
+
+            // ── 8. Comparison h4 text ──
+            document.querySelectorAll('h4').forEach(el => {
+                if (el.innerText.includes('विस्तृत कुंडली')) el.innerText = 'विस्तृत कुंडली (₹' + b + ')';
+                if (el.innerText.includes('प्रीमियम कुंडली')) el.innerText = 'प्रीमियम कुंडली (₹' + pr + ')';
+            });
+
+            // ── 9. pAmt in processKundliPayment — use window._adminPricing ──
+            console.log('✅ Pricing applied everywhere:', p);
         }
 
         async function initializeTracking() {
