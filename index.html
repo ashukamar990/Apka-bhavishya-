@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+
+    <!-- Favicon — Bhavishya Dekho Logo -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta name="theme-color" content="#07080f">
+    <meta name="msapplication-TileColor" content="#07080f">
+    <meta name="msapplication-TileImage" content="favicon-180.png">
     <title>Bhavishya Dekho - मुफ्त कुंडली, राशिफल और वैदिक ज्योतिष | Free Kundli Online</title>
-    <meta name="monetag" content="50beea4e0f2a186e497fe71ffde096da">
 
     <!-- Primary SEO Meta Tags -->
     <meta name="description" content="Bhavishya Dekho पर मुफ्त कुंडली, दैनिक राशिफल, लव कैलकुलेटर और वैदिक ज्योतिष। Free Kundli, Daily Horoscope & Astrology in Hindi. अभी मुफ्त देखें!">
@@ -52,7 +60,6 @@
     <link rel="alternate" hreflang="hi" href="https://bhavishyadekho.online/">
     <link rel="alternate" hreflang="en" href="https://bhavishyadekho.online/">
     <link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/">
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -330,7 +337,7 @@
             <div class="payment-close" onclick="closePaymentModal()">
                 <i class="fas fa-times"></i>
             </div>
-            <div class="payment-title">💳 भुगतान करें</div>
+            <div class="payment-title" id="pay-title-text">💳 भुगतान करें</div>
             <div class="payment-amount" id="paymentAmount">₹19</div>
 
             <!-- Razorpay single button -->
@@ -424,33 +431,33 @@
             <div style="color:rgba(255,215,0,0.6);font-size:0.75em;">वैदिक ज्योतिष का सटीक संगम</div>
         </div>
         <div class="menu-item" onclick="scrollToTop(); toggleMenu();">
-            <i class="fas fa-home"></i> होम
+            <i class="fas fa-home"></i> <span id="nav-home">होम</span>
         </div>
         <div class="menu-item" onclick="showPage('daily'); toggleMenu();">
-            <i class="fas fa-sun"></i> दैनिक राशिफल
+            <i class="fas fa-sun"></i> <span id="nav-daily">दैनिक राशिफल</span>
         </div>
         <div class="menu-item" onclick="showPage('monthly'); toggleMenu();">
-            <i class="fas fa-calendar-alt"></i> मासिक राशिफल
+            <i class="fas fa-calendar-alt"></i> <span id="nav-monthly">मासिक राशिफल</span>
         </div>
         <div class="menu-item" onclick="showPage('yearly'); toggleMenu();">
-            <i class="fas fa-calendar"></i> वार्षिक राशिफल
+            <i class="fas fa-calendar"></i> <span id="nav-yearly">वार्षिक राशिफल</span>
         </div>
         <div class="menu-item" onclick="showPage('matching'); toggleMenu();">
-            <i class="fas fa-heart"></i> कुंडली मिलान
+            <i class="fas fa-heart"></i> <span id="nav-matching">कुंडली मिलान</span>
         </div>
         <div class="menu-item" onclick="showPage('gemstones'); toggleMenu();">
-            <i class="fas fa-gem"></i> रत्न सुझाव
+            <i class="fas fa-gem"></i> <span id="nav-gemstones">रत्न सुझाव</span>
         </div>
         <div class="menu-item" onclick="showPage('remedies'); toggleMenu();">
-            <i class="fas fa-hand-holding-heart"></i> उपाय
+            <i class="fas fa-hand-holding-heart"></i> <span id="nav-remedies">उपाय</span>
         </div>
         <div class="menu-item" onclick="showHistory(); toggleMenu();">
-            <i class="fas fa-history"></i> मेरी रिपोर्ट्स (हिस्ट्री)
+            <i class="fas fa-history"></i> <span id="nav-history">मेरी रिपोर्ट्स (हिस्ट्री)</span>
         </div>
         <div class="menu-item" onclick="showPage('premium'); toggleMenu();" style="background:linear-gradient(135deg,rgba(255,215,0,0.25),rgba(255,69,0,0.2));border:2px solid #ffd700;box-shadow:0 0 18px rgba(255,215,0,0.4);position:relative;overflow:hidden;">
             <span style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,215,0,0.08),transparent);animation:shimmerMenu 2s infinite;pointer-events:none;"></span>
             <i class="fas fa-crown" style="color:#ffd700;font-size:1.3em;"></i>
-            <span style="font-weight:700;font-size:1.05em;background:linear-gradient(135deg,#ffd700,#ff4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Premium Plan</span>
+            <span style="font-weight:700;font-size:1.05em;background:linear-gradient(135deg,#ffd700,#ff4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="nav-premium">Premium Plan</span>
             <span style="margin-left:auto;background:linear-gradient(135deg,#ffd700,#ff4500);color:#0a0a1a;font-size:0.72em;font-weight:700;padding:3px 9px;border-radius:20px;">✨ HOT</span>
         </div>
         <style>
@@ -460,22 +467,22 @@
         }
         </style>
         <div class="menu-item" onclick="showPage('about'); toggleMenu();">
-            <i class="fas fa-info-circle"></i> हमारे बारे में
+            <i class="fas fa-info-circle"></i> <span id="nav-about">हमारे बारे में</span>
         </div>
         <div class="menu-item" onclick="showPage('contact'); toggleMenu();">
-            <i class="fas fa-phone-alt"></i> संपर्क करें
+            <i class="fas fa-phone-alt"></i> <span id="nav-contact">संपर्क करें</span>
         </div>
         <div class="menu-item" onclick="showPage('privacy'); toggleMenu();">
-            <i class="fas fa-shield-alt"></i> गोपनीयता नीति
+            <i class="fas fa-shield-alt"></i> <span id="nav-privacy">गोपनीयता नीति</span>
         </div>
         <div class="menu-item" onclick="showPage('terms'); toggleMenu();">
-            <i class="fas fa-file-contract"></i> नियम और शर्तें
+            <i class="fas fa-file-contract"></i> <span id="nav-terms">नियम और शर्तें</span>
         </div>
         <div class="menu-item" onclick="showPage('disclaimer'); toggleMenu();">
-            <i class="fas fa-exclamation-circle"></i> Disclaimer
+            <i class="fas fa-exclamation-circle"></i> <span id="nav-disclaimer">Disclaimer</span>
         </div>
         <div class="menu-item" onclick="doHistoryBackup(); toggleMenu();">
-            <i class="fas fa-download"></i> History Backup
+            <i class="fas fa-download"></i> <span id="nav-backup">History Backup</span>
         </div>
     </div>
 
@@ -1381,6 +1388,9 @@
 
     <!-- Main Script -->
     <script src="script.js"></script>
+
+    <!-- Language System — Firebase ke baad load hona chahiye -->
+    <script src="lang.js"></script>
 
     <!-- Razorpay -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

@@ -128,7 +128,9 @@ setTimeout(function() {
         }
 
         function triggerRashiPurchase() {
-            const rashiAmt = (window._adminPricing && window._adminPricing.rashi) ? window._adminPricing.rashi : 5;
+            var isEnR = (window._currentLangCode === 'en');
+            var usdR = (typeof BD_CURRENCY_SETTINGS !== 'undefined') ? BD_CURRENCY_SETTINGS : {};
+            var rashiAmt = isEnR ? (usdR.usdRashi || 0.07) : ((window._adminPricing && window._adminPricing.rashi) ? window._adminPricing.rashi : 5);
             currentPaymentAmount = rashiAmt;
             window._currentPaymentAmount = rashiAmt;
             window._currentPaymentType = 'rashi';
@@ -1089,9 +1091,15 @@ setTimeout(function() {
         }
 
         function showPremiumPayment(amount, plan) {
-            // Use admin pricing if available
-            const pricing = window._adminPricing;
-            if (pricing) {
+            // Language ke hisaab se pricing
+            var isEnP = (window._currentLangCode === 'en');
+            var usdP = (typeof BD_CURRENCY_SETTINGS !== 'undefined') ? BD_CURRENCY_SETTINGS : {};
+            var pricing = window._adminPricing;
+            if (isEnP) {
+                if (plan === 'monthly') amount = usdP.usdMonthly || 1.20;
+                else if (plan === '6months') amount = usdP.usdSixMonth || 6.00;
+                else if (plan === 'yearly') amount = usdP.usdYearly || 12.00;
+            } else if (pricing) {
                 if (plan === 'monthly') amount = pricing.monthly || amount;
                 else if (plan === '6months') amount = pricing.sixMonth || amount;
                 else if (plan === 'yearly') amount = pricing.yearly || amount;
@@ -1621,10 +1629,12 @@ setTimeout(function() {
         }
 
         function processKundliPayment(amount, type) {
-            // Always use latest admin pricing
-            const pricing = window._adminPricing || { basic: 19, premium: 49, rashi: 5 };
-            if (type === 'basic') amount = pricing.basic || amount;
-            if (type === 'premium') amount = pricing.premium || amount;
+            // Language ke hisaab se pricing use karo
+            var isEn = (window._currentLangCode === 'en');
+            var pricing = window._adminPricing || { basic: 19, premium: 49, rashi: 5 };
+            var usd = (typeof BD_CURRENCY_SETTINGS !== 'undefined') ? BD_CURRENCY_SETTINGS : {};
+            if (type === 'basic') amount = isEn ? (usd.usdBasic || 0.25) : (pricing.basic || 19);
+            if (type === 'premium') amount = isEn ? (usd.usdPremium || 0.60) : (pricing.premium || 49);
 
             if (isPremium) {
                 if (type === 'basic' && freeBasicKundliCount < maxFreeBasicKundli) {
@@ -3829,12 +3839,14 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         // RAZORPAY PAYMENT FUNCTION WITH FIREBASE TRACKING
         // ============================================================
         function startPayment() {
-            var amt = (currentPaymentAmount || 19) * 100; // paise mein
+            var isEn = (window._currentLangCode === 'en');
+            var currency = isEn ? 'USD' : 'INR';
+            var amt = Math.round((currentPaymentAmount || 19) * 100);
             var orderId = "ORDER_" + Date.now();
 
             // ── Razorpay Key Check ──
             var RAZORPAY_KEY = "YOUR_RAZORPAY_KEY"; // <-- Yahan apna live key daalo: rzp_live_XXXXXXXX
-            if (!RAZORPAY_KEY || RAZORPAY_KEY === "rzp_live_SblFMVrk0vpfPc") {
+            if (!RAZORPAY_KEY || RAZORPAY_KEY === "YOUR_RAZORPAY_KEY") {
                 alert("⚠️ Razorpay key setup nahi hai.\n\nAdmin se contact karein.\n\nTest ke liye OK dabayein — payment simulate hogi.");
                 // Test mode: simulate payment success
                 closePaymentModal();
@@ -3858,9 +3870,9 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             var options = {
                 key: RAZORPAY_KEY,
                 amount: amt,
-                currency: "INR",
+                currency: currency,
                 name: "Bhavishya Dekho",
-                description: "Vedic Astrology Service",
+                description: isEn ? "Vedic Astrology Service" : "वैदिक ज्योतिष सेवा",
                 handler: function (response) {
                     if (rzpClosed) return;
                     rzpClosed = true;
@@ -3877,7 +3889,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                     document.documentElement.style.overflow = '';
                     closePaymentModal();
                     processPayment('done');
-                    alert("✅ भुगतान सफल!\nPayment ID: " + response.razorpay_payment_id);
+                    alert(isEn ? "✅ Payment Successful!\nPayment ID: " + response.razorpay_payment_id : "✅ भुगतान सफल!\nPayment ID: " + response.razorpay_payment_id);
                 },
                 prefill: { name: "", email: "", contact: "" },
                 theme: { color: "#ffd700" },
@@ -3902,13 +3914,13 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                     try { database.ref("payments/" + orderId).update({ status: "failed", error: response.error.description }); } catch(e) {}
                     document.body.style.overflow = '';
                     closePaymentModal();
-                    alert("❌ भुगतान असफल: " + (response.error.description || 'कृपया दोबारा कोशिश करें'));
+                    alert(isEn ? "❌ Payment Failed: " + (response.error.description || "Please try again") : "❌ भुगतान असफल: " + (response.error.description || "कृपया दोबारा कोशिश करें"));
                 });
                 rzp.open();
             } catch(e) {
                 console.error('Razorpay error:', e);
                 closePaymentModal();
-                alert('❌ Payment gateway error. Kripaya baad mein try karein.');
+                alert(isEn ? '❌ Payment gateway error. Please try again.' : '❌ Payment gateway error. Kripaya baad mein try karein.');
             }
         }
 
@@ -4090,7 +4102,12 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 const snap = await database.ref('settings/pricing').once('value');
                 const p = snap.val() || { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
                 window._adminPricing = p;
-                applyPricingEverywhere(p);
+                // lang.js ka function use karo agar available hai, warna fallback
+                if (typeof applyPricingWithLanguage === 'function') {
+                    applyPricingWithLanguage(window._currentLangCode || 'hi');
+                } else {
+                    applyPricingEverywhere(p);
+                }
                 return p;
             } catch(e) {
                 return { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
@@ -4098,6 +4115,13 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         }
 
         function applyPricingEverywhere(p) {
+            // Agar lang.js loaded hai toh uska use karo
+            if (typeof applyPricingWithLanguage === 'function') {
+                applyPricingWithLanguage(window._currentLangCode || 'hi');
+                return;
+            }
+
+            // Fallback — sirf Hindi/INR
             const b  = p.basic    || 19;
             const pr = p.premium  || 49;
             const r  = p.rashi    || 5;
@@ -4105,17 +4129,14 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             const s  = p.sixMonth || 499;
             const y  = p.yearly   || 999;
 
-            // ── 1. Basic Kundli ──
             const setTxt = (id, txt) => { const el = document.getElementById(id); if(el) el.innerText = txt; };
             setTxt('basicKundliPrice',   '₹' + b);
             setTxt('basicKundliBadge',   '₹' + b);
             setTxt('basicKundliBtnText', '₹' + b + ' में रिपोर्ट खरीदें');
 
-            // Button onclick amount
             const basicBtn = document.getElementById('basicKundliBtn');
             if (basicBtn) basicBtn.setAttribute('onclick', 'processKundliPayment(' + b + ", 'basic')");
 
-            // ── 2. Premium Kundli ──
             setTxt('premiumKundliPrice',   '₹' + pr);
             setTxt('premiumKundliBadge',   '₹' + pr);
             setTxt('premiumKundliBtnText', '₹' + pr + ' में प्रीमियम रिपोर्ट खरीदें');
@@ -4123,10 +4144,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             const premBtn = document.getElementById('premiumKundliBtn');
             if (premBtn) premBtn.setAttribute('onclick', 'processKundliPayment(' + pr + ", 'premium')");
 
-            // ── 3. Premium Packages (Monthly/6Month/Yearly) ──
-            // Find all premium-card divs and update them
-            const premCards = document.querySelectorAll('.premium-card');
-            premCards.forEach(card => {
+            document.querySelectorAll('.premium-card').forEach(card => {
                 const onclick = card.getAttribute('onclick') || '';
                 const priceEl = card.querySelector('.premium-price');
                 if (onclick.includes("'monthly'")) {
@@ -4141,13 +4159,11 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 }
             });
 
-            // ── 4. Comparison section prices ──
             document.querySelectorAll('.comparison-price').forEach(el => {
-                if (el.innerText.includes('19') || el.innerText.includes('' + b)) el.innerText = '₹' + b;
-                if (el.innerText.includes('49') || el.innerText.includes('' + pr)) el.innerText = '₹' + pr;
+                if (el.innerText.includes('19')) el.innerText = '₹' + b;
+                if (el.innerText.includes('49')) el.innerText = '₹' + pr;
             });
 
-            // ── 5. Upsell buttons ──
             document.querySelectorAll('.upsell-btn').forEach(el => {
                 if (el.getAttribute('onclick') && el.getAttribute('onclick').includes('showKundliSection') && el.innerText.includes('विस्तृत')) {
                     el.innerText = '📜 ₹' + b + ' विस्तृत कुंडली';
@@ -4157,34 +4173,15 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 }
             });
 
-            // ── 6. Rashi price ──
             document.querySelectorAll('#loveRashiBuyMsg, #horoRashiBuyMsg, #rashiBuyHint').forEach(container => {
                 const badge = container.querySelector('span[style*="border-radius:20px"]');
                 const text  = container.querySelector('div[style*="ffd700"]');
                 if (badge) badge.innerText = '₹' + r;
                 if (text && text.innerText.includes('राशि')) text.innerText = 'सिर्फ ₹' + r + ' में सटीक राशि जानें';
-                // Update onclick amount
                 container.setAttribute('onclick', 'triggerRashiPurchase()');
             });
 
-            // ── 7. Payment modal amount display ──
-            // paymentAmount div update (shown in payment modal)
-            const payAmt = document.getElementById('paymentAmount');
-            if (payAmt && window._currentPaymentType) {
-                const type = window._currentPaymentType;
-                if (type === 'basic') payAmt.innerText = '₹' + b;
-                else if (type === 'premium') payAmt.innerText = '₹' + pr;
-                else if (type === 'rashi') payAmt.innerText = '₹' + r;
-            }
-
-            // ── 8. Comparison h4 text ──
-            document.querySelectorAll('h4').forEach(el => {
-                if (el.innerText.includes('विस्तृत कुंडली')) el.innerText = 'विस्तृत कुंडली (₹' + b + ')';
-                if (el.innerText.includes('प्रीमियम कुंडली')) el.innerText = 'प्रीमियम कुंडली (₹' + pr + ')';
-            });
-
-            // ── 9. pAmt in processKundliPayment — use window._adminPricing ──
-            console.log('✅ Pricing applied everywhere:', p);
+            console.log('✅ Pricing applied (fallback INR):', p);
         }
 
         async function initializeTracking() {
@@ -4194,7 +4191,10 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 setupActiveUserTracking();
                 checkAndDisplayAnnouncement();
                 applySEOSettings();
-                await getPricingFromAdmin(); // yeh sab prices update kar deta hai
+
+                // ── Language system init karo pehle ──
+                // (lang.js ka initLanguageSystem auto-run hota hai, yahan sirf wait karo)
+                await getPricingFromAdmin(); // pricing load + apply karo
 
                 // ── Admin se data load karo ──
                 loadRashifalFromAdmin();
