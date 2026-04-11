@@ -1,0 +1,22 @@
+# Bhavishya Dekho - robots.txt
+# https://bhavishyadekho.online
+
+User-agent: *
+Allow: /
+
+# Admin panel crawl mat karo
+Disallow: /admin/
+Disallow: /admin-panel/
+
+# Sitemap location
+Sitemap: https://bhavishyadekho.online/sitemap.xml
+
+# Google crawl rate
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
