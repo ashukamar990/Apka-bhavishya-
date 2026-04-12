@@ -1630,7 +1630,7 @@ setTimeout(function() {
 
         function processKundliPayment(amount, type) {
             // Language ke hisaab se pricing use karo
-            var isEn = (window._currentLangCode === 'en');
+            var isEn = (typeof _isEn !== 'undefined') ? _isEn : false;
             var pricing = window._adminPricing || { basic: 19, premium: 49, rashi: 5 };
             var usd = (typeof BD_CURRENCY_SETTINGS !== 'undefined') ? BD_CURRENCY_SETTINGS : {};
             if (type === 'basic') amount = isEn ? (usd.usdBasic || 0.25) : (pricing.basic || 19);
@@ -3839,7 +3839,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         // RAZORPAY PAYMENT FUNCTION WITH FIREBASE TRACKING
         // ============================================================
         function startPayment() {
-            var isEn = (window._currentLangCode === 'en');
+            var isEn = (typeof _isEn !== 'undefined') ? _isEn : false;
             var currency = isEn ? 'USD' : 'INR';
             var amt = Math.round((currentPaymentAmount || 19) * 100);
             var orderId = "ORDER_" + Date.now();
@@ -4103,8 +4103,8 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 const p = snap.val() || { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
                 window._adminPricing = p;
                 // lang.js ka function use karo agar available hai, warna fallback
-                if (typeof applyPricingWithLanguage === 'function') {
-                    applyPricingWithLanguage(window._currentLangCode || 'hi');
+                if (typeof applyPricingWithLang === 'function') {
+                    applyPricingWithLang();
                 } else {
                     applyPricingEverywhere(p);
                 }
@@ -4115,9 +4115,9 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         }
 
         function applyPricingEverywhere(p) {
-            // Agar lang.js loaded hai toh uska use karo
-            if (typeof applyPricingWithLanguage === 'function') {
-                applyPricingWithLanguage(window._currentLangCode || 'hi');
+            // Agar lang_complete.js loaded hai toh uska use karo
+            if (typeof applyPricingWithLang === 'function') {
+                applyPricingWithLang();
                 return;
             }
 
