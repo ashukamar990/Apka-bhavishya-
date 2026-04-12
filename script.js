@@ -3806,7 +3806,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
             // ── Razorpay Key Check ──
             var RAZORPAY_KEY = "YOUR_RAZORPAY_KEY"; // <-- Yahan apna live key daalo: rzp_live_XXXXXXXX
-            if (!RAZORPAY_KEY || RAZORPAY_KEY === "rzp_live_SblFMVrk0vpfPc") {
+            if (!RAZORPAY_KEY || RAZORPAY_KEY === "YOUR_RAZORPAY_KEY") {
                 alert("⚠️ Razorpay key setup nahi hai.\n\nAdmin se contact karein.\n\nTest ke liye OK dabayein — payment simulate hogi.");
                 // Test mode: simulate payment success
                 closePaymentModal();
