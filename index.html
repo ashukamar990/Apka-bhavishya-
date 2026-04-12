@@ -3,15 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-
-    <!-- Favicon — Bhavishya Dekho Logo -->
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
-    <link rel="shortcut icon" href="favicon.ico">
-    <meta name="theme-color" content="#07080f">
-    <meta name="msapplication-TileColor" content="#07080f">
-    <meta name="msapplication-TileImage" content="favicon-180.png">
     <title>Bhavishya Dekho - मुफ्त कुंडली, राशिफल और वैदिक ज्योतिष | Free Kundli Online</title>
 
     <!-- Primary SEO Meta Tags -->
@@ -297,13 +288,20 @@
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta name="theme-color" content="#07080f">
 
     <!-- Security Headers -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="splashScreen" class="splash-screen">
@@ -312,12 +310,12 @@
                 <i class="fas fa-crystal-ball"></i>
             </div>
             <h1 style="color: #ffd700; font-size: 2.5em; font-weight:700; text-shadow: 0 0 30px rgba(255,215,0,0.6);">Bhavishya Dekho</h1>
-            <p style="color: #ffd700; margin: 8px 0; font-size:1.1em; font-weight:500;">वैदिक ज्योतिष का सटीक संगम</p>
-            <p style="color: #ccc; margin: 5px 0; font-size:0.9em;">✨ ग्रह · नक्षत्र · कुंडली · भविष्यफल ✨</p>
+            <p style="color: #ffd700; margin: 8px 0; font-size:1.1em; font-weight:500;" id="splash-subtitle" data-i18n="splash_subtitle">वैदिक ज्योतिष का सटीक संगम</p>
+            <p style="color: #ccc; margin: 5px 0; font-size:0.9em;" id="splash-tagline" data-i18n="hero_tagline">✨ ग्रह · नक्षत्र · कुंडली · भविष्यफल ✨</p>
             <div style="width: 260px; height: 5px; background: rgba(255,215,0,0.2); border-radius:10px; margin: 22px auto; overflow: hidden;">
                 <div id="splashBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ffd700, #ff4500); border-radius:10px; transition: width 3s linear;"></div>
             </div>
-            <p style="color: rgba(255,215,0,0.6); font-size:0.8em; margin-top:5px;" id="splashMsg">🔮 भविष्य जानने की तैयारी हो रही है...</p>
+            <p style="color: rgba(255,215,0,0.6); font-size:0.8em; margin-top:5px;" id="splashMsg" data-i18n="splash1">🔮 भविष्य जानने की तैयारी हो रही है...</p>
         </div>
     </div>
 
@@ -326,8 +324,8 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
             <div class="loading-spinner"></div>
-            <div class="loading-text">🔮 Bhavishya Dekho — भविष्य बन रहा है...</div>
-            <p style="color: #fff; margin-top: 15px;">ग्रहों की स्थिति का विश्लेषण हो रहा है</p>
+            <div class="loading-text" id="loading-text" data-i18n="loading_text">🔮 Bhavishya Dekho — भविष्य बन रहा है...</div>
+            <p style="color: #fff; margin-top: 15px;" id="loading-subtext" data-i18n="loading_subtext">ग्रहों की स्थिति का विश्लेषण हो रहा है</p>
         </div>
     </div>
 
@@ -337,7 +335,7 @@
             <div class="payment-close" onclick="closePaymentModal()">
                 <i class="fas fa-times"></i>
             </div>
-            <div class="payment-title" id="pay-title-text">💳 भुगतान करें</div>
+            <div class="payment-title" id="pay-title-text" data-i18n="pay_title">💳 भुगतान करें</div>
             <div class="payment-amount" id="paymentAmount">₹19</div>
 
             <!-- Razorpay single button -->
@@ -365,12 +363,12 @@
                     <path d="M3 7.5L9.5 3L21 10.5L14.5 15L3 7.5Z" fill="#fff" opacity="0.9"/>
                     <path d="M9.5 15L3 10.5V18L9.5 21.5L21 15V7.5L9.5 15Z" fill="#fff" opacity="0.6"/>
                 </svg>
-                🔐 सुरक्षित भुगतान करें
+                <span id="pay-btn-text" data-i18n="pay_btn">🔐 सुरक्षित भुगतान करें</span>
             </button>
 
             <!-- Accepted payment methods info -->
             <div style="text-align:center;margin:8px 0 4px;">
-                <p style="color:#aaa;font-size:0.78em;margin-bottom:8px;">सभी payment methods accept होते हैं</p>
+                <p style="color:#aaa;font-size:0.78em;margin-bottom:8px;" id="pay-methods-text" data-i18n="pay_methods">सभी payment methods accept होते हैं</p>
                 <div style="display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;">
                     <!-- GPay -->
                     <div style="background:#fff;border-radius:8px;padding:4px 8px;display:flex;align-items:center;gap:3px;">
@@ -403,10 +401,10 @@
             </div>
 
             <div style="background:rgba(76,175,80,0.12);border:1px solid rgba(76,175,80,0.3);border-radius:10px;padding:9px;margin:12px 0 0;text-align:center;font-size:0.82em;color:#ddd;">
-                <i class="fas fa-lock" style="color:#4CAF50;"></i> 100% Secure Payment — भुगतान होते ही सेवा तुरंत मिलेगी!
+                <i class="fas fa-lock" style="color:#4CAF50;"></i> <span id="pay-secure-text" data-i18n="pay_secure_short">100% Secure Payment — भुगतान होते ही सेवा तुरंत मिलेगी!</span>
             </div>
             <div class="payment-status" id="paymentStatus">
-                <i class="fas fa-spinner fa-spin"></i> भुगतान प्रक्रिया जारी...
+                <i class="fas fa-spinner fa-spin"></i> <span id="pay-processing-text" data-i18n="pay_processing">भुगतान प्रक्रिया जारी...</span>
             </div>
         </div>
     </div>
@@ -431,33 +429,33 @@
             <div style="color:rgba(255,215,0,0.6);font-size:0.75em;">वैदिक ज्योतिष का सटीक संगम</div>
         </div>
         <div class="menu-item" onclick="scrollToTop(); toggleMenu();">
-            <i class="fas fa-home"></i> <span id="nav-home">होम</span>
+            <i class="fas fa-home"></i> होम
         </div>
         <div class="menu-item" onclick="showPage('daily'); toggleMenu();">
-            <i class="fas fa-sun"></i> <span id="nav-daily">दैनिक राशिफल</span>
+            <i class="fas fa-sun"></i> दैनिक राशिफल
         </div>
         <div class="menu-item" onclick="showPage('monthly'); toggleMenu();">
-            <i class="fas fa-calendar-alt"></i> <span id="nav-monthly">मासिक राशिफल</span>
+            <i class="fas fa-calendar-alt"></i> मासिक राशिफल
         </div>
         <div class="menu-item" onclick="showPage('yearly'); toggleMenu();">
-            <i class="fas fa-calendar"></i> <span id="nav-yearly">वार्षिक राशिफल</span>
+            <i class="fas fa-calendar"></i> वार्षिक राशिफल
         </div>
         <div class="menu-item" onclick="showPage('matching'); toggleMenu();">
-            <i class="fas fa-heart"></i> <span id="nav-matching">कुंडली मिलान</span>
+            <i class="fas fa-heart"></i> कुंडली मिलान
         </div>
         <div class="menu-item" onclick="showPage('gemstones'); toggleMenu();">
-            <i class="fas fa-gem"></i> <span id="nav-gemstones">रत्न सुझाव</span>
+            <i class="fas fa-gem"></i> रत्न सुझाव
         </div>
         <div class="menu-item" onclick="showPage('remedies'); toggleMenu();">
-            <i class="fas fa-hand-holding-heart"></i> <span id="nav-remedies">उपाय</span>
+            <i class="fas fa-hand-holding-heart"></i> उपाय
         </div>
         <div class="menu-item" onclick="showHistory(); toggleMenu();">
-            <i class="fas fa-history"></i> <span id="nav-history">मेरी रिपोर्ट्स (हिस्ट्री)</span>
+            <i class="fas fa-history"></i> मेरी रिपोर्ट्स (हिस्ट्री)
         </div>
         <div class="menu-item" onclick="showPage('premium'); toggleMenu();" style="background:linear-gradient(135deg,rgba(255,215,0,0.25),rgba(255,69,0,0.2));border:2px solid #ffd700;box-shadow:0 0 18px rgba(255,215,0,0.4);position:relative;overflow:hidden;">
             <span style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,215,0,0.08),transparent);animation:shimmerMenu 2s infinite;pointer-events:none;"></span>
             <i class="fas fa-crown" style="color:#ffd700;font-size:1.3em;"></i>
-            <span style="font-weight:700;font-size:1.05em;background:linear-gradient(135deg,#ffd700,#ff4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="nav-premium">Premium Plan</span>
+            <span style="font-weight:700;font-size:1.05em;background:linear-gradient(135deg,#ffd700,#ff4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Premium Plan</span>
             <span style="margin-left:auto;background:linear-gradient(135deg,#ffd700,#ff4500);color:#0a0a1a;font-size:0.72em;font-weight:700;padding:3px 9px;border-radius:20px;">✨ HOT</span>
         </div>
         <style>
@@ -467,22 +465,37 @@
         }
         </style>
         <div class="menu-item" onclick="showPage('about'); toggleMenu();">
-            <i class="fas fa-info-circle"></i> <span id="nav-about">हमारे बारे में</span>
+            <i class="fas fa-info-circle"></i> हमारे बारे में
         </div>
         <div class="menu-item" onclick="showPage('contact'); toggleMenu();">
-            <i class="fas fa-phone-alt"></i> <span id="nav-contact">संपर्क करें</span>
+            <i class="fas fa-phone-alt"></i> संपर्क करें
         </div>
         <div class="menu-item" onclick="showPage('privacy'); toggleMenu();">
-            <i class="fas fa-shield-alt"></i> <span id="nav-privacy">गोपनीयता नीति</span>
+            <i class="fas fa-shield-alt"></i> गोपनीयता नीति
         </div>
         <div class="menu-item" onclick="showPage('terms'); toggleMenu();">
-            <i class="fas fa-file-contract"></i> <span id="nav-terms">नियम और शर्तें</span>
+            <i class="fas fa-file-contract"></i> नियम और शर्तें
         </div>
         <div class="menu-item" onclick="showPage('disclaimer'); toggleMenu();">
-            <i class="fas fa-exclamation-circle"></i> <span id="nav-disclaimer">Disclaimer</span>
+            <i class="fas fa-exclamation-circle"></i> Disclaimer
         </div>
         <div class="menu-item" onclick="doHistoryBackup(); toggleMenu();">
             <i class="fas fa-download"></i> <span id="nav-backup">History Backup</span>
+        </div>
+
+        <!-- Language Selector in Menu -->
+        <div style="padding:10px 16px;border-top:1px solid rgba(255,215,0,0.15);margin-top:6px;">
+            <div style="font-size:0.7rem;color:rgba(255,215,0,0.6);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">
+                🌐 <span id="lang-menu-label">भाषा / Language</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+                <button id="lang-btn-hi" onclick="window.bdSetLang('hi');toggleMenu();" style="flex:1;padding:10px;border:1.5px solid rgba(255,215,0,0.4);border-radius:12px;background:rgba(255,215,0,0.12);color:#ffd700;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;">
+                    🇮🇳 हिंदी
+                </button>
+                <button id="lang-btn-en" onclick="window.bdSetLang('en');toggleMenu();" style="flex:1;padding:10px;border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;background:rgba(255,255,255,0.05);color:#aaa;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;">
+                    🇺🇸 English
+                </button>
+            </div>
         </div>
     </div>
 
@@ -613,7 +626,7 @@
         <!-- Premium Active Benefits Panel -->
         <div id="premiumBenefitsPanel" style="display:none; background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(155,89,182,0.1)); border:2px solid #ffd700; border-radius:20px; padding:20px; margin-bottom:20px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-                <h3 style="color:#ffd700;margin:0;"><i class="fas fa-crown"></i> आपके Premium लाभ</h3>
+                <h3 style="color:#ffd700;margin:0;"><i class="fas fa-crown"></i> <span id="prem-benefits-title">आपके Premium लाभ</span></h3>
                 <span onclick="hidePremiumBenefitsPanel()" style="color:#ffd700;cursor:pointer;font-size:1.3em;">✕</span>
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:12px;">
@@ -630,39 +643,39 @@
 
         <!-- Premium Status Display (legacy) -->
         <div id="premiumStatusContainer" style="display: none;" class="premium-status">
-            <h3><i class="fas fa-crown"></i> आप प्रीमियम सदस्य हैं</h3>
+            <h3><i class="fas fa-crown"></i> <span id="prem-member-text">आप प्रीमियम सदस्य हैं</span></h3>
             <p id="premiumBenefits"></p>
             <p id="freeKundlisCount"></p>
         </div>
 
         <!-- Mera Bhavishya Dekhein Button - Main Option -->
         <button class="predict-btn-top" onclick="scrollToForm()">
-            <i class="fas fa-crystal-ball"></i> मेरा भविष्य देखें (मुफ्त)
+            <i class="fas fa-crystal-ball"></i> <span id="hero-btn">मेरा भविष्य देखें (मुफ्त)</span>
         </button>
 
         <div class="feature-grid">
             <div class="feature-card" onclick="showLoveCalculator()">
                 <div class="feature-icon">❤️</div>
-                <div class="feature-title">लव कैलकुलेटर</div>
-                <p>प्यार का प्रतिशत जानें</p>
-                <div class="feature-price">मुफ्त</div>
+                <div class="feature-title" id="fc-love-title">लव कैलकुलेटर</div>
+                <p id="fc-love-desc">प्यार का प्रतिशत जानें</p>
+                <div class="feature-price" id="fc-love-price">मुफ्त</div>
             </div>
             <div class="feature-card" onclick="showDailyHoroscope()">
                 <div class="feature-icon">☀️</div>
-                <div class="feature-title">दैनिक राशिफल</div>
-                <p>आज का भविष्यफल</p>
-                <div class="feature-price">मुफ्त</div>
+                <div class="feature-title" id="fc-horo-title">दैनिक राशिफल</div>
+                <p id="fc-horo-desc">आज का भविष्यफल</p>
+                <div class="feature-price" id="fc-horo-price">मुफ्त</div>
             </div>
             <div class="feature-card" onclick="showKundliSection()">
                 <div class="feature-icon">📜</div>
-                <div class="feature-title">विस्तृत कुंडली</div>
-                <p>जीवन विश्लेषण</p>
+                <div class="feature-title" id="fc-basic-title">विस्तृत कुंडली</div>
+                <p id="fc-basic-desc">जीवन विश्लेषण</p>
                 <div class="feature-price" id="basicKundliPrice">₹19</div>
             </div>
             <div class="feature-card" onclick="showPremiumKundliSection()">
                 <div class="feature-icon">👑</div>
-                <div class="feature-title">प्रीमियम कुंडली</div>
-                <p>संपूर्ण जीवन दर्शन</p>
+                <div class="feature-title" id="fc-prem-title">प्रीमियम कुंडली</div>
+                <p id="fc-prem-desc">संपूर्ण जीवन दर्शन</p>
                 <div class="feature-price" id="premiumKundliPrice">₹49</div>
             </div>
         </div>
@@ -1377,11 +1390,27 @@
 
     </div><!-- end mainContent -->
 
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js">
+        function doHistoryBackup() {
+            if (!kundliHistory || kundliHistory.length === 0) { alert('कोई history नहीं है'); return; }
+            var data = JSON.stringify({ history: kundliHistory, date: new Date().toISOString() }, null, 2);
+            var blob = new Blob([data], { type: 'application/json' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'bhavishyadekho_history_' + new Date().toISOString().slice(0,10) + '.json';
+            a.click();
+            setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+        }
 
-    <!-- External Libraries -->
+    
+        // Free form naam type hone par rashi auto-detect (only if ₹5 package active)
+    </script>
+    <!-- Firebase SDK -->
+
+    <!-- External Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -1389,8 +1418,8 @@
     <!-- Main Script -->
     <script src="script.js"></script>
 
-    <!-- Language System — Firebase ke baad load hona chahiye -->
-    <script src="lang_complete.js"></script>
+    <!-- Language System -->
+    <script src="lang.js"></script>
 
     <!-- Razorpay -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -1411,6 +1440,6 @@
         } catch(e) {}
     })();
     </script>
-</body>
+
 </body>
 </html>
