@@ -1,831 +1,680 @@
 /* ============================================================
-   Bhavishya Dekho — lang_complete.js
-   Complete Language System — EVERY text translates
+   Bhavishya Dekho — lang.js  v3.0
+   Complete bilingual system — Hindi & English
+   Auto-detect by IP + Manual menu switch
+   bhavishyadekho.online
    ============================================================ */
-
+(function() {
 'use strict';
 
-// ════════════════════════════════════════════════════════════
-// COMPLETE TRANSLATION DICTIONARY
-// ════════════════════════════════════════════════════════════
-var T = {
-  hi: {
-    /* ── Currency ── */
-    currency: '₹', currencyCode: 'INR',
+/* ══════════════════════════════════════════════════════════
+   COMPLETE TRANSLATION MAP — Hindi → English
+   ══════════════════════════════════════════════════════════ */
+var HI_TO_EN = {
+  /* Splash */
+  'वैदिक ज्योतिष का सटीक संगम': 'The Science of Vedic Astrology',
+  '✨ ग्रह · नक्षत्र · कुंडली · भविष्यफल ✨': '✨ Planets · Stars · Kundli · Horoscope ✨',
+  '🔮 भविष्य जानने की तैयारी हो रही है...': '🔮 Preparing your cosmic reading...',
+  '⭐ ग्रहों की स्थिति जांची जा रही है...': '⭐ Analyzing planetary positions...',
+  '✨ कुंडली तैयार हो रही है...': '✨ Your horoscope is being prepared...',
+  '🔮 Bhavishya Dekho — भविष्य बन रहा है...': '🔮 Bhavishya Dekho — Building your future...',
+  'ग्रहों की स्थिति का विश्लेषण हो रहा है': 'Analyzing your planetary positions...',
+  'आपका भविष्य तैयार हो रहा है 🌟': 'Your future is being prepared 🌟',
+  'परिणाम तैयार हो रहा है...': 'Preparing your result...',
 
-    /* ── Splash ── */
-    splash1: '🔮 भविष्य जानने की तैयारी हो रही है...',
-    splash2: '⭐ ग्रहों की स्थिति जांची जा रही है...',
-    splash3: '✨ कुंडली तैयार हो रही है...',
+  /* Payment */
+  '💳 भुगतान करें': '💳 Make Payment',
+  '🔐 सुरक्षित भुगतान करें': '🔐 Secure Payment',
+  'सभी payment methods accept होते हैं': 'All payment methods accepted',
+  '100% Secure Payment — भुगतान होते ही सेवा तुरंत मिलेगी!': '100% Secure Payment — Service activated instantly!',
+  'भुगतान प्रक्रिया जारी...': 'Processing payment...',
+  '✦ सभी payments एक बार के होते हैं': '✦ All payments are one-time',
+  '✦ Report generate होने के बाद refund नहीं होगा': '✦ No refund after report is generated',
+  '✦ हम किसी भी गलत उपयोग के लिए जिम्मेदार नहीं होंगे': '✦ We are not responsible for any misuse',
+  '✦ User को अपनी सही जानकारी भरनी जरूरी है': '✦ User must enter correct information',
+  '✦ यह service केवल digital report के रूप में प्रदान की जाती है': '✦ This service is provided as a digital report only',
 
-    /* ── Nav ── */
-    nav_home: 'होम', nav_daily: 'दैनिक राशिफल', nav_monthly: 'मासिक राशिफल',
-    nav_yearly: 'वार्षिक राशिफल', nav_matching: 'कुंडली मिलान',
-    nav_gemstones: 'रत्न सुझाव', nav_remedies: 'उपाय',
-    nav_history: 'मेरी रिपोर्ट्स (हिस्ट्री)', nav_premium: 'Premium Plan',
-    nav_about: 'हमारे बारे में', nav_contact: 'संपर्क करें',
-    nav_privacy: 'गोपनीयता नीति', nav_terms: 'नियम और शर्तें',
-    nav_disclaimer: 'Disclaimer', nav_backup: 'History Backup',
+  /* Hero / Main */
+  'मेरा भविष्य देखें (मुफ्त)': 'See My Future (Free)',
+  'अपनी जानकारी दर्ज करें (मुफ्त भविष्य)': 'Enter your details (free prediction)',
+  'मेरा भविष्य देखें': 'See My Future',
+  'मुफ्त भविष्यफल देखें': 'Get Free Prediction',
 
-    /* ── Hero ── */
-    hero_title: 'अपना भविष्य जानें',
-    hero_subtitle: 'वैदिक ज्योतिष से सटीक भविष्यफल',
-    hero_btn: '🔮 मुफ्त भविष्यफल देखें',
-    hero_tagline: '✨ ग्रह · नक्षत्र · कुंडली · भविष्यफल ✨',
+  /* Feature cards */
+  'लव कैलकुलेटर': 'Love Calculator',
+  'प्यार का प्रतिशत जानें': 'Calculate love %',
+  'दैनिक राशिफल': 'Daily Horoscope',
+  'आज का भविष्यफल': "Today's horoscope",
+  'विस्तृत कुंडली': 'Detailed Kundli',
+  'जीवन विश्लेषण': 'Life Analysis',
+  'प्रीमियम कुंडली': 'Premium Kundli',
+  'संपूर्ण जीवन दर्शन': 'Complete Life Reading',
+  'मुफ्त': 'Free',
 
-    /* ── Form ── */
-    form_name: 'नाम',
-    form_name_ph: 'अपना नाम लिखें',
-    form_dob: 'जन्म तिथि',
-    form_time: 'जन्म समय',
-    form_place: 'जन्म स्थान',
-    form_place_ph: 'जन्म स्थान दर्ज करें',
-    form_gender: 'लिंग',
-    form_gender_m: 'पुरुष',
-    form_gender_f: 'महिला',
-    form_gender_o: 'अन्य',
-    form_rashi: 'राशि',
-    form_rashi_ph: '-- अपनी राशि चुनें --',
-    form_nakshatra: 'नक्षत्र',
-    form_submit: '🔮 मेरा भविष्य देखें (मुफ्त)',
-    form_required: 'नाम दर्ज करना आवश्यक है',
-    form_wait: 'कृपया प्रतीक्षा करें',
-    form_loading: 'आपका भविष्य तैयार हो रहा है 🌟',
-    form_info: 'अपनी जानकारी दर्ज करें (मुफ्त भविष्य)',
+  /* Form */
+  'अपना नाम लिखें': 'Enter your name',
+  'जन्म स्थान दर्ज करें': 'Enter birth place',
+  'आपका नाम': 'Your name',
+  'साथी का नाम': "Partner's name",
+  'नाम': 'Name',
+  'नाम *': 'Name *',
+  'नाम:': 'Name:',
+  'जन्म तिथि': 'Date of Birth',
+  'जन्म समय': 'Birth Time',
+  'जन्म स्थान': 'Birth Place',
+  'लिंग': 'Gender',
+  'लिंग:': 'Gender:',
+  'पुरुष': 'Male',
+  'महिला': 'Female',
+  'अन्य': 'Other',
+  'राशि': 'Zodiac Sign',
+  'राशि:': 'Zodiac:',
+  '-- अपनी राशि चुनें --': '-- Select your zodiac --',
+  'नक्षत्र': 'Nakshatra',
+  'शहर का नाम': 'City name',
+  'समय': 'Time',
+  'दिन': 'Day',
+  'महीना': 'Month',
+  'साल': 'Year',
+  'आयु': 'Age',
+  'वार': 'Day',
 
-    /* ── Results ── */
-    result_title: 'आपका भविष्यफल',
-    result_share: '📲 इस रिपोर्ट को शेयर करें',
-    result_share2: '📲 Share करें — 1 और मुफ्त पाएं',
-    result_main: '🔮 मुख्य भविष्यवाणी',
-    result_detail: '【 विस्तृत भविष्यफल 】',
-    result_info: '【 व्यक्तिगत जानकारी 】',
-    result_free: 'मुफ्त भविष्य',
+  /* Rashis */
+  'मेष': 'Aries', 'वृष': 'Taurus', 'मिथुन': 'Gemini',
+  'कर्क': 'Cancer', 'सिंह': 'Leo', 'कन्या': 'Virgo',
+  'तुला': 'Libra', 'वृश्चिक': 'Scorpio', 'धनु': 'Sagittarius',
+  'मकर': 'Capricorn', 'कुंभ': 'Aquarius', 'मीन': 'Pisces',
 
-    /* ── Kundli ── */
-    kundli_basic_title: 'विस्तृत कुंडली',
-    kundli_basic_desc: '✨ इस रिपोर्ट में क्या मिलेगा?',
-    kundli_basic_buy: 'में रिपोर्ट खरीदें',
-    kundli_premium_title: 'प्रीमियम कुंडली',
-    kundli_premium_buy: 'में प्रीमियम रिपोर्ट खरीदें',
-    kundli_basic_label: 'विस्तृत',
-    kundli_premium_label: 'प्रीमियम',
-    kundli_more: '👑 और विस्तृत जानकारी?',
-    kundli_history_empty: 'कोई रिपोर्ट नहीं देखी गई',
-    kundli_no_history: 'अभी तक कोई भविष्यफल नहीं देखा। पहले भविष्य देखें!',
-    kundli_clear: '🗑️ पूरी History साफ़ करें',
-    kundli_remove: '✕ एक भविष्यफल हटाएं (History से चुनें)',
-    kundli_report: '🔮 कुंडली रिपोर्ट',
-    kundli_free_report: '📜 विस्तृत कुंडली रिपोर्ट',
-    kundli_premium_report: '👑 प्रीमियम कुंडली रिपोर्ट',
+  /* Graha */
+  'सूर्य:': 'Sun:', 'चंद्र:': 'Moon:', 'मंगल:': 'Mars:',
+  'बुध:': 'Mercury:', 'गुरु:': 'Jupiter:', 'शुक्र:': 'Venus:',
+  'शनि:': 'Saturn:', 'राहु:': 'Rahu:', 'केतु:': 'Ketu:',
 
-    /* ── Rashifal ── */
-    rashi_daily: '☀️ दैनिक राशिफल',
-    rashi_monthly: '📆 मासिक राशिफल',
-    rashi_yearly: '📅 वार्षिक राशिफल',
-    rashi_select: 'राशि चुनें',
-    rashi_today: 'आज का राशिफल',
-    rashi_thismonth: 'इस महीने',
-    rashi_thisyear: 'इस साल',
+  /* Nav */
+  'होम': 'Home',
+  'मासिक राशिफल': 'Monthly Horoscope',
+  'वार्षिक राशिफल': 'Yearly Horoscope',
+  'कुंडली मिलान': 'Kundli Matching',
+  'रत्न सुझाव': 'Gemstone Guide',
+  'उपाय': 'Remedies',
+  'मेरी रिपोर्ट्स (हिस्ट्री)': 'My Reports (History)',
+  'हमारे बारे में': 'About Us',
+  'संपर्क करें': 'Contact Us',
+  'गोपनीयता नीति': 'Privacy Policy',
+  'नियम और शर्तें': 'Terms & Conditions',
+  'History Backup': 'History Backup',
 
-    /* ── Rashis ── */
-    rashi_aries: 'मेष', rashi_taurus: 'वृष', rashi_gemini: 'मिथुन',
-    rashi_cancer: 'कर्क', rashi_leo: 'सिंह', rashi_virgo: 'कन्या',
-    rashi_libra: 'तुला', rashi_scorpio: 'वृश्चिक', rashi_sagittarius: 'धनु',
-    rashi_capricorn: 'मकर', rashi_aquarius: 'कुंभ', rashi_pisces: 'मीन',
+  /* History page */
+  '📋 मेरी रिपोर्ट्स': '📋 My Reports',
+  'वापस': 'Back',
+  '🗑️ साफ़ करें': '🗑️ Clear',
+  'कोई रिपोर्ट नहीं': 'No Reports Found',
+  'अभी तक कोई भविष्यफल नहीं देखा। पहले भविष्य देखें!': 'No predictions yet. See your future first!',
+  'मेरी रिपोर्ट': 'My Report',
 
-    /* ── Love Calculator ── */
-    love_title: '❤️ लव कैलकुलेटर',
-    love_your_name: 'आपका नाम',
-    love_partner_name: 'साथी का नाम',
-    love_your_ph: 'आपका नाम',
-    love_partner_ph: 'साथी का नाम',
-    love_btn: '❤️ प्यार का प्रतिशत जानें',
-    love_result: 'प्रेम अनुकूलता',
+  /* Prediction results */
+  '🔮 भविष्यफल': '🔮 Prediction',
+  '📲 शेयर करें': '📲 Share',
+  '📲 दोस्तों के साथ शेयर करें': '📲 Share with friends',
+  '📲 Share करें — 1 और मुफ्त पाएं': '📲 Share — Get 1 more free',
+  '📲 इस रिपोर्ट को शेयर करें': '📲 Share this report',
+  '【 विस्तृत भविष्यफल 】': '【 Detailed Prediction 】',
+  '【 व्यक्तिगत जानकारी 】': '【 Personal Information 】',
+  '🔮 मुख्य भविष्यवाणी': '🔮 Main Prediction',
+  'रिपोर्ट': 'Report',
+  '📜 कुंडली रिपोर्ट': '📜 Kundli Report',
+  '📜 विस्तृत कुंडली रिपोर्ट': '📜 Detailed Kundli Report',
+  '👑 प्रीमियम कुंडली रिपोर्ट': '👑 Premium Kundli Report',
 
-    /* ── Horoscope ── */
-    horo_title: 'राशिफल देखें',
-    horo_select: 'अपनी राशि चुनें',
+  /* Kundli buy */
+  '✨ इस रिपोर्ट में क्या मिलेगा?': '✨ What\'s included in this report?',
+  '👑 और विस्तृत जानकारी?': '👑 Want more details?',
+  'में रिपोर्ट खरीदें': 'Buy Report',
+  'में प्रीमियम रिपोर्ट खरीदें': 'Buy Premium Report',
+  '₹19 में रिपोर्ट खरीदें': '₹19 Buy Report',
+  '₹49 में प्रीमियम रिपोर्ट खरीदें': '₹49 Buy Premium Report',
 
-    /* ── Rashi Package ── */
-    rashi_pkg_hint: 'में सटीक राशि जानें',
-    rashi_pkg_prefix: 'सिर्फ ',
-    rashi_pkg_name: 'राशि पैकेज',
-    rashi_pkg_validity: '24 घंटे के लिए सक्रिय',
-    rashi_auto: 'Auto Detect — राशि रिपोर्ट में दिखेगी',
-    rashi_detect_ok: '✅ राशि auto-detect होगी',
+  /* Upsell */
+  '📜 ₹19 विस्तृत कुंडली': '📜 Detailed Kundli',
+  '👑 ₹49 प्रीमियम कुंडली': '👑 Premium Kundli',
+  '📜 विस्तृत कुंडली': '📜 Detailed Kundli',
+  '👑 प्रीमियम कुंडली': '👑 Premium Kundli',
 
-    /* ── Premium ── */
-    premium_title: '👑 Premium Plan',
-    premium_subtitle: 'प्रीमियम सदस्यता के लाभ',
-    premium_all: 'सभी प्रीमियम सुविधाएं',
-    premium_member: 'आप प्रीमियम सदस्य हैं',
-    premium_benefits: 'प्रीमियम में मिलेंगे ये अतिरिक्त लाभ',
-    premium_adfree: 'प्रीमियम में बनें एड-फ्री',
-    premium_unlimited: 'बिना किसी रुकावट के सेवाएं',
-    premium_daily: '👑 Premium लें — रोज़ 10+ भविष्यफल',
-    premium_renew: 'सभी प्रीमियम प्लान में ऑटो-नवीनीकरण की सुविधा',
+  /* Premium */
+  'आपके Premium लाभ': 'Your Premium Benefits',
+  'आप प्रीमियम सदस्य हैं': 'You are a Premium Member',
+  'प्रीमियम सदस्यता के लाभ': 'Premium membership benefits',
+  'सभी प्रीमियम सुविधाएं': 'All premium features',
+  'प्रीमियम में मिलेंगे ये अतिरिक्त लाभ': 'Additional benefits in Premium',
+  'प्रीमियम में बनें एड-फ्री': 'Go Ad-Free with Premium',
+  'बिना किसी रुकावट के सेवाएं': 'Uninterrupted services',
+  'बिना किसी रुकावट के ज्योतिषीय सेवाओं का लाभ उठाएं': 'Enjoy astrological services without interruption',
+  '👑 Premium लें — रोज़ 10+ भविष्यफल': '👑 Get Premium — 10+ daily predictions',
+  'सभी प्रीमियम प्लान में ऑटो-नवीनीकरण की सुविधा': 'All premium plans include auto-renewal',
+  'यह रिपोर्ट आपके प्रीमियम प्लान के तहत मुफ्त है': 'This report is free under your premium plan',
+  'प्रीमियम प्लान देखें': 'View Premium Plan',
+  'एड-फ्री': 'Ad-Free',
+  'बिना रुकावट': 'No interruptions',
+  'मुफ्त कुंडली': 'Free Kundli',
+  'मुफ्त प्रीमियम': 'Free Premium',
+  'रत्न सुझाव': 'Gemstone Guide',
+  'व्यक्तिगत': 'Personal',
+  'ग्रह उपाय': 'Planetary Remedies',
+  'दोष निवारण': 'Dosha Removal',
+  'शुभ मुहूर्त': 'Auspicious Time',
+  'महत्वपूर्ण कार्य': 'Important Tasks',
+  'प्राथमिकता': 'Priority',
+  'तेज सहायता': 'Fast Support',
+  'प्रीमियम सदस्य': 'Premium Member',
+  'मासिक (₹99)': 'Monthly (₹99)',
+  '6 माह (₹499)': '6 Months (₹499)',
+  '12 माह (₹999)': '12 Months (₹999)',
+  '6 माह': '6 Months',
+  '/माह': '/month',
+  '/6 माह': '/6 months',
+  '/साल': '/year',
+  '/12 माह': '/12 months',
+  'सबसे लोकप्रिय': 'Most Popular',
+  'मासिक': 'Monthly',
+  'वार्षिक': 'Yearly',
+  '12 माह': '12 Months',
+  '20 बार': '20 times',
+  '30 बार': '30 times',
+  '10 बार': '10 times',
+  'कस्टम': 'Custom',
+  'कुंडली': 'Kundli',
 
-    /* ── Premium Packages ── */
-    pkg_monthly: '/माह', pkg_6month: '/6 माह', pkg_yearly: '/साल',
-    pkg_monthly_label: 'मासिक', pkg_6month_label: '6 माह', pkg_yearly_label: 'वार्षिक',
+  /* Comparison */
+  'विस्तृत कुंडली (₹19)': 'Detailed Kundli (₹19)',
+  'प्रीमियम कुंडली (₹49)': 'Premium Kundli (₹49)',
+  'संपूर्ण जीवन विश्लेषण': 'Complete Life Analysis',
+  '12 भावों का विस्तृत फल': 'Detailed results for all 12 houses',
+  '9 ग्रहों की विस्तृत स्थिति और प्रभाव': 'Detailed position and effect of 9 planets',
+  'सभी 12 भावों का विस्तृत विश्लेषण': 'Detailed analysis of all 12 houses',
+  'ग्रहों के लिए रत्न और धारण विधि': 'Gemstones for planets and wearing method',
+  'आपकी सटीक राशि और नक्षत्र की जानकारी': 'Your accurate zodiac and nakshatra info',
+  'प्रेम जीवन और विवाह की संभावनाएं': 'Love life and marriage possibilities',
+  'नौकरी और व्यवसाय में उन्नति के योग': 'Job and business growth prospects',
+  'व्यक्तित्व में निखार': 'Personality enhancement',
+  'व्यक्तिगत रत्न सिफारिशें': 'Personal gemstone recommendations',
+  'दोष निवारण के लिए सरल उपाय': 'Simple remedies for dosha removal',
+  'ग्रहों की विस्तृत स्थिति': 'Detailed planetary positions',
+  'मासिक राशिफल रिपोर्ट': 'Monthly Horoscope Report',
+  'वार्षिक राशिफल रिपोर्ट': 'Yearly Horoscope Report',
+  'विस्तृत कुंडली रिपोर्ट': 'Detailed Kundli Report',
+  'प्रीमियम कुंडली रिपोर्ट': 'Premium Kundli Report',
+  'संपूर्ण जीवन दर्शन': 'Complete Life Reading',
+  'पूरा जीवन विश्लेषण, 5 साल का भविष्य और सही समय जानने के लिए': 'For complete life analysis, 5-year future and right timing',
+  'प्रीमियम कुंडली में पाएं और भी विस्तृत जानकारी': 'Get even more detailed info in Premium Kundli',
 
-    /* ── Payment ── */
-    pay_title: '💳 भुगतान करें',
-    pay_btn: '🔐 सुरक्षित भुगतान करें',
-    pay_methods: 'सभी payment methods accept होते हैं',
-    pay_success: '✅ भुगतान सफल!',
-    pay_failed: '❌ भुगतान असफल',
-    pay_cancelled: 'भुगतान प्रक्रिया रद्द हुई',
-    pay_processing: 'भुगतान प्रक्रिया जारी...',
-    pay_secure: '100% Secure Payment — भुगतान होते ही सेवा तुरंत मिलेगी!',
-    pay_once: '✦ सभी payments एक बार के होते हैं',
-    pay_norefund: '✦ Report generate होने के बाद refund नहीं होगा',
+  /* Rashi package */
+  'सिर्फ ₹5 में सटीक राशि जानें': 'Know your accurate zodiac for just ₹5',
+  '⭐ ₹5 राशि पैकेज': '⭐ Zodiac Package',
+  '⏰ 24 घंटे के लिए सक्रिय': '⏰ Active for 24 hours',
+  'नाम से राशि auto-detect • 24 घंटे valid': 'Auto-detect zodiac from name • Valid 24 hours',
+  '✅ राशि auto-detect होगी': '✅ Zodiac will be auto-detected',
+  'Auto Detect — राशि रिपोर्ट में दिखेगी': 'Auto Detect — zodiac shown in report',
+  'Auto Detect (नाम से)': 'Auto Detect (from name)',
+  'जितने चाहें नाम डालें — सभी की राशि जानें!': 'Enter any names — know everyone\'s zodiac!',
+  'जितने चाहें नाम डालें — सभी की राशि!': 'Enter any names — everyone\'s zodiac!',
+  '✅ राशि auto-detect होगी': '✅ Zodiac will be auto-detected',
+  '✅ राशि auto-detect होगी': '✅ Zodiac will be auto-detected',
 
-    /* ── Upsell ── */
-    upsell_basic: 'विस्तृत कुंडली',
-    upsell_premium: 'प्रीमियम कुंडली',
-    upsell_basic_btn: '📜 विस्तृत कुंडली',
-    upsell_premium_btn: '👑 प्रीमियम कुंडली',
+  /* Love Calculator */
+  '❤️ प्यार का प्रतिशत जानें': '❤️ Calculate Love %',
+  'प्रेम अनुकूलता': 'Love Compatibility',
 
-    /* ── Comparison ── */
-    compare_basic_title: 'विस्तृत कुंडली',
-    compare_premium_title: 'प्रीमियम कुंडली',
-    compare_includes: 'सब कुछ +',
+  /* Horoscope */
+  '☀️ दैनिक राशिफल': '☀️ Daily Horoscope',
+  '📆 मासिक राशिफल': '📆 Monthly Horoscope',
+  '📅 वार्षिक राशिफल': '📅 Yearly Horoscope',
+  'राशि चुनें': 'Select zodiac',
+  'अपनी राशि चुनें': 'Select your zodiac',
+  'राशि चुनिए': 'Choose your zodiac',
 
-    /* ── Gemstones ── */
-    gem_title: '💎 रत्न सुझाव',
-    gem_subtitle: 'व्यक्तिगत रत्न सिफारिशें',
-    gem_wear_day: 'धारण दिन',
-    gem_for_rashi: 'ग्रहों के लिए रत्न और धारण विधि',
+  /* Kundli matching */
+  '👰 वधू': '👰 Bride',
+  '🤵 वर': '🤵 Groom',
+  '💕 मिलान करें': '💕 Match Now',
+  '🌟 उत्कृष्ट मिलान!': '🌟 Excellent Match!',
+  '✅ अच्छा मिलान।': '✅ Good Match.',
+  '⚠️ सावधानी आवश्यक।': '⚠️ Caution Advised.',
+  'गुण मिलान': 'Guna Milan',
 
-    /* ── Remedies ── */
-    remedy_title: '🕉️ ग्रह उपाय',
-    remedy_subtitle: 'दोष निवारण के लिए सरल उपाय',
+  /* Gemstones */
+  '💎 रत्न सुझाव': '💎 Gemstone Guide',
+  'धारण दिन': 'Wear Day',
+  'पुखराज (गुरु के लिए)': 'Yellow Sapphire (for Jupiter)',
+  'Coral (Moonga)': 'Coral (Moonga)',
+  'Diamond (Heera)': 'Diamond (Heera)',
+  'Emerald (Panna)': 'Emerald (Panna)',
+  'Pearl (Moti)': 'Pearl (Moti)',
+  'Ruby (Manik)': 'Ruby (Manik)',
+  'Yellow Sapphire (Pukhraj)': 'Yellow Sapphire (Pukhraj)',
+  'Blue Sapphire (Neelam)': 'Blue Sapphire (Neelam)',
+  'मंगलवार': 'Tuesday',
+  'शुक्रवार': 'Friday',
+  'बुधवार': 'Wednesday',
+  'सोमवार': 'Monday',
+  'रविवार': 'Sunday',
+  'गुरुवार': 'Thursday',
+  'शनिवार': 'Saturday',
 
-    /* ── About/Contact/Pages ── */
-    about_title: 'हमारे बारे में',
-    contact_title: 'संपर्क करें',
-    privacy_title: 'गोपनीयता नीति',
-    terms_title: 'नियम और शर्तें',
-    disclaimer_title: 'Disclaimer',
+  /* Remedies */
+  '🕉️ ग्रह उपाय': '🕉️ Planetary Remedies',
 
-    /* ── Disclaimer text ── */
-    disclaimer_text: '⚠️ यह भविष्यफल वैदिक ज्योतिष पर आधारित है। महत्वपूर्ण निर्णयों के लिए विशेषज्ञ से परामर्श लें।',
-    disclaimer_long: 'यह website केवल मनोरंजन और सामान्य मार्गदर्शन के उद्देश्य से बनाई गई है।',
+  /* Panchang */
+  'पंचांग': 'Panchang',
 
-    /* ── General ── */
-    share: '📲 शेयर करें',
-    share_friends: '📲 दोस्तों के साथ शेयर करें',
-    free: 'मुफ्त',
-    loading: 'लोड हो रहा है...',
-    close: 'बंद करें',
-    save: 'सेव करें',
-    cancel: 'रद्द करें',
-    ok: 'ठीक है',
-    back: 'वापस',
-    next: 'आगे',
-    see_more: 'और देखें',
-    history: 'हिस्ट्री',
-    bookmark: '📲 Website को Bookmark करें और हर रोज़ अपना भविष्य देखें!',
-    support: '🙏 कृपया हमें सपोर्ट करें',
-    limit_reset: 'रात 12 बजे आपको 2 नए मुफ्त भविष्यफल मिलेंगे!',
+  /* Premium member benefits */
+  '₹19 — 4 बार': '₹19 — 4 times',
+  '₹49 — 3 बार': '₹49 — 3 times',
 
-    /* ── Panchang ── */
-    panch_day: 'वार', panch_date: 'तिथि', panch_month: 'महीना',
-    panch_time: 'समय', panch_age: 'आयु',
+  /* Limit messages */
+  'आज के': "Today's",
+  'रात 12 बजे आपको 2 नए मुफ्त भविष्यफल मिलेंगे!': 'You will get 2 new free predictions at midnight!',
+  'Share = +1': 'Share = +1',
+  'रोज़ रीसेट': 'Daily reset',
+  'बचे': 'remaining',
 
-    /* ── Kundli matching ── */
-    match_bride: '👰 वधू', match_groom: '🤵 वर',
-    match_btn: '💕 मिलान करें',
-    match_excellent: '🌟 उत्कृष्ट मिलान!',
-    match_good: '✅ अच्छा मिलान।',
-    match_caution: '⚠️ सावधानी आवश्यक।',
+  /* Support */
+  '🙏 कृपया हमें सपोर्ट करें': '🙏 Please support us',
+  'आपके सहयोग से हम और बेहतर सेवाएं दे सकते हैं': 'With your support we can provide better services',
+  'रोज़ भविष्य देखते रहें': 'Keep checking your future daily',
+  '📲 Website को Bookmark करें और हर रोज़ अपना भविष्य देखें!': '📲 Bookmark this website and check your future every day!',
+  'और जानें कि ग्रह आपके लिए क्या लेकर आ रहे हैं।': 'Learn what the planets are bringing for you.',
 
-    /* ── Limit messages ── */
-    limit_title: 'आज के {feat} समाप्त!',
-    limit_used: 'आपने आज के {max} में से {used} बार उपयोग किया',
-    limit_watch_ad: 'Ad देखकर +1 मुफ्त पाएं',
-    limit_share_get: 'Share करके +1 पाएं',
+  /* Disclaimer */
+  '⚠️ यह भविष्यफल वैदिक ज्योतिष पर आधारित है। महत्वपूर्ण निर्णयों के लिए विशेषज्ञ से परामर्श लें।': '⚠️ This prediction is based on Vedic astrology. Consult an expert for important decisions.',
+  'यह website केवल मनोरंजन और सामान्य मार्गदर्शन के उद्देश्य से बनाई गई है।': 'This website is for entertainment and general guidance purposes only.',
+  'यहाँ दी गई भविष्यवाणियाँ logic और calculation पर आधारित हैं और 100% सटीक होने की गारंटी नहीं देतीं।': 'Predictions here are based on logic and calculation and do not guarantee 100% accuracy.',
+  'यह रिपोर्ट ज्योतिषीय मान्यताओं पर आधारित है।': 'This report is based on astrological beliefs.',
+  'किसी भी महत्वपूर्ण निर्णय के लिए केवल इस prediction पर निर्भर न रहें।': 'Do not rely only on this prediction for any important decision.',
 
-    /* ── Language selector ── */
-    lang_label: 'भाषा',
-  },
+  /* Report sections */
+  '【 व्यक्तित्व झलक 】': '【 Personality Glimpse 】',
+  '⭐ जीवन की चुनौतियां': '⭐ Life Challenges',
+  '🔮 विशेष रहस्योद्घाटन': '🔮 Special Revelation',
+  '⏳ आपकी भविष्य की Timeline': '⏳ Your Future Timeline',
+  '🌿 विशेष उपाय': '🌿 Special Remedies',
+  'शुभ कारक': 'Lucky Factors',
+  'ग्रहों की स्थिति': 'Planetary Positions',
+  '12 भाव फल': '12 House Results',
+  'जीवन टाइमलाइन': 'Life Timeline',
+  '5 साल का भविष्य': '5-Year Future',
+  'अगले 3–6 महीने': 'Next 3-6 Months',
+  'व्यक्तित्व झलक': 'Personality Glimpse',
+  'विशेष उपाय': 'Special Remedies',
 
-  en: {
-    /* ── Currency ── */
-    currency: '$', currencyCode: 'USD',
+  /* History */
+  '📋 मेरी रिपोर्ट्स': '📋 My Reports',
+  '🗑️ पूरी History साफ़ करें': '🗑️ Clear All History',
+  '✕ एक भविष्यफल हटाएं (History से चुनें)': '✕ Remove a prediction (choose from history)',
+  'मुफ्त भविष्य': 'Free Prediction',
 
-    /* ── Splash ── */
-    splash1: '🔮 Preparing your cosmic reading...',
-    splash2: '⭐ Analyzing planetary positions...',
-    splash3: '✨ Your horoscope is being prepared...',
+  /* Result upsell */
+  '🌟 अपने दोस्तों के साथ शेयर करें': '🌟 Share with your friends',
+  'प्रीमियम में मिलेंगे ये अतिरिक्त लाभ': 'Additional benefits in Premium',
 
-    /* ── Nav ── */
-    nav_home: 'Home', nav_daily: 'Daily Horoscope', nav_monthly: 'Monthly Horoscope',
-    nav_yearly: 'Yearly Horoscope', nav_matching: 'Kundli Matching',
-    nav_gemstones: 'Gemstone Guide', nav_remedies: 'Remedies',
-    nav_history: 'My Reports (History)', nav_premium: 'Premium Plan',
-    nav_about: 'About Us', nav_contact: 'Contact Us',
-    nav_privacy: 'Privacy Policy', nav_terms: 'Terms & Conditions',
-    nav_disclaimer: 'Disclaimer', nav_backup: 'History Backup',
-
-    /* ── Hero ── */
-    hero_title: 'Know Your Future',
-    hero_subtitle: 'Accurate predictions through Vedic Astrology',
-    hero_btn: '🔮 Get Free Prediction',
-    hero_tagline: '✨ Planets · Stars · Kundli · Horoscope ✨',
-
-    /* ── Form ── */
-    form_name: 'Name',
-    form_name_ph: 'Enter your name',
-    form_dob: 'Date of Birth',
-    form_time: 'Birth Time',
-    form_place: 'Birth Place',
-    form_place_ph: 'Enter birth place',
-    form_gender: 'Gender',
-    form_gender_m: 'Male',
-    form_gender_f: 'Female',
-    form_gender_o: 'Other',
-    form_rashi: 'Zodiac Sign',
-    form_rashi_ph: '-- Select your zodiac --',
-    form_nakshatra: 'Nakshatra',
-    form_submit: '🔮 See My Future (Free)',
-    form_required: 'Name is required',
-    form_wait: 'Please wait...',
-    form_loading: 'Your future is being prepared 🌟',
-    form_info: 'Enter your details (free prediction)',
-
-    /* ── Results ── */
-    result_title: 'Your Horoscope',
-    result_share: '📲 Share This Report',
-    result_share2: '📲 Share — Get 1 More Free',
-    result_main: '🔮 Main Prediction',
-    result_detail: '【 Detailed Horoscope 】',
-    result_info: '【 Personal Information 】',
-    result_free: 'Free Prediction',
-
-    /* ── Kundli ── */
-    kundli_basic_title: 'Detailed Kundli',
-    kundli_basic_desc: '✨ What\'s in this report?',
-    kundli_basic_buy: 'Buy Report',
-    kundli_premium_title: 'Premium Kundli',
-    kundli_premium_buy: 'Buy Premium Report',
-    kundli_basic_label: 'Detailed',
-    kundli_premium_label: 'Premium',
-    kundli_more: '👑 Want more details?',
-    kundli_history_empty: 'No reports viewed yet',
-    kundli_no_history: 'No predictions yet. See your future first!',
-    kundli_clear: '🗑️ Clear All History',
-    kundli_remove: '✕ Remove a prediction (choose from history)',
-    kundli_report: '🔮 Kundli Report',
-    kundli_free_report: '📜 Detailed Kundli Report',
-    kundli_premium_report: '👑 Premium Kundli Report',
-
-    /* ── Rashifal ── */
-    rashi_daily: '☀️ Daily Horoscope',
-    rashi_monthly: '📆 Monthly Horoscope',
-    rashi_yearly: '📅 Yearly Horoscope',
-    rashi_select: 'Select zodiac',
-    rashi_today: 'Today\'s Horoscope',
-    rashi_thismonth: 'This Month',
-    rashi_thisyear: 'This Year',
-
-    /* ── Rashis ── */
-    rashi_aries: 'Aries', rashi_taurus: 'Taurus', rashi_gemini: 'Gemini',
-    rashi_cancer: 'Cancer', rashi_leo: 'Leo', rashi_virgo: 'Virgo',
-    rashi_libra: 'Libra', rashi_scorpio: 'Scorpio', rashi_sagittarius: 'Sagittarius',
-    rashi_capricorn: 'Capricorn', rashi_aquarius: 'Aquarius', rashi_pisces: 'Pisces',
-
-    /* ── Love Calculator ── */
-    love_title: '❤️ Love Calculator',
-    love_your_name: 'Your Name',
-    love_partner_name: 'Partner\'s Name',
-    love_your_ph: 'Your name',
-    love_partner_ph: 'Partner\'s name',
-    love_btn: '❤️ Calculate Love %',
-    love_result: 'Love Compatibility',
-
-    /* ── Horoscope ── */
-    horo_title: 'View Horoscope',
-    horo_select: 'Select your zodiac sign',
-
-    /* ── Rashi Package ── */
-    rashi_pkg_hint: 'for accurate zodiac detection',
-    rashi_pkg_prefix: 'Just ',
-    rashi_pkg_name: 'Zodiac Package',
-    rashi_pkg_validity: 'Active for 24 hours',
-    rashi_auto: 'Auto Detect — zodiac shown in report',
-    rashi_detect_ok: '✅ Zodiac will be auto-detected',
-
-    /* ── Premium ── */
-    premium_title: '👑 Premium Plan',
-    premium_subtitle: 'Premium membership benefits',
-    premium_all: 'All premium features',
-    premium_member: 'You are a Premium Member',
-    premium_benefits: 'Additional benefits in Premium',
-    premium_adfree: 'Go Ad-Free with Premium',
-    premium_unlimited: 'Uninterrupted services',
-    premium_daily: '👑 Get Premium — 10+ daily predictions',
-    premium_renew: 'All premium plans include auto-renewal',
-
-    /* ── Premium Packages ── */
-    pkg_monthly: '/month', pkg_6month: '/6 months', pkg_yearly: '/year',
-    pkg_monthly_label: 'Monthly', pkg_6month_label: '6 Months', pkg_yearly_label: 'Yearly',
-
-    /* ── Payment ── */
-    pay_title: '💳 Make Payment',
-    pay_btn: '🔐 Secure Payment',
-    pay_methods: 'All payment methods accepted',
-    pay_success: '✅ Payment Successful!',
-    pay_failed: '❌ Payment Failed',
-    pay_cancelled: 'Payment cancelled',
-    pay_processing: 'Processing payment...',
-    pay_secure: '100% Secure Payment — Service activated instantly!',
-    pay_once: '✦ All payments are one-time',
-    pay_norefund: '✦ No refund after report is generated',
-
-    /* ── Upsell ── */
-    upsell_basic: 'Detailed Kundli',
-    upsell_premium: 'Premium Kundli',
-    upsell_basic_btn: '📜 Detailed Kundli',
-    upsell_premium_btn: '👑 Premium Kundli',
-
-    /* ── Comparison ── */
-    compare_basic_title: 'Detailed Kundli',
-    compare_premium_title: 'Premium Kundli',
-    compare_includes: 'everything +',
-
-    /* ── Gemstones ── */
-    gem_title: '💎 Gemstone Guide',
-    gem_subtitle: 'Personalized gemstone recommendations',
-    gem_wear_day: 'Wear Day',
-    gem_for_rashi: 'Gemstones for planetary alignment',
-
-    /* ── Remedies ── */
-    remedy_title: '🕉️ Planetary Remedies',
-    remedy_subtitle: 'Simple remedies for doshas',
-
-    /* ── About/Contact/Pages ── */
-    about_title: 'About Us',
-    contact_title: 'Contact Us',
-    privacy_title: 'Privacy Policy',
-    terms_title: 'Terms & Conditions',
-    disclaimer_title: 'Disclaimer',
-
-    /* ── Disclaimer text ── */
-    disclaimer_text: '⚠️ This prediction is based on Vedic astrology. Consult an expert for important decisions.',
-    disclaimer_long: 'This website is for entertainment and general guidance purposes only.',
-
-    /* ── General ── */
-    share: '📲 Share',
-    share_friends: '📲 Share with friends',
-    free: 'Free',
-    loading: 'Loading...',
-    close: 'Close',
-    save: 'Save',
-    cancel: 'Cancel',
-    ok: 'OK',
-    back: 'Back',
-    next: 'Next',
-    see_more: 'See More',
-    history: 'History',
-    bookmark: '📲 Bookmark this website and check your future every day!',
-    support: '🙏 Please support us',
-    limit_reset: 'You will get 2 new free predictions at midnight!',
-
-    /* ── Panchang ── */
-    panch_day: 'Day', panch_date: 'Date', panch_month: 'Month',
-    panch_time: 'Time', panch_age: 'Age',
-
-    /* ── Kundli matching ── */
-    match_bride: '👰 Bride', match_groom: '🤵 Groom',
-    match_btn: '💕 Match Now',
-    match_excellent: '🌟 Excellent Match!',
-    match_good: '✅ Good Match.',
-    match_caution: '⚠️ Caution advised.',
-
-    /* ── Limit messages ── */
-    limit_title: 'Today\'s {feat} limit reached!',
-    limit_used: 'You used {used} out of {max} today',
-    limit_watch_ad: 'Watch an ad for +1 free',
-    limit_share_get: 'Share to get +1 free',
-
-    /* ── Language selector ── */
-    lang_label: 'Language',
-  }
+  /* General */
+  'कृपया प्रतीक्षा करें': 'Please wait...',
+  'लोड हो रहा है...': 'Loading...',
+  'Ad देख रहे हैं...': 'Watching Ad...',
+  '5 सेकंड प्रतीक्षा करें': 'Please wait 5 seconds',
+  'नाम दर्ज करना आवश्यक है': 'Name is required',
+  'कृपया सभी जानकारी भरें': 'Please fill all information',
+  'कोई रिपोर्ट नहीं देखी गई': 'No reports viewed yet',
+  'चुनें': 'Select',
+  'अन्य': 'Other',
+  '✅ 1 मुफ्त ': '✅ 1 free ',
+  ' मिला!': ' received!',
 };
 
-// ════════════════════════════════════════════════════════════
-// CURRENCY SETTINGS (admin se override hoga)
-// ════════════════════════════════════════════════════════════
-var BD_CURRENCY_SETTINGS = {
-  usdBasic: 0.25, usdPremium: 0.60, usdRashi: 0.07,
-  usdMonthly: 1.20, usdSixMonth: 6.00, usdYearly: 12.00,
-};
-
+/* ══════════════════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════════════════ */
 var _lang = 'hi';
 var _isEn = false;
+window._currentLangCode = 'hi';
+window._isEn = false;
 
-// ════════════════════════════════════════════════════════════
-// DETECT LOCATION
-// ════════════════════════════════════════════════════════════
-async function detectUserLocation() {
-  try {
-    var saved = localStorage.getItem('bd_lang');
-    if (saved && T[saved]) { _lang = saved; _isEn = (saved === 'en'); return; }
-    var res = await fetch('https://ipapi.co/json/');
-    var d = await res.json();
-    var eng = ['US','GB','CA','AU','NZ','IE','SG','ZA'];
-    if (eng.includes(d.country_code)) { _lang = 'en'; _isEn = true; }
-    else { _lang = 'hi'; _isEn = false; }
-  } catch(e) { _lang = 'hi'; _isEn = false; }
-}
-
-// ════════════════════════════════════════════════════════════
-// GET TRANSLATION
-// ════════════════════════════════════════════════════════════
-function t(key) {
-  return (T[_lang] && T[_lang][key]) || (T['hi'] && T['hi'][key]) || key;
-}
-
-// ════════════════════════════════════════════════════════════
-// APPLY LANGUAGE — data-i18n elements + dynamic content
-// ════════════════════════════════════════════════════════════
-function applyLanguage(lang) {
-  if (!T[lang]) lang = 'hi';
-  _lang = lang;
-  _isEn = (lang === 'en');
-  localStorage.setItem('bd_lang', lang);
-  document.documentElement.lang = lang;
-
-  var tl = T[lang];
-
-  // ── 1. All data-i18n elements ──
-  document.querySelectorAll('[data-i18n]').forEach(function(el) {
-    var key = el.getAttribute('data-i18n');
-    var val = tl[key] || T['hi'][key] || '';
-    if (val) {
-      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = val;
-      else el.textContent = val;
-    }
-  });
-
-  // ── 2. data-i18n-html (innerHTML) ──
-  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
-    var key = el.getAttribute('data-i18n-html');
-    var val = tl[key] || T['hi'][key] || '';
-    if (val) el.innerHTML = val;
-  });
-
-  // ── 3. data-i18n-placeholder ──
-  document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
-    var key = el.getAttribute('data-i18n-ph');
-    var val = tl[key] || T['hi'][key] || '';
-    if (val) el.placeholder = val;
-  });
-
-  // ── 4. Nav items ──
-  var navIds = {
-    'nav-home': tl.nav_home, 'nav-daily': tl.nav_daily,
-    'nav-monthly': tl.nav_monthly, 'nav-yearly': tl.nav_yearly,
-    'nav-matching': tl.nav_matching, 'nav-gemstones': tl.nav_gemstones,
-    'nav-remedies': tl.nav_remedies, 'nav-history': tl.nav_history,
-    'nav-premium': tl.nav_premium, 'nav-about': tl.nav_about,
-    'nav-contact': tl.nav_contact, 'nav-privacy': tl.nav_privacy,
-    'nav-terms': tl.nav_terms, 'nav-disclaimer': tl.nav_disclaimer,
-    'nav-backup': tl.nav_backup,
-  };
-  Object.keys(navIds).forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el && navIds[id]) el.textContent = navIds[id];
-  });
-
-  // ── 5. Splash messages ──
-  window._splashMsgs = [tl.splash1, tl.splash2, tl.splash3];
-  var splashEl = document.getElementById('splashMsg');
-  if (splashEl) splashEl.textContent = tl.splash1;
-
-  // ── 6. Payment modal ──
-  var payTitle = document.getElementById('pay-title-text');
-  if (payTitle) payTitle.textContent = tl.pay_title;
-  var payBtn = document.querySelector('.payment-content button[onclick="startPayment()"] span, .payment-content button[onclick="startPayment()"]');
-  if (payBtn) payBtn.textContent = tl.pay_btn;
-  var payMethodsTxt = document.querySelectorAll('.payment-content p');
-  payMethodsTxt.forEach(function(p) {
-    if (p.textContent.includes('accept') || p.textContent.includes('payment methods')) {
-      p.textContent = tl.pay_methods;
-    }
-  });
-
-  // ── 7. Hero section ──
-  var heroTitle = document.getElementById('hero-title');
-  var heroSubtitle = document.getElementById('hero-subtitle');
-  var heroBtn = document.getElementById('hero-btn');
-  var heroTagline = document.getElementById('hero-tagline');
-  if (heroTitle) heroTitle.textContent = tl.hero_title;
-  if (heroSubtitle) heroSubtitle.textContent = tl.hero_subtitle;
-  if (heroBtn) heroBtn.textContent = tl.hero_btn;
-  if (heroTagline) heroTagline.textContent = tl.hero_tagline;
-
-  // ── 8. Form labels and placeholders ──
-  var formMaps = {
-    'label-name': tl.form_name, 'label-dob': tl.form_dob,
-    'label-time': tl.form_time, 'label-place': tl.form_place,
-    'label-gender': tl.form_gender, 'label-rashi': tl.form_rashi,
-    'label-nakshatra': tl.form_nakshatra,
-  };
-  Object.keys(formMaps).forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el && formMaps[id]) el.textContent = formMaps[id];
-  });
-
-  // Placeholders
-  var phMap = {
-    'name': tl.form_name_ph, 'birthPlace': tl.form_place_ph,
-    'kundliName': tl.form_name_ph, 'kundliPlace': tl.form_place_ph,
-    'premiumKundliName': tl.form_name_ph, 'premiumKundliPlace': tl.form_place_ph,
-    'loveYourName': tl.love_your_ph, 'lovePartnerName': tl.love_partner_ph,
-    'horoscopeName': tl.form_name_ph,
-  };
-  Object.keys(phMap).forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el && phMap[id]) el.placeholder = phMap[id];
-  });
-
-  // Gender options
-  var genderSels = ['gender', 'kundliGender', 'premiumKundliGender'];
-  genderSels.forEach(function(selId) {
-    var sel = document.getElementById(selId);
-    if (!sel) return;
-    var opts = sel.querySelectorAll('option');
-    opts.forEach(function(opt) {
-      if (opt.value === 'male') opt.textContent = tl.form_gender_m;
-      else if (opt.value === 'female') opt.textContent = tl.form_gender_f;
-      else if (opt.value === 'other') opt.textContent = tl.form_gender_o;
-    });
-  });
-
-  // Zodiac dropdown options
-  var rashiMap = {
-    'aries': tl.rashi_aries, 'taurus': tl.rashi_taurus, 'gemini': tl.rashi_gemini,
-    'cancer': tl.rashi_cancer, 'leo': tl.rashi_leo, 'virgo': tl.rashi_virgo,
-    'libra': tl.rashi_libra, 'scorpio': tl.rashi_scorpio, 'sagittarius': tl.rashi_sagittarius,
-    'capricorn': tl.rashi_capricorn, 'aquarius': tl.rashi_aquarius, 'pisces': tl.rashi_pisces,
-  };
-  document.querySelectorAll('select option').forEach(function(opt) {
-    var v = opt.value ? opt.value.toLowerCase() : '';
-    if (rashiMap[v]) opt.textContent = rashiMap[v];
-  });
-
-  // Submit buttons
-  var submitBtn = document.querySelector('button[onclick*="predict"], button[onclick*="submitForm"], .predict-btn-top');
-  if (submitBtn && !submitBtn.id) submitBtn.textContent = tl.form_submit;
-  var submitBtnId = document.getElementById('main-predict-btn');
-  if (submitBtnId) submitBtnId.textContent = tl.form_submit;
-
-  // ── 9. Kundli section ──
-  var kundliBasicTitle = document.querySelector('#kundliSection .feature-title, #basicKundliSection h2');
-  var kundliPremTitle = document.querySelector('#premiumKundliSection .feature-title, #premiumKundliSection h2');
-
-  // Basic/Premium kundli what's included
-  document.querySelectorAll('h3').forEach(function(h) {
-    var txt = h.textContent.trim();
-    if (txt === '✨ इस रिपोर्ट में क्या मिलेगा?' || txt === '✨ What\'s in this report?') {
-      h.textContent = tl.kundli_basic_desc;
-    }
-    if (txt === '👑 और विस्तृत जानकारी?' || txt === '👑 Want more details?') {
-      h.textContent = tl.kundli_more;
-    }
-    if (txt === 'कोई रिपोर्ट नहीं' || txt === 'No reports viewed yet') {
-      h.textContent = tl.kundli_history_empty;
-    }
-  });
-
-  // ── 10. Rashi pkg hints ──
-  document.querySelectorAll('#loveRashiBuyMsg, #horoRashiBuyMsg, #rashiBuyHint').forEach(function(container) {
-    var badge = container.querySelector('span[style*="border-radius:20px"]');
-    var text  = container.querySelector('div[style*="ffd700"]');
-    if (badge) badge.textContent = getPriceDisplay('rashi');
-    if (text) text.textContent = tl.rashi_pkg_prefix + getPriceDisplay('rashi') + ' ' + tl.rashi_pkg_hint;
-  });
-
-  // ── 11. Premium section texts ──
-  document.querySelectorAll('p, div').forEach(function(el) {
-    var txt = el.textContent.trim();
-    if (!el.children.length) { // only leaf nodes
-      if (txt === 'सभी प्रीमियम प्लान में ऑटो-नवीनीकरण की सुविधा' || txt === 'All premium plans include auto-renewal') {
-        el.textContent = tl.premium_renew;
-      }
-      if (txt === '100% Secure Payment — भुगतान होते ही सेवा तुरंत मिलेगी!' || txt === '100% Secure Payment — Service activated instantly!') {
-        el.textContent = tl.pay_secure;
-      }
-      if (txt === '✦ सभी payments एक बार के होते हैं' || txt === '✦ All payments are one-time') {
-        el.textContent = tl.pay_once;
-      }
-      if (txt === '✦ Report generate होने के बाद refund नहीं होगा' || txt === '✦ No refund after report is generated') {
-        el.textContent = tl.pay_norefund;
-      }
-    }
-  });
-
-  // ── 12. Love calculator ──
-  var loveTitle = document.querySelector('.love-calculator-section h2, #loveSection h2');
-  if (loveTitle) loveTitle.textContent = tl.love_title;
-  var loveBtn = document.querySelector('.love-calculator-section .predict-btn, #loveSection .predict-btn');
-  if (loveBtn) loveBtn.textContent = tl.love_btn;
-
-  // ── 13. Horoscope section ──
-  var horoTitle = document.querySelector('.horoscope-section h2, #horoscopeSection h2');
-  if (horoTitle) horoTitle.textContent = tl.horo_title;
-
-  // ── 14. Upsell buttons ──
-  document.querySelectorAll('.upsell-btn').forEach(function(el) {
-    var oc = el.getAttribute('onclick') || '';
-    if (oc.includes('showKundliSection') && !oc.includes('Premium')) {
-      el.textContent = '📜 ' + getPriceDisplay('basic') + ' ' + tl.upsell_basic;
-    }
-    if (oc.includes('showPremiumKundliSection')) {
-      el.textContent = '👑 ' + getPriceDisplay('premium') + ' ' + tl.upsell_premium;
-    }
-  });
-
-  // ── 15. Comparison ──
-  document.querySelectorAll('h4').forEach(function(el) {
-    var txt = el.textContent.trim();
-    if (txt.includes('विस्तृत कुंडली') || txt.includes('Detailed Kundli')) {
-      el.textContent = tl.compare_basic_title + ' (' + getPriceDisplay('basic') + ')';
-    }
-    if (txt.includes('प्रीमियम कुंडली') || txt.includes('Premium Kundli')) {
-      el.textContent = tl.compare_premium_title + ' (' + getPriceDisplay('premium') + ')';
-    }
-  });
-
-  // ── 16. Gemstones page ──
-  var gemTitle = document.querySelector('#page-gemstones h2, #gemstonesSection h2');
-  if (gemTitle) gemTitle.textContent = tl.gem_title;
-
-  // ── 17. Disclaimer ──
-  document.querySelectorAll('.disclaimer, [class*="disclaimer"]').forEach(function(el) {
-    if (el.textContent.includes('ज्योतिष') || el.textContent.includes('astrology')) {
-      el.textContent = tl.disclaimer_text;
-    }
-  });
-
-  // ── 18. Apply pricing ──
-  applyPricingWithLang();
-
-  // ── 19. Language switcher active ──
-  document.querySelectorAll('.bd-lang-btn').forEach(function(btn) {
-    var isActive = btn.dataset.lang === lang;
-    btn.style.background = isActive ? 'linear-gradient(135deg,#ffd700,#ffaa00)' : 'transparent';
-    btn.style.color = isActive ? '#07080f' : '#aaa';
-  });
-
-  console.log('✅ Full language applied:', lang);
-}
-
-// ════════════════════════════════════════════════════════════
-// PRICE DISPLAY
-// ════════════════════════════════════════════════════════════
-function getPriceDisplay(type) {
-  var p = window._adminPricing || { basic:19, premium:49, rashi:5, monthly:99, sixMonth:499, yearly:999 };
-  var s = BD_CURRENCY_SETTINGS;
-  if (_isEn) {
-    var map = { basic: s.usdBasic, premium: s.usdPremium, rashi: s.usdRashi,
-                monthly: s.usdMonthly, sixMonth: s.usdSixMonth, yearly: s.usdYearly };
-    return '$' + (map[type] || 0).toFixed(2);
+/* ══════════════════════════════════════════════════════════
+   DETECT LOCATION BY IP
+   ══════════════════════════════════════════════════════════ */
+function detectLang(callback) {
+  var saved = localStorage.getItem('bd_lang');
+  if (saved && (saved === 'hi' || saved === 'en')) {
+    _lang = saved; _isEn = (saved === 'en');
+    window._currentLangCode = _lang; window._isEn = _isEn;
+    callback(); return;
   }
-  var inrMap = { basic: p.basic, premium: p.premium, rashi: p.rashi,
-                 monthly: p.monthly, sixMonth: p.sixMonth, yearly: p.yearly };
-  return '₹' + (inrMap[type] || 0);
+  fetch('https://ipapi.co/json/')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var engCountries = ['US','GB','CA','AU','NZ','IE','SG','ZA','PH','MY'];
+      if (engCountries.indexOf(d.country_code) > -1) {
+        _lang = 'en'; _isEn = true;
+      } else {
+        _lang = 'hi'; _isEn = false;
+      }
+      window._currentLangCode = _lang; window._isEn = _isEn;
+      callback();
+    })
+    .catch(function() {
+      _lang = 'hi'; _isEn = false;
+      window._currentLangCode = 'hi'; window._isEn = false;
+      callback();
+    });
 }
 
-// ════════════════════════════════════════════════════════════
-// APPLY PRICING WITH LANGUAGE
-// ════════════════════════════════════════════════════════════
-function applyPricingWithLang() {
-  var tl = T[_lang] || T['hi'];
-  var setTxt = function(id, txt) { var el = document.getElementById(id); if(el) el.textContent = txt; };
+/* ══════════════════════════════════════════════════════════
+   TRANSLATE TEXT NODE — Hindi → English or reverse
+   ══════════════════════════════════════════════════════════ */
+function translateText(text, toEn) {
+  if (!text || !text.trim()) return text;
+  var result = text;
+  if (toEn) {
+    Object.keys(HI_TO_EN).forEach(function(hi) {
+      if (result.indexOf(hi) > -1) {
+        result = result.split(hi).join(HI_TO_EN[hi]);
+      }
+    });
+  } else {
+    // English → Hindi (reverse map)
+    Object.keys(HI_TO_EN).forEach(function(hi) {
+      var en = HI_TO_EN[hi];
+      if (result.indexOf(en) > -1) {
+        result = result.split(en).join(hi);
+      }
+    });
+  }
+  return result;
+}
 
-  setTxt('basicKundliPrice',   getPriceDisplay('basic'));
-  setTxt('basicKundliBadge',   getPriceDisplay('basic'));
-  setTxt('basicKundliBtnText', getPriceDisplay('basic') + ' ' + tl.kundli_basic_buy);
-  setTxt('premiumKundliPrice',  getPriceDisplay('premium'));
-  setTxt('premiumKundliBadge',  getPriceDisplay('premium'));
-  setTxt('premiumKundliBtnText', getPriceDisplay('premium') + ' ' + tl.kundli_premium_buy);
+/* ══════════════════════════════════════════════════════════
+   TRANSLATE ALL TEXT NODES IN DOM
+   ══════════════════════════════════════════════════════════ */
+function translateDOM(toEn) {
+  // Walk all text nodes
+  var walker = document.createTreeWalker(
+    document.body,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: function(node) {
+        var parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        var tag = parent.tagName;
+        // Skip script, style, meta
+        if (['SCRIPT','STYLE','META','LINK','NOSCRIPT','SVG','PATH'].indexOf(tag) > -1)
+          return NodeFilter.FILTER_REJECT;
+        // Skip if no content
+        if (!node.nodeValue || !node.nodeValue.trim())
+          return NodeFilter.FILTER_SKIP;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
 
-  // Button onclick amounts
-  var basicAmt = _isEn ? BD_CURRENCY_SETTINGS.usdBasic : (window._adminPricing ? window._adminPricing.basic : 19);
-  var premAmt  = _isEn ? BD_CURRENCY_SETTINGS.usdPremium : (window._adminPricing ? window._adminPricing.premium : 49);
-  var basicBtn = document.getElementById('basicKundliBtn');
-  if (basicBtn) basicBtn.setAttribute('onclick', "processKundliPayment(" + basicAmt + ", 'basic')");
-  var premBtn = document.getElementById('premiumKundliBtn');
-  if (premBtn) premBtn.setAttribute('onclick', "processKundliPayment(" + premAmt + ", 'premium')");
+  var nodes = [];
+  var node;
+  while (node = walker.nextNode()) {
+    nodes.push(node);
+  }
+
+  nodes.forEach(function(n) {
+    var original = n.nodeValue;
+    var translated = translateText(original, toEn);
+    if (translated !== original) {
+      n.nodeValue = translated;
+    }
+  });
+
+  // Also translate placeholder attributes
+  document.querySelectorAll('[placeholder]').forEach(function(el) {
+    var ph = el.getAttribute('placeholder');
+    var translated = translateText(ph, toEn);
+    if (translated !== ph) el.setAttribute('placeholder', translated);
+  });
+
+  // Translate select option text
+  document.querySelectorAll('option').forEach(function(opt) {
+    var translated = translateText(opt.textContent, toEn);
+    if (translated !== opt.textContent) opt.textContent = translated;
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOAD USD PRICES FROM FIREBASE
+   ══════════════════════════════════════════════════════════ */
+var USD = {basic:0.25, premium:0.60, rashi:0.07, monthly:1.20, sixMonth:6.00, yearly:12.00};
+window.BD_CURRENCY_SETTINGS = USD;
+
+function loadUSD() {
+  try {
+    if (typeof database === 'undefined') return;
+    database.ref('settings/usdPricing').once('value').then(function(snap) {
+      var d = snap.val();
+      if (d) {
+        USD.basic    = d.basic    || USD.basic;
+        USD.premium  = d.premium  || USD.premium;
+        USD.rashi    = d.rashi    || USD.rashi;
+        USD.monthly  = d.monthly  || USD.monthly;
+        USD.sixMonth = d.sixMonth || USD.sixMonth;
+        USD.yearly   = d.yearly   || USD.yearly;
+        window.BD_CURRENCY_SETTINGS = USD;
+        if (_isEn) applyPricingEN();
+      }
+    });
+  } catch(e) {}
+}
+
+/* ══════════════════════════════════════════════════════════
+   APPLY PRICING
+   ══════════════════════════════════════════════════════════ */
+function pr(type) {
+  var p = window._adminPricing || {basic:19,premium:49,rashi:5,monthly:99,sixMonth:499,yearly:999};
+  if (_isEn) {
+    var m = {basic:USD.basic,premium:USD.premium,rashi:USD.rashi,monthly:USD.monthly,sixMonth:USD.sixMonth,yearly:USD.yearly};
+    return '$'+(m[type]||0).toFixed(2);
+  }
+  var n = {basic:p.basic,premium:p.premium,rashi:p.rashi,monthly:p.monthly,sixMonth:p.sixMonth,yearly:p.yearly};
+  return '₹'+(n[type]||0);
+}
+
+function applyPricingEN() {
+  var p = window._adminPricing || {basic:19,premium:49,rashi:5,monthly:99,sixMonth:499,yearly:999};
+  function st(id,txt){var e=document.getElementById(id);if(e&&txt!==undefined)e.textContent=txt;}
+
+  st('basicKundliPrice',  pr('basic'));
+  st('basicKundliBadge',  pr('basic'));
+  st('basicKundliBtnText', pr('basic')+' Buy Report');
+  st('premiumKundliPrice', pr('premium'));
+  st('premiumKundliBadge', pr('premium'));
+  st('premiumKundliBtnText', pr('premium')+' Buy Premium Report');
+
+  var basicAmt  = _isEn ? USD.basic   : p.basic;
+  var premAmt   = _isEn ? USD.premium : p.premium;
+  var rashiAmt  = _isEn ? USD.rashi   : p.rashi;
+
+  var bb = document.getElementById('basicKundliBtn');
+  if (bb) bb.setAttribute('onclick',"processKundliPayment("+basicAmt+",'basic')");
+  var pb = document.getElementById('premiumKundliBtn');
+  if (pb) pb.setAttribute('onclick',"processKundliPayment("+premAmt+",'premium')");
 
   // Premium cards
   document.querySelectorAll('.premium-card').forEach(function(card) {
     var oc = card.getAttribute('onclick') || '';
-    var priceEl = card.querySelector('.premium-price');
-    if (oc.includes("'monthly'")) {
-      if (priceEl) priceEl.innerHTML = getPriceDisplay('monthly') + '<small>' + tl.pkg_monthly + '</small>';
-      var mAmt = _isEn ? BD_CURRENCY_SETTINGS.usdMonthly : (window._adminPricing ? window._adminPricing.monthly : 99);
-      card.setAttribute('onclick', "showPremiumPayment(" + mAmt + ", 'monthly')");
-    } else if (oc.includes("'6months'")) {
-      if (priceEl) priceEl.innerHTML = getPriceDisplay('sixMonth') + '<small>' + tl.pkg_6month + '</small>';
-      var sAmt = _isEn ? BD_CURRENCY_SETTINGS.usdSixMonth : (window._adminPricing ? window._adminPricing.sixMonth : 499);
-      card.setAttribute('onclick', "showPremiumPayment(" + sAmt + ", '6months')");
-    } else if (oc.includes("'yearly'")) {
-      if (priceEl) priceEl.innerHTML = getPriceDisplay('yearly') + '<small>' + tl.pkg_yearly + '</small>';
-      var yAmt = _isEn ? BD_CURRENCY_SETTINGS.usdYearly : (window._adminPricing ? window._adminPricing.yearly : 999);
-      card.setAttribute('onclick', "showPremiumPayment(" + yAmt + ", 'yearly')");
+    var pe = card.querySelector('.premium-price');
+    if (oc.indexOf("'monthly'") > -1) {
+      var mAmt = _isEn ? USD.monthly : p.monthly;
+      if (pe) pe.innerHTML = pr('monthly') + '<small>' + (_isEn?'/month':'/माह') + '</small>';
+      card.setAttribute('onclick',"showPremiumPayment("+mAmt+",'monthly')");
+    } else if (oc.indexOf("'6months'") > -1) {
+      var sAmt = _isEn ? USD.sixMonth : p.sixMonth;
+      if (pe) pe.innerHTML = pr('sixMonth') + '<small>' + (_isEn?'/6 months':'/6 माह') + '</small>';
+      card.setAttribute('onclick',"showPremiumPayment("+sAmt+",'6months')");
+    } else if (oc.indexOf("'yearly'") > -1) {
+      var yAmt = _isEn ? USD.yearly : p.yearly;
+      if (pe) pe.innerHTML = pr('yearly') + '<small>' + (_isEn?'/year':'/साल') + '</small>';
+      card.setAttribute('onclick',"showPremiumPayment("+yAmt+",'yearly')");
     }
+  });
+
+  // Upsell buttons
+  document.querySelectorAll('.upsell-btn').forEach(function(el) {
+    var oc = el.getAttribute('onclick') || '';
+    if (oc.indexOf('showKundliSection') > -1 && oc.indexOf('Premium') === -1)
+      el.textContent = '📜 ' + pr('basic') + ' Detailed Kundli';
+    if (oc.indexOf('showPremiumKundliSection') > -1)
+      el.textContent = '👑 ' + pr('premium') + ' Premium Kundli';
   });
 
   // Comparison prices
   document.querySelectorAll('.comparison-price').forEach(function(el) {
     var txt = el.textContent;
-    if (txt.match(/₹19|\$0\.25|19/)) el.textContent = getPriceDisplay('basic');
-    if (txt.match(/₹49|\$0\.60|49/)) el.textContent = getPriceDisplay('premium');
+    if (txt.match(/19|0\.25/)) el.textContent = pr('basic');
+    if (txt.match(/49|0\.60/)) el.textContent = pr('premium');
+  });
+
+  // h4 comparison headings
+  document.querySelectorAll('h4').forEach(function(el) {
+    var txt = el.textContent.trim();
+    if (txt.indexOf('Detailed Kundli') > -1 || txt.indexOf('विस्तृत कुंडली') > -1)
+      el.textContent = 'Detailed Kundli (' + pr('basic') + ')';
+    if (txt.indexOf('Premium Kundli') > -1 || txt.indexOf('प्रीमियम कुंडली') > -1)
+      el.textContent = 'Premium Kundli (' + pr('premium') + ')';
   });
 
   // Rashi hints
-  var tl2 = T[_lang] || T['hi'];
-  document.querySelectorAll('#loveRashiBuyMsg, #horoRashiBuyMsg, #rashiBuyHint').forEach(function(c) {
+  document.querySelectorAll('#loveRashiBuyMsg,#horoRashiBuyMsg,#rashiBuyHint').forEach(function(c) {
     var badge = c.querySelector('span[style*="border-radius:20px"]');
-    var text  = c.querySelector('div[style*="ffd700"]');
-    if (badge) badge.textContent = getPriceDisplay('rashi');
-    if (text) text.textContent = tl2.rashi_pkg_prefix + getPriceDisplay('rashi') + ' ' + tl2.rashi_pkg_hint;
+    var txt   = c.querySelector('div[style*="ffd700"]');
+    if (badge) badge.textContent = pr('rashi');
+    if (txt)   txt.textContent   = 'Just ' + pr('rashi') + ' for accurate zodiac detection';
+    var rAmt = _isEn ? USD.rashi : (window._adminPricing ? window._adminPricing.rashi : 5);
+    c.setAttribute('onclick','triggerRashiPurchase()');
   });
 }
 
-// ════════════════════════════════════════════════════════════
-// LOAD USD PRICES FROM FIREBASE
-// ════════════════════════════════════════════════════════════
-async function loadUsdPricesFromAdmin() {
-  try {
-    if (typeof database === 'undefined') return;
-    var snap = await database.ref('settings/usdPricing').once('value');
-    var d = snap.val();
-    if (d) {
-      BD_CURRENCY_SETTINGS.usdBasic    = d.basic    || BD_CURRENCY_SETTINGS.usdBasic;
-      BD_CURRENCY_SETTINGS.usdPremium  = d.premium  || BD_CURRENCY_SETTINGS.usdPremium;
-      BD_CURRENCY_SETTINGS.usdRashi    = d.rashi    || BD_CURRENCY_SETTINGS.usdRashi;
-      BD_CURRENCY_SETTINGS.usdMonthly  = d.monthly  || BD_CURRENCY_SETTINGS.usdMonthly;
-      BD_CURRENCY_SETTINGS.usdSixMonth = d.sixMonth || BD_CURRENCY_SETTINGS.usdSixMonth;
-      BD_CURRENCY_SETTINGS.usdYearly   = d.yearly   || BD_CURRENCY_SETTINGS.usdYearly;
+function applyPricingHI() {
+  var p = window._adminPricing || {basic:19,premium:49,rashi:5,monthly:99,sixMonth:499,yearly:999};
+  function st(id,txt){var e=document.getElementById(id);if(e&&txt!==undefined)e.textContent=txt;}
+
+  st('basicKundliPrice',  '₹'+p.basic);
+  st('basicKundliBadge',  '₹'+p.basic);
+  st('basicKundliBtnText', '₹'+p.basic+' में रिपोर्ट खरीदें');
+  st('premiumKundliPrice', '₹'+p.premium);
+  st('premiumKundliBadge', '₹'+p.premium);
+  st('premiumKundliBtnText', '₹'+p.premium+' में प्रीमियम रिपोर्ट खरीदें');
+
+  var bb = document.getElementById('basicKundliBtn');
+  if (bb) bb.setAttribute('onclick',"processKundliPayment("+p.basic+",'basic')");
+  var pb = document.getElementById('premiumKundliBtn');
+  if (pb) pb.setAttribute('onclick',"processKundliPayment("+p.premium+",'premium')");
+
+  document.querySelectorAll('.premium-card').forEach(function(card) {
+    var oc = card.getAttribute('onclick') || '';
+    var pe = card.querySelector('.premium-price');
+    if (oc.indexOf("'monthly'") > -1) {
+      if (pe) pe.innerHTML = '₹'+p.monthly+'<small>/माह</small>';
+      card.setAttribute('onclick',"showPremiumPayment("+p.monthly+",'monthly')");
+    } else if (oc.indexOf("'6months'") > -1) {
+      if (pe) pe.innerHTML = '₹'+p.sixMonth+'<small>/6 माह</small>';
+      card.setAttribute('onclick',"showPremiumPayment("+p.sixMonth+",'6months')");
+    } else if (oc.indexOf("'yearly'") > -1) {
+      if (pe) pe.innerHTML = '₹'+p.yearly+'<small>/साल</small>';
+      card.setAttribute('onclick',"showPremiumPayment("+p.yearly+",'yearly')");
     }
-  } catch(e) {}
+  });
+
+  document.querySelectorAll('.upsell-btn').forEach(function(el) {
+    var oc = el.getAttribute('onclick') || '';
+    if (oc.indexOf('showKundliSection') > -1 && oc.indexOf('Premium') === -1)
+      el.textContent = '📜 ₹'+p.basic+' विस्तृत कुंडली';
+    if (oc.indexOf('showPremiumKundliSection') > -1)
+      el.textContent = '👑 ₹'+p.premium+' प्रीमियम कुंडली';
+  });
+
+  document.querySelectorAll('#loveRashiBuyMsg,#horoRashiBuyMsg,#rashiBuyHint').forEach(function(c) {
+    var badge = c.querySelector('span[style*="border-radius:20px"]');
+    var txt   = c.querySelector('div[style*="ffd700"]');
+    if (badge) badge.textContent = '₹'+p.rashi;
+    if (txt)   txt.textContent   = 'सिर्फ ₹'+p.rashi+' में सटीक राशि जानें';
+  });
 }
 
-// ════════════════════════════════════════════════════════════
-// LANGUAGE SWITCHER UI
-// ════════════════════════════════════════════════════════════
-function createLanguageSwitcher() {
-  var old = document.getElementById('bd-lang-switcher');
-  if (old) old.remove();
+/* ══════════════════════════════════════════════════════════
+   APPLY FULL LANGUAGE
+   ══════════════════════════════════════════════════════════ */
+function applyLang(lang) {
+  if (lang !== 'hi' && lang !== 'en') lang = 'hi';
+  var wasEn = _isEn;
+  _lang = lang; _isEn = (lang === 'en');
+  window._currentLangCode = lang; window._isEn = _isEn;
+  localStorage.setItem('bd_lang', lang);
+  document.documentElement.lang = lang;
 
-  var sw = document.createElement('div');
-  sw.id = 'bd-lang-switcher';
-  sw.style.cssText = 'position:fixed;bottom:80px;right:16px;z-index:9999;';
-  sw.innerHTML =
-    '<div style="display:flex;gap:4px;align-items:center;background:rgba(7,8,15,0.93);' +
-    'border:1px solid rgba(255,215,0,0.4);border-radius:25px;padding:5px 10px 5px 8px;' +
-    'box-shadow:0 4px 20px rgba(0,0,0,0.5);">' +
-    '<span style="font-size:0.75rem;color:rgba(255,215,0,0.7);margin-right:2px;">🌐</span>' +
-    '<button class="bd-lang-btn" data-lang="hi" onclick="applyLanguage(\'hi\')" ' +
-    'style="background:transparent;border:none;cursor:pointer;font-size:0.78rem;' +
-    'font-weight:600;padding:4px 10px;border-radius:20px;color:#aaa;transition:all 0.2s;">हिं</button>' +
-    '<button class="bd-lang-btn" data-lang="en" onclick="applyLanguage(\'en\')" ' +
-    'style="background:transparent;border:none;cursor:pointer;font-size:0.78rem;' +
-    'font-weight:600;padding:4px 10px;border-radius:20px;color:#aaa;transition:all 0.2s;">EN</button>' +
-    '</div>';
-
-  document.body.appendChild(sw);
-}
-
-// ════════════════════════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════════════════════════
-window.applyLanguage = applyLanguage;
-window.getPriceDisplay = getPriceDisplay;
-window.BD_CURRENCY_SETTINGS = BD_CURRENCY_SETTINGS;
-window.t = t;
-
-async function initLanguageSystem() {
-  await detectUserLocation();
-  await loadUsdPricesFromAdmin();
-  // DOM ready hone ke baad apply karo
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      createLanguageSwitcher();
-      applyLanguage(_lang);
-    });
+  if (_isEn) {
+    // If was Hindi, translate to English
+    if (!wasEn) translateDOM(true);
+    applyPricingEN();
   } else {
-    createLanguageSwitcher();
-    applyLanguage(_lang);
+    // If was English, translate back to Hindi
+    if (wasEn) translateDOM(false);
+    applyPricingHI();
   }
-  console.log('✅ Language system ready:', _lang);
+
+  // Update menu buttons
+  updateMenuButtons();
+  console.log('✅ Language set to:', lang);
 }
 
-initLanguageSystem();
+/* ══════════════════════════════════════════════════════════
+   MENU LANGUAGE BUTTONS UI
+   ══════════════════════════════════════════════════════════ */
+function updateMenuButtons() {
+  var hiBtn = document.getElementById('lang-btn-hi');
+  var enBtn = document.getElementById('lang-btn-en');
+  if (!hiBtn || !enBtn) return;
+  if (_isEn) {
+    hiBtn.style.cssText = 'flex:1;padding:10px;border:1.5px solid rgba(255,255,255,0.2);border-radius:12px;background:rgba(255,255,255,0.06);color:#aaa;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;';
+    enBtn.style.cssText = 'flex:1;padding:10px;border:1.5px solid rgba(255,215,0,0.6);border-radius:12px;background:rgba(255,215,0,0.18);color:#ffd700;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;';
+  } else {
+    hiBtn.style.cssText = 'flex:1;padding:10px;border:1.5px solid rgba(255,215,0,0.6);border-radius:12px;background:rgba(255,215,0,0.18);color:#ffd700;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;';
+    enBtn.style.cssText = 'flex:1;padding:10px;border:1.5px solid rgba(255,255,255,0.2);border-radius:12px;background:rgba(255,255,255,0.06);color:#aaa;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   GLOBAL EXPORTS
+   ══════════════════════════════════════════════════════════ */
+window.bdSetLang = function(lang) { applyLang(lang); };
+window.applyLanguage = window.bdSetLang;
+window.applyPricingWithLang = function() { _isEn ? applyPricingEN() : applyPricingHI(); };
+
+/* ══════════════════════════════════════════════════════════
+   INIT — Auto-detect then apply
+   ══════════════════════════════════════════════════════════ */
+function init() {
+  detectLang(function() {
+    // Small delay to let Firebase and DOM fully load
+    setTimeout(function() {
+      if (_isEn) {
+        translateDOM(true);
+        applyPricingEN();
+      } else {
+        applyPricingHI();
+      }
+      updateMenuButtons();
+      loadUSD();
+    }, 800);
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 300); });
+} else {
+  setTimeout(init, 300);
+}
+
+})();

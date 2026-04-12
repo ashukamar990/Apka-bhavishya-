@@ -288,19 +288,13 @@
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" media="print" onload="this.media='all'">
-    <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
     <link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
     <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
     <link rel="shortcut icon" href="favicon.ico">
     <meta name="theme-color" content="#07080f">
-
-    <!-- Security Headers -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-
-    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -310,8 +304,8 @@
                 <i class="fas fa-crystal-ball"></i>
             </div>
             <h1 style="color: #ffd700; font-size: 2.5em; font-weight:700; text-shadow: 0 0 30px rgba(255,215,0,0.6);">Bhavishya Dekho</h1>
-            <p style="color: #ffd700; margin: 8px 0; font-size:1.1em; font-weight:500;" id="splash-subtitle" data-i18n="splash_subtitle">वैदिक ज्योतिष का सटीक संगम</p>
-            <p style="color: #ccc; margin: 5px 0; font-size:0.9em;" id="splash-tagline" data-i18n="hero_tagline">✨ ग्रह · नक्षत्र · कुंडली · भविष्यफल ✨</p>
+            <p style="color: #ffd700; margin: 8px 0; font-size:1.1em; font-weight:500;" id="splash-subtitle" data-i18n="splash_subtitle">The Science of Vedic Astrology</p>
+            <p style="color: #ccc; margin: 5px 0; font-size:0.9em;" id="splash-tagline" data-i18n="hero_tagline">✨ Planets · Stars · Kundli · Horoscope ✨</p>
             <div style="width: 260px; height: 5px; background: rgba(255,215,0,0.2); border-radius:10px; margin: 22px auto; overflow: hidden;">
                 <div id="splashBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ffd700, #ff4500); border-radius:10px; transition: width 3s linear;"></div>
             </div>
@@ -324,8 +318,8 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
             <div class="loading-spinner"></div>
-            <div class="loading-text" id="loading-text" data-i18n="loading_text">🔮 Bhavishya Dekho — भविष्य बन रहा है...</div>
-            <p style="color: #fff; margin-top: 15px;" id="loading-subtext" data-i18n="loading_subtext">ग्रहों की स्थिति का विश्लेषण हो रहा है</p>
+            <div class="loading-text" id="loading-text" data-i18n="loading_text">🔮 Bhavishya Dekho — Building your future...</div>
+            <p style="color: #fff; margin-top: 15px;" id="loading-subtext" data-i18n="loading_subtext">Analyzing planetary positions...</p>
         </div>
     </div>
 
@@ -426,31 +420,31 @@
         <div style="text-align:center;padding:0 0 20px 0;border-bottom:1px solid rgba(255,215,0,0.3);margin-bottom:10px;">
             <div style="font-size:2.5em;margin-bottom:5px;">🔮</div>
             <div style="font-size:1.2em;font-weight:700;background:linear-gradient(135deg,#ffd700,#ff4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Bhavishya Dekho</div>
-            <div style="color:rgba(255,215,0,0.6);font-size:0.75em;">वैदिक ज्योतिष का सटीक संगम</div>
+            <div style="color:rgba(255,215,0,0.6);font-size:0.75em;">The Science of Vedic Astrology</div>
         </div>
         <div class="menu-item" onclick="scrollToTop(); toggleMenu();">
-            <i class="fas fa-home"></i> होम
+            <i class="fas fa-home"></i> <span data-hi="होम" data-en="Home">होम</span>
         </div>
         <div class="menu-item" onclick="showPage('daily'); toggleMenu();">
-            <i class="fas fa-sun"></i> दैनिक राशिफल
+            <i class="fas fa-sun"></i> <span data-hi="दैनिक राशिफल" data-en="Daily Horoscope">दैनिक राशिफल</span>
         </div>
         <div class="menu-item" onclick="showPage('monthly'); toggleMenu();">
-            <i class="fas fa-calendar-alt"></i> मासिक राशिफल
+            <i class="fas fa-calendar-alt"></i> <span data-hi="मासिक राशिफल" data-en="Monthly Horoscope">मासिक राशिफल</span>
         </div>
         <div class="menu-item" onclick="showPage('yearly'); toggleMenu();">
-            <i class="fas fa-calendar"></i> वार्षिक राशिफल
+            <i class="fas fa-calendar"></i> <span data-hi="वार्षिक राशिफल" data-en="Yearly Horoscope">वार्षिक राशिफल</span>
         </div>
         <div class="menu-item" onclick="showPage('matching'); toggleMenu();">
-            <i class="fas fa-heart"></i> कुंडली मिलान
+            <i class="fas fa-heart"></i> <span data-hi="कुंडली मिलान" data-en="Kundli Matching">कुंडली मिलान</span>
         </div>
         <div class="menu-item" onclick="showPage('gemstones'); toggleMenu();">
-            <i class="fas fa-gem"></i> रत्न सुझाव
+            <i class="fas fa-gem"></i> <span data-hi="रत्न सुझाव" data-en="Gemstone Guide">रत्न सुझाव</span>
         </div>
         <div class="menu-item" onclick="showPage('remedies'); toggleMenu();">
-            <i class="fas fa-hand-holding-heart"></i> उपाय
+            <i class="fas fa-hand-holding-heart"></i> <span data-hi="उपाय" data-en="Remedies">उपाय</span>
         </div>
         <div class="menu-item" onclick="showHistory(); toggleMenu();">
-            <i class="fas fa-history"></i> मेरी रिपोर्ट्स (हिस्ट्री)
+            <i class="fas fa-history"></i> <span data-hi="मेरी रिपोर्ट्स (हिस्ट्री)" data-en="My Reports (History)">मेरी रिपोर्ट्स (हिस्ट्री)</span>
         </div>
         <div class="menu-item" onclick="showPage('premium'); toggleMenu();" style="background:linear-gradient(135deg,rgba(255,215,0,0.25),rgba(255,69,0,0.2));border:2px solid #ffd700;box-shadow:0 0 18px rgba(255,215,0,0.4);position:relative;overflow:hidden;">
             <span style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,215,0,0.08),transparent);animation:shimmerMenu 2s infinite;pointer-events:none;"></span>
@@ -465,16 +459,16 @@
         }
         </style>
         <div class="menu-item" onclick="showPage('about'); toggleMenu();">
-            <i class="fas fa-info-circle"></i> हमारे बारे में
+            <i class="fas fa-info-circle"></i> <span data-hi="हमारे बारे में" data-en="About Us">हमारे बारे में</span>
         </div>
         <div class="menu-item" onclick="showPage('contact'); toggleMenu();">
-            <i class="fas fa-phone-alt"></i> संपर्क करें
+            <i class="fas fa-phone-alt"></i> <span data-hi="संपर्क करें" data-en="Contact Us">संपर्क करें</span>
         </div>
         <div class="menu-item" onclick="showPage('privacy'); toggleMenu();">
-            <i class="fas fa-shield-alt"></i> गोपनीयता नीति
+            <i class="fas fa-shield-alt"></i> <span data-hi="गोपनीयता नीति" data-en="Privacy Policy">गोपनीयता नीति</span>
         </div>
         <div class="menu-item" onclick="showPage('terms'); toggleMenu();">
-            <i class="fas fa-file-contract"></i> नियम और शर्तें
+            <i class="fas fa-file-contract"></i> <span data-hi="नियम और शर्तें" data-en="Terms & Conditions">नियम और शर्तें</span>
         </div>
         <div class="menu-item" onclick="showPage('disclaimer'); toggleMenu();">
             <i class="fas fa-exclamation-circle"></i> Disclaimer
@@ -1406,22 +1400,15 @@
         // Free form naam type hone par rashi auto-detect (only if ₹5 package active)
     </script>
     <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-    <!-- External Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-
-    <!-- Main Script -->
     <script src="script.js"></script>
-
-    <!-- Language System -->
     <script src="lang.js"></script>
-
-    <!-- Razorpay -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <!-- Push Notification: Only for non-premium users -->
