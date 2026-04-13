@@ -6,7 +6,6 @@ document.addEventListener('keydown',function(e){
   if(e.ctrlKey&&e.shiftKey&&['I','J','C','K'].includes(e.key.toUpperCase())){e.preventDefault();return false;}
   if(e.ctrlKey&&['U','S'].includes(e.key.toUpperCase())){e.preventDefault();return false;}
 });
-(function(){var t=160;setInterval(function(){if(window.outerWidth-window.innerWidth>t||window.outerHeight-window.innerHeight>t){document.body.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#07080f;color:#ffd700;font-family:sans-serif;text-align:center;gap:16px;padding:20px;"><span style=\"font-size:3em\">🔮</span><b>Bhavishya Dekho</b><span style=\"color:#aaa\">Developer tools ke saath yeh page nahi chalta.</span></div>';}},1500);})();
 document.addEventListener('selectstart',function(e){if(!['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))e.preventDefault();});
 document.addEventListener('dragstart',function(e){e.preventDefault();});
 
