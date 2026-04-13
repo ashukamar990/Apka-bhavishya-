@@ -1409,7 +1409,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="script.js"></script>
     <script src="lang.js"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Razorpay — async load so website never hangs -->
+    <script>
+    (function(){
+        var s = document.createElement('script');
+        s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        s.async = true;
+        s.defer = true;
+        s.onerror = function(){ console.log('Razorpay load failed - payment will show error on attempt'); };
+        document.body.appendChild(s);
+    })();
+    </script>
 
     <!-- Push Notification: Only for non-premium users -->
     <script>
