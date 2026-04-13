@@ -296,6 +296,29 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
     <link rel="stylesheet" href="style.css">
+
+    <!-- SAFETY: Agar koi bhi script fail ho toh 5s mein splash band -->
+    <script>
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            var splash = document.getElementById('splashScreen');
+            var mc = document.getElementById('mainContent');
+            if (splash && splash.style.display !== 'none') {
+                splash.style.display = 'none';
+            }
+            if (mc && !mc.classList.contains('ready')) {
+                mc.classList.add('ready');
+            }
+        }, 5000);
+    });
+    // Absolute fallback — 8 second ke baad force show
+    setTimeout(function() {
+        var splash = document.getElementById('splashScreen');
+        var mc = document.getElementById('mainContent');
+        if (splash) splash.style.display = 'none';
+        if (mc) mc.style.visibility = 'visible';
+    }, 8000);
+    </script>
 </head>
 <body>
     <div id="splashScreen" class="splash-screen">

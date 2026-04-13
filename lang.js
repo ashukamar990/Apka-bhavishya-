@@ -672,9 +672,9 @@ function init() {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 300); });
+  document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 1500); });
 } else {
-  setTimeout(init, 300);
+  setTimeout(init, 1500);
 }
 
 })();

@@ -3542,36 +3542,30 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
         // DOMContentLoaded init
         document.addEventListener('DOMContentLoaded', function() {
-            // === SMART SPLASH ANIMATION ===
-            // Rules:
-            // 1. First time visit → show splash
-            // 2. Tab closed + reopened → show splash (sessionStorage clears on close)
-            // 3. Browser reload (F5/refresh) → NO splash
-            // 4. User minimizes app/switches tab and comes back → show splash
             var splash = document.getElementById('splashScreen');
             var bar = document.getElementById('splashBar');
             var msgs = ['🔮 भविष्य जानने की तैयारी हो रही है...','⭐ ग्रहों की स्थिति जांची जा रही है...','✨ कुंडली तैयार हो रही है...'];
             var msgEl = document.getElementById('splashMsg');
             var mc = document.getElementById('mainContent');
 
-            // Detect if this is a browser reload using performance API
-            var isReload = false;
-            try {
-                var navType = window.performance && window.performance.getEntriesByType &&
-                    window.performance.getEntriesByType('navigation')[0];
-                if (navType && navType.type === 'reload') isReload = true;
-                // Fallback for older browsers
-                if (!navType && window.performance && window.performance.navigation) {
-                    isReload = window.performance.navigation.type === 1;
-                }
-            } catch(e) {}
+            function skipSplash() {
+                if (splash) splash.style.display = 'none';
+                if (mc) mc.classList.add('ready');
+            }
 
             function runSplash() {
                 if (!splash) { if (mc) mc.classList.add('ready'); return; }
                 sessionStorage.setItem('splashShown', '1');
+                // Bar fill karo
                 setTimeout(function() { if (bar) bar.style.width = '100%'; }, 80);
+                // Messages cycle
                 var mi = 0;
-                var mTimer = setInterval(function() { mi++; if (msgEl && msgs[mi]) msgEl.textContent = msgs[mi]; }, 1000);
+                var mTimer = setInterval(function() {
+                    mi++;
+                    var splashMsgs = (window._splashMsgs && window._splashMsgs.length) ? window._splashMsgs : msgs;
+                    if (msgEl && splashMsgs[mi]) msgEl.textContent = splashMsgs[mi];
+                }, 1000);
+                // 3 second baad hide karo — KISI BHI network call ka wait NAHI
                 setTimeout(function() {
                     clearInterval(mTimer);
                     splash.classList.add('hide');
@@ -3579,48 +3573,50 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                     setTimeout(function() {
                         splash.style.display = 'none';
                         splash.classList.remove('hide');
-                        if (bar) { bar.style.transition = 'none'; bar.style.width = '0%'; setTimeout(function(){ bar.style.transition = 'width 3s linear'; }, 50); }
+                        if (bar) {
+                            bar.style.transition = 'none';
+                            bar.style.width = '0%';
+                            setTimeout(function(){ bar.style.transition = 'width 3s linear'; }, 50);
+                        }
                     }, 700);
                 }, 3000);
             }
 
-            function skipSplash() {
-                if (splash) splash.style.display = 'none';
-                if (mc) mc.classList.add('ready');
-            }
+            // Reload check
+            var isReload = false;
+            try {
+                var navType = window.performance && window.performance.getEntriesByType &&
+                    window.performance.getEntriesByType('navigation')[0];
+                if (navType && navType.type === 'reload') isReload = true;
+                if (!navType && window.performance && window.performance.navigation) {
+                    isReload = window.performance.navigation.type === 1;
+                }
+            } catch(e) {}
 
             if (isReload) {
-                // Browser reload — never show splash
                 skipSplash();
             } else if (!sessionStorage.getItem('splashShown')) {
-                // Fresh open (first visit or new tab session) — show splash
                 runSplash();
             } else {
-                // Already shown this session — skip
                 skipSplash();
             }
 
-            // When user comes back after hiding (minimizing app / switching to another app)
-            // reset so next fresh open shows splash again
             document.addEventListener('visibilitychange', function() {
-                if (document.hidden) {
-                    // User left — clear session flag so next visit shows splash
-                    sessionStorage.removeItem('splashShown');
-                }
+                if (document.hidden) sessionStorage.removeItem('splashShown');
             });
-            // =====================================================
 
+            // Baaki sab initialize karo — splash se independent
             createStars();
             loadKundliHistory();
             loadRashiPurchase();
             checkPremiumStatus();
             updateAllLimitBars();
             updatePremiumUI();
-            var fb = parseInt(localStorage.getItem('freeBonus') || '0');
-            if (fb > 0) { /* bonus already set */ }
 
-            // Initialize admin tracking
-            initializeTracking();
+            // Network calls alag se — splash ko block nahi karenge
+            setTimeout(function() {
+                initializeTracking();
+            }, 100);
         });
 
 
@@ -4151,14 +4147,15 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
         async function initializeTracking() {
             try {
-                const isAllowed = await trackVisitor();
-                if (!isAllowed) return;
+                // trackVisitor background mein chale — splash/page ko block na kare
+                trackVisitor().catch(function(e){ console.log('Visitor track failed:', e); });
+
                 setupActiveUserTracking();
                 checkAndDisplayAnnouncement();
                 applySEOSettings();
-                await getPricingFromAdmin(); // yeh sab prices update kar deta hai
+                await getPricingFromAdmin();
 
-                // ── Admin se data load karo ──
+                // Admin data load karo
                 loadRashifalFromAdmin();
                 loadGemstonesFromAdmin();
                 loadRemediesFromAdmin();
