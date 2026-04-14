@@ -172,6 +172,52 @@ var H2E = {
   'किसी भी महत्वपूर्ण निर्णय के लिए केवल इस prediction पर निर्भर न रहें।':'Do not rely only on this prediction for important decisions.',
   '🙏 कृपया हमें सपोर्ट करें':'🙏 Please support us',
   '📲 इस रिपोर्ट को शेयर करें':'📲 Share this report',
+  /* Comparison section */
+  'फ्री भविष्य':'Free Prediction',
+  'सामान्य भविष्यवाणी':'General Prediction',
+  'करियर, प्रेम, धन फल':'Career, Love, Money',
+  'शुभ अंक':'Lucky Numbers',
+  'ग्रहों की स्थिति नहीं':'No Planetary Positions',
+  'उपाय नहीं':'No Remedies',
+  'Planetary Positions नहीं':'No Planetary Positions',
+  'Remedies नहीं':'No Remedies',
+  'Zodiac Sign और Nakshatra':'Zodiac & Nakshatra',
+  'राशि और नक्षत्र':'Zodiac & Nakshatra',
+  'उपाय नहीं':'No Remedies',
+  'पूरी फ्री +':'All Free +',
+  'ग्रहों की विस्तृत स्थिति':'Detailed Planetary Positions',
+  '12 भावों का विस्तृत फल':'Detailed 12 House Results',
+  'राशि और नक्षत्र':'Zodiac & Nakshatra',
+  '₹19 वाली सब कुछ +':'All ₹19 features +',
+  'ग्रहों के उपाय':'Planetary Remedies',
+  'शुभ समय और मुहूर्त':'Auspicious Time & Muhurta',
+  /* h4 titles with price */
+  'विस्तृत कुंडली (₹19)':'Detailed Kundli ($0.25)',
+  'प्रीमियम कुंडली (₹49)':'Premium Kundli ($0.60)',
+  /* Mixed strings */
+  /* Form */
+  'नाम *':'Name *',
+  'नाम:':'Name:',
+  'लिंग:':'Gender:',
+  'राशि:':'Zodiac:',
+  'जन्म तिथि:':'Date of Birth:',
+  'जन्म समय:':'Birth Time:',
+  'जन्म स्थान:':'Birth Place:',
+  /* 12 Bhav */
+  '🔱 12 भाव (Houses)':'🔱 12 Houses',
+  /* Alert messages */
+  'कोई history नहीं है':'No history found',
+  'कोई रिपोर्ट नहीं देखी गई':'No reports found',
+  'रिपोर्ट नहीं मिली':'Report not found',
+  'रिपोर्ट उपलब्ध नहीं':'Report not available',
+  'कोई भविष्यफल नहीं मिला। पहले भविष्य देखें।':'No prediction found. Please see your future first.',
+  'कोई रिपोर्ट नहीं मिली। पहले कुंडली देखें।':'No report found. Please check kundli first.',
+  /* Misc */
+  'नहीं मिली':'Not found',
+  'उपलब्ध नहीं है।':'Not available.',
+  'पूरी फ्री':'All Free',
+  'फ्री +':'Free +',
+
 };
 
 /* ── STATE ─────────────────────────────────────────────── */
@@ -303,6 +349,17 @@ function applyPricing(){
     if(t.match(/19|0\.25/))el.textContent=pr('basic');
     if(t.match(/49|0\.60/))el.textContent=pr('premium');
   });
+  /* Comparison card h4 titles */
+  document.querySelectorAll('.kundli-comparison h4').forEach(function(el){
+    var t=el.textContent.trim();
+    if(t.indexOf('फ्री भविष्य')>-1||t.indexOf('Free Prediction')>-1)
+      el.textContent=_isEn?'Free Prediction':'फ्री भविष्य';
+    else if(t.indexOf('विस्तृत')>-1||t.indexOf('Detailed Kundli')>-1)
+      el.textContent=_isEn?('Detailed Kundli ('+pr('basic')+')'):'विस्तृत कुंडली ('+pr('basic')+')';
+    else if(t.indexOf('प्रीमियम')>-1||t.indexOf('Premium Kundli')>-1)
+      el.textContent=_isEn?('Premium Kundli ('+pr('premium')+')'):'प्रीमियम कुंडली ('+pr('premium')+')';
+  });
+
   document.querySelectorAll('#loveRashiBuyMsg,#horoRashiBuyMsg,#rashiBuyHint').forEach(function(c){
     var b=c.querySelector('span[style*="border-radius:20px"]');
     var t=c.querySelector('div[style*="ffd700"]');
