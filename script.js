@@ -1,13 +1,4 @@
-/* Bhavishya Dekho — script.js */
-'use strict';
-document.addEventListener('contextmenu',function(e){e.preventDefault();});
-document.addEventListener('keydown',function(e){
-  if(e.key==='F12'){e.preventDefault();return false;}
-  if(e.ctrlKey&&e.shiftKey&&['I','J','C','K'].includes(e.key.toUpperCase())){e.preventDefault();return false;}
-  if(e.ctrlKey&&['U','S'].includes(e.key.toUpperCase())){e.preventDefault();return false;}
-});
-document.addEventListener('selectstart',function(e){if(!['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))e.preventDefault();});
-document.addEventListener('dragstart',function(e){e.preventDefault();});
+/* Bhavishya Dekho — script.js | bhavishyadekho.online */
 
         // Your Firebase configuration
         const firebaseConfig = {
@@ -3542,80 +3533,58 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         // DOMContentLoaded init
         document.addEventListener('DOMContentLoaded', function() {
             var splash = document.getElementById('splashScreen');
-            var bar = document.getElementById('splashBar');
-            var msgs = ['🔮 भविष्य जानने की तैयारी हो रही है...','⭐ ग्रहों की स्थिति जांची जा रही है...','✨ कुंडली तैयार हो रही है...'];
-            var msgEl = document.getElementById('splashMsg');
-            var mc = document.getElementById('mainContent');
+            var bar    = document.getElementById('splashBar');
+            var msgEl  = document.getElementById('splashMsg');
+            var mc     = document.getElementById('mainContent');
+            var defMsgs = ['🔮 भविष्य जानने की तैयारी हो रही है...','⭐ ग्रहों की स्थिति जांची जा रही है...','✨ कुंडली तैयार हो रही है...'];
 
-            function skipSplash() {
-                if (splash) splash.style.display = 'none';
-                if (mc) mc.classList.add('ready');
+            function skipSplash(){
+                if(splash) splash.style.display='none';
+                if(mc) mc.classList.add('ready');
             }
-
-            function runSplash() {
-                if (!splash) { if (mc) mc.classList.add('ready'); return; }
-                sessionStorage.setItem('splashShown', '1');
-                // Bar fill karo
-                setTimeout(function() { if (bar) bar.style.width = '100%'; }, 80);
-                // Messages cycle
-                var mi = 0;
-                var mTimer = setInterval(function() {
+            function runSplash(){
+                if(!splash){skipSplash();return;}
+                sessionStorage.setItem('splashShown','1');
+                setTimeout(function(){if(bar) bar.style.width='100%';},80);
+                var mi=0;
+                var mt=setInterval(function(){
                     mi++;
-                    var splashMsgs = (window._splashMsgs && window._splashMsgs.length) ? window._splashMsgs : msgs;
-                    if (msgEl && splashMsgs[mi]) msgEl.textContent = splashMsgs[mi];
-                }, 1000);
-                // 3 second baad hide karo — KISI BHI network call ka wait NAHI
-                setTimeout(function() {
-                    clearInterval(mTimer);
+                    var msgs=window._splashMsgs||defMsgs;
+                    if(msgEl&&msgs[mi]) msgEl.textContent=msgs[mi];
+                },1000);
+                setTimeout(function(){
+                    clearInterval(mt);
                     splash.classList.add('hide');
-                    if (mc) mc.classList.add('ready');
-                    setTimeout(function() {
-                        splash.style.display = 'none';
+                    if(mc) mc.classList.add('ready');
+                    setTimeout(function(){
+                        splash.style.display='none';
                         splash.classList.remove('hide');
-                        if (bar) {
-                            bar.style.transition = 'none';
-                            bar.style.width = '0%';
-                            setTimeout(function(){ bar.style.transition = 'width 3s linear'; }, 50);
-                        }
-                    }, 700);
-                }, 3000);
+                        if(bar){bar.style.transition='none';bar.style.width='0%';setTimeout(function(){bar.style.transition='width 3s linear';},50);}
+                    },700);
+                },3000);
             }
+            var isReload=false;
+            try{
+                var nt=window.performance&&window.performance.getEntriesByType&&window.performance.getEntriesByType('navigation')[0];
+                if(nt&&nt.type==='reload') isReload=true;
+                if(!nt&&window.performance&&window.performance.navigation) isReload=window.performance.navigation.type===1;
+            }catch(e){}
 
-            // Reload check
-            var isReload = false;
-            try {
-                var navType = window.performance && window.performance.getEntriesByType &&
-                    window.performance.getEntriesByType('navigation')[0];
-                if (navType && navType.type === 'reload') isReload = true;
-                if (!navType && window.performance && window.performance.navigation) {
-                    isReload = window.performance.navigation.type === 1;
-                }
-            } catch(e) {}
+            if(isReload){skipSplash();}
+            else if(!sessionStorage.getItem('splashShown')){runSplash();}
+            else{skipSplash();}
 
-            if (isReload) {
-                skipSplash();
-            } else if (!sessionStorage.getItem('splashShown')) {
-                runSplash();
-            } else {
-                skipSplash();
-            }
-
-            document.addEventListener('visibilitychange', function() {
-                if (document.hidden) sessionStorage.removeItem('splashShown');
+            document.addEventListener('visibilitychange',function(){
+                if(document.hidden) sessionStorage.removeItem('splashShown');
             });
 
-            // Baaki sab initialize karo — splash se independent
             createStars();
             loadKundliHistory();
             loadRashiPurchase();
             checkPremiumStatus();
             updateAllLimitBars();
             updatePremiumUI();
-
-            // Network calls alag se — splash ko block nahi karenge
-            setTimeout(function() {
-                initializeTracking();
-            }, 100);
+            setTimeout(function(){initializeTracking();},200);
         });
 
 
@@ -3786,7 +3755,9 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         // RAZORPAY PAYMENT FUNCTION WITH FIREBASE TRACKING
         // ============================================================
         function startPayment() {
-            var amt = (currentPaymentAmount || 19) * 100; // paise mein
+            var isEn=(typeof window._isEn!=='undefined')?window._isEn:false;
+            var currency=isEn?'USD':'INR';
+            var amt=Math.round((currentPaymentAmount||19)*100);
             var orderId = "ORDER_" + Date.now();
 
             // ── Razorpay Key Check ──
@@ -3815,7 +3786,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             var options = {
                 key: RAZORPAY_KEY,
                 amount: amt,
-                currency: "INR",
+                currency: currency,
                 name: "Bhavishya Dekho",
                 description: "Vedic Astrology Service",
                 handler: function (response) {
@@ -4055,6 +4026,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         }
 
         function applyPricingEverywhere(p) {
+            if(typeof window.applyPricingLang==='function'){window.applyPricingLang();return;}
             const b  = p.basic    || 19;
             const pr = p.premium  || 49;
             const r  = p.rashi    || 5;
@@ -4146,15 +4118,14 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
         async function initializeTracking() {
             try {
-                // trackVisitor background mein chale — splash/page ko block na kare
-                trackVisitor().catch(function(e){ console.log('Visitor track failed:', e); });
-
+                // Background mein track - page block na ho
+                trackVisitor().catch(function(){});
                 setupActiveUserTracking();
                 checkAndDisplayAnnouncement();
                 applySEOSettings();
-                await getPricingFromAdmin();
+                await getPricingFromAdmin(); // yeh sab prices update kar deta hai
 
-                // Admin data load karo
+                // ── Admin se data load karo ──
                 loadRashifalFromAdmin();
                 loadGemstonesFromAdmin();
                 loadRemediesFromAdmin();
@@ -4283,23 +4254,3 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         }
 
         // ============================================================
-
-    </script>
-<script src="lang.js"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-    <!-- Push Notification: Only for non-premium users -->
-    <script>
-    (function() {
-        try {
-            var pd = JSON.parse(localStorage.getItem('premiumData') || 'null');
-            if (!pd || !pd.expiry || pd.expiry <= Date.now()) {
-                // Non-premium: load push notification script
-                var s = document.createElement('script');
-                s.src = 'https://5gvci.com/act/files/tag.min.js?z=10834456';
-                s.setAttribute('data-cfasync', 'false');
-                s.async = true;
-                document.body.appendChild(s);
-            }
-        } catch(e) {}
-    })();
