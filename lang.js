@@ -1,922 +1,660 @@
+/* ============================================================
+   Bhavishya Dekho — lang.js v7.0 COMPLETE FIX
+   Fixes: hidden elements, dynamic content, timing, all labels
+   bhavishyadekho.online
+   ============================================================ */
 (function(){
 'use strict';
 
+/* ══════════════════════════════════════════════════════════
+   TRANSLATION MAP — Hindi → English
+   ══════════════════════════════════════════════════════════ */
 var H = {
-    'होम':'Home','वापस':'Back','← वापस':'← Back','बंद करें':'Close','सबमिट':'Submit',
-    'सेव करें':'Save','डाउनलोड':'Download','शेयर करें':'Share','कॉपी करें':'Copy',
-    'देखें':'View','खरीदें':'Buy','जानें':'Know','भेजें':'Send','हटाएं':'Delete',
-    'साफ़ करें':'Clear','चुनें':'Select','खोजें':'Search','लोड हो रहा है':'Loading',
-    'कृपया प्रतीक्षा करें':'Please wait','सफल':'Success','असफल':'Failed',
-    'त्रुटि':'Error','चेतावनी':'Warning','सूचना':'Notice','पुष्टि':'Confirm',
-    'रद्द करें':'Cancel','हाँ':'Yes','नहीं':'No','ठीक है':'Okay','धन्यवाद':'Thank you',
-    'स्वागत है':'Welcome','लॉगिन':'Login','लॉगआउट':'Logout','रजिस्टर':'Register',
-    'प्रोफ़ाइल':'Profile','सेटिंग्स':'Settings','भाषा':'Language','हिंदी':'Hindi',
-    'अंग्रेज़ी':'English','मेष':'Aries','वृष':'Taurus','मिथुन':'Gemini','कर्क':'Cancer',
-    'सिंह':'Leo','कन्या':'Virgo','तुला':'Libra','वृश्चिक':'Scorpio','धनु':'Sagittarius',
-    'मकर':'Capricorn','कुंभ':'Aquarius','मीन':'Pisces','राशि':'Zodiac','राशिफल':'Horoscope',
-    'दैनिक राशिफल':'Daily Horoscope','मासिक राशिफल':'Monthly Horoscope',
-    'वार्षिक राशिफल':'Yearly Horoscope','आज का राशिफल':"Today's Horoscope",
-    'कल का राशिफल':"Tomorrow's Horoscope",'साप्ताहिक राशिफल':'Weekly Horoscope',
-    'कुंडली':'Kundli','जन्म कुंडली':'Birth Chart','कुंडली मिलान':'Kundli Matching',
-    'गुण मिलान':'Guna Milan','अंक ज्योतिष':'Numerology','नाम':'Name','पूरा नाम':'Full Name',
-    'पिता का नाम':"Father's Name",'माता का नाम':"Mother's Name",'जीवनसाथी':'Partner',
-    'पति':'Husband','पत्नी':'Wife','लिंग':'Gender','पुरुष':'Male','महिला':'Female',
-    'अन्य':'Other','जन्म तिथि':'Date of Birth','जन्म समय':'Birth Time',
-    'जन्म स्थान':'Birth Place','शहर':'City','राज्य':'State','देश':'Country',
-    'समय':'Time','घंटा':'Hour','मिनट':'Minute','सेकंड':'Second','सुबह':'AM',
-    'शाम':'PM','दिन':'Day','महीना':'Month','साल':'Year','तारीख':'Date',
-    'रविवार':'Sunday','सोमवार':'Monday','मंगलवार':'Tuesday','बुधवार':'Wednesday',
-    'गुरुवार':'Thursday','शुक्रवार':'Friday','शनिवार':'Saturday','जनवरी':'January',
-    'फरवरी':'February','मार्च':'March','अप्रैल':'April','मई':'May','जून':'June',
-    'जुलाई':'July','अगस्त':'August','सितंबर':'September','अक्टूबर':'October',
-    'नवंबर':'November','दिसंबर':'December','उम्र':'Age','पता':'Address',
-    'ईमेल':'Email','फ़ोन':'Phone','मोबाइल':'Mobile','वेबसाइट':'Website',
-    'पासवर्ड':'Password','पुराना पासवर्ड':'Old Password','नया पासवर्ड':'New Password',
-    'पासवर्ड भूल गए':'Forgot Password','याद रखें':'Remember Me','भविष्यफल':'Prediction',
-    'भविष्य':'Future','आज का भविष्यफल':"Today's Prediction",'कल का भविष्यफल':"Tomorrow's Prediction",
-    'साप्ताहिक भविष्यफल':'Weekly Prediction','मासिक भविष्यफल':'Monthly Prediction',
-    'वार्षिक भविष्यफल':'Yearly Prediction','मुफ्त भविष्यफल':'Free Prediction',
-    'विस्तृत भविष्यफल':'Detailed Prediction','प्रीमियम भविष्यफल':'Premium Prediction',
-    'करियर':'Career','नौकरी':'Job','व्यवसाय':'Business','पदोन्नति':'Promotion',
-    'वेतन':'Salary','लाभ':'Profit','हानि':'Loss','आय':'Income','व्यय':'Expense',
-    'धन':'Money','वित्त':'Finance','निवेश':'Investment','बचत':'Savings',
-    'बैंक':'Bank','ऋण':'Loan','कर्ज':'Debt','संपत्ति':'Property','वाहन':'Vehicle',
-    'मकान':'House','ज़मीन':'Land','आभूषण':'Jewelry','प्रेम':'Love',
-    'विवाह':'Marriage','रिश्ता':'Relationship','दोस्ती':'Friendship','परिवार':'Family',
-    'माता':'Mother','पिता':'Father','भाई':'Brother','बहन':'Sister','बेटा':'Son',
-    'बेटी':'Daughter','दोस्त':'Friend','साथी':'Partner','प्रेमी':'Boyfriend',
-    'प्रेमिका':'Girlfriend','स्वास्थ्य':'Health','सेहत':'Wellness','बीमारी':'Disease',
-    'रोग':'Illness','चिकित्सा':'Treatment','दवा':'Medicine','डॉक्टर':'Doctor',
-    'अस्पताल':'Hospital','व्यायाम':'Exercise','योग':'Yoga','ध्यान':'Meditation',
-    'आहार':'Diet','पोषण':'Nutrition','शिक्षा':'Education','पढ़ाई':'Studies',
-    'स्कूल':'School','कॉलेज':'College','विश्वविद्यालय':'University','डिग्री':'Degree',
-    'परीक्षा':'Exam','परिणाम':'Result','सफलता':'Success','असफलता':'Failure',
-    'भाग्य':'Luck','किस्मत':'Fortune','शुभ':'Auspicious','अशुभ':'Inauspicious',
-    'ग्रह':'Planet','नक्षत्र':'Nakshatra','तारा':'Star','सूर्य':'Sun','चंद्र':'Moon',
-    'मंगल':'Mars','बुध':'Mercury','गुरु':'Jupiter','शुक्र':'Venus','शनि':'Saturn',
-    'राहु':'Rahu','केतु':'Ketu','लग्न':'Ascendant','भाव':'House','दशा':'Dasha',
-    'महादशा':'Mahadasha','अंतर्दशा':'Antardasha','गोचर':'Transit','योग':'Yoga',
-    'दोष':'Dosha','मांगलिक दोष':'Manglik Dosha','काल सर्प दोष':'Kaal Sarp Dosha',
-    'पितृ दोष':'Pitru Dosha','शनि दोष':'Shani Dosha','रत्न':'Gemstone',
-    'माणिक':'Ruby','मोती':'Pearl','मूंगा':'Coral','पन्ना':'Emerald',
-    'पुखराज':'Yellow Sapphire','हीरा':'Diamond','नीलम':'Blue Sapphire',
-    'गोमेद':'Hessonite','लहसुनिया':'Cat\'s Eye','फ़िरोज़ा':'Turquoise',
-    'उपाय':'Remedy','पूजा':'Worship','मंत्र':'Mantra','जाप':'Chanting','दान':'Donation',
-    'व्रत':'Fasting','अनुष्ठान':'Ritual','हवन':'Havan','तीर्थ':'Pilgrimage',
-    'मंदिर':'Temple','पंडित':'Priest','ज्योतिषी':'Astrologer','ज्योतिष':'Astrology',
-    'वैदिक':'Vedic','भविष्यवाणी':'Prophecy','पंचांग':'Panchang','तिथि':'Tithi',
-    'वार':'Weekday','करण':'Karan','मुहूर्त':'Muhurat','शुभ मुहूर्त':'Auspicious Time',
-    'अभिजीत मुहूर्त':'Abhijit Muhurat','ब्रह्म मुहूर्त':'Brahma Muhurat',
-    'राहु काल':'Rahu Kaal','गुलिक काल':'Gulik Kaal','यमगंड':'Yamaganda',
-    'दिशा':'Direction','पूर्व':'East','पश्चिम':'West','उत्तर':'North','दक्षिण':'South',
-    'ईशान':'Northeast','आग्नेय':'Southeast','नैऋत्य':'Southwest','वायव्य':'Northwest',
-    'रंग':'Color','लाल':'Red','पीला':'Yellow','नीला':'Blue','हरा':'Green',
-    'सफेद':'White','काला':'Black','गुलाबी':'Pink','नारंगी':'Orange','बैंगनी':'Purple',
-    'भूरा':'Brown','सुनहरा':'Golden','चांदी':'Silver','अंक':'Number','शुभ अंक':'Lucky Number',
-    'शुभ रंग':'Lucky Color','शुभ दिन':'Lucky Day','शुभ दिशा':'Lucky Direction',
-    'मेरा भविष्य देखें':'See My Future','मुफ्त कुंडली बनाएं':'Create Free Kundli',
-    'लव कैलकुलेटर':'Love Calculator','प्रीमियम प्लान':'Premium Plan',
-    'एड फ्री':'Ad Free','विशेषज्ञ सलाह':'Expert Advice','प्राथमिकता सहायता':'Priority Support',
-    'विस्तृत रिपोर्ट':'Detailed Report','पीडीएफ डाउनलोड':'PDF Download',
-    'भुगतान':'Payment','कीमत':'Price','मूल्य':'Value','रुपए':'Rupees','डॉलर':'Dollar',
-    'निःशुल्क':'Free of Cost','सशुल्क':'Paid','खरीदारी':'Purchase','चेकआउट':'Checkout',
-    'कार्ड':'Card','यूपीआई':'UPI','नेट बैंकिंग':'Net Banking','वॉलेट':'Wallet',
-    'भुगतान करें':'Make Payment','सुरक्षित भुगतान':'Secure Payment',
-    'भुगतान सफल':'Payment Successful','भुगतान विफल':'Payment Failed',
-    'कृपया सभी जानकारी भरें':'Please fill all information',
-    'यह फ़ील्ड आवश्यक है':'This field is required',
-    'अमान्य ईमेल पता':'Invalid email address',
-    'अमान्य फ़ोन नंबर':'Invalid phone number',
-    'पासवर्ड मेल नहीं खाते':'Passwords do not match',
-    'कम से कम 8 अक्षर':'At least 8 characters',
-    'नेटवर्क त्रुटि':'Network error',
-    'कृपया बाद में पुनः प्रयास करें':'Please try again later',
-    'कोई डेटा नहीं मिला':'No data found',
-    'लोड करने में विफल':'Failed to load',
-    'सहेजने में विफल':'Failed to save',
-    'हटाने में विफल':'Failed to delete',
-    'क्या आप निश्चित हैं':'Are you sure',
-    'यह क्रिया पूर्ववत नहीं की जा सकती':'This action cannot be undone',
-    'सभी अधिकार सुरक्षित':'All rights reserved',
-    'गोपनीयता नीति':'Privacy Policy','नियम और शर्तें':'Terms and Conditions',
-    'अस्वीकरण':'Disclaimer','हमारे बारे में':'About Us','संपर्क करें':'Contact Us',
-    'सहायता':'Help','अक्सर पूछे जाने वाले प्रश्न':'FAQ','फीडबैक':'Feedback',
-    'रेटिंग':'Rating','समीक्षा':'Review','टिप्पणी':'Comment','साझा करें':'Share',
-    'प्रिंट करें':'Print','बुकमार्क':'Bookmark','इतिहास':'History','हालिया':'Recent',
-    'लोकप्रिय':'Popular','रुझान':'Trending','अनुशंसित':'Recommended','विशेष':'Featured',
-    'नवीनतम':'Latest','पुराना':'Oldest','और पढ़ें':'Read More','कम पढ़ें':'Read Less',
-    'विस्तार करें':'Expand','संक्षिप्त करें':'Collapse','और दिखाएं':'Show More',
-    'कम दिखाएं':'Show Less','▼ और देखें':'▼ See More','▲ कम दिखाएं':'▲ Show Less',
-    'खोज परिणाम':'Search Results','कोई परिणाम नहीं':'No Results','फ़िल्टर':'Filter',
-    'क्रमबद्ध करें':'Sort','ताज़ा करें':'Refresh','रीसेट करें':'Reset',
-    'डिफ़ॉल्ट':'Default','कस्टम':'Custom','उन्नत':'Advanced','बुनियादी':'Basic',
-    'मानक':'Standard','प्रीमियम':'Premium','विशेषज्ञ':'Expert','मास्टर':'Master',
-    'शुरुआती':'Beginner','मध्यवर्ती':'Intermediate','खाता':'Account',
-    'डैशबोर्ड':'Dashboard','सूचनाएं':'Notifications','संदेश':'Messages',
-    'गतिविधि':'Activity','सांख्यिकी':'Statistics','विश्लेषण':'Analytics',
-    'रिपोर्ट':'Report','निर्यात':'Export','आयात':'Import','अपलोड':'Upload',
-    'अटैचमेंट':'Attachment','फ़ाइल':'File','छवि':'Image','वीडियो':'Video',
-    'ऑडियो':'Audio','दस्तावेज़':'Document','लिंक':'Link','यूआरएल':'URL',
-    'स्रोत':'Source','लक्ष्य':'Target','शीर्षक':'Title','विवरण':'Description',
-    'सामग्री':'Content','सारांश':'Summary','टैग':'Tags','श्रेणी':'Category',
-    'प्रकार':'Type','स्थिति':'Status','प्राथमिकता':'Priority','अवधि':'Duration',
-    'आरंभ':'Start','समाप्त':'End','सक्रिय':'Active','निष्क्रिय':'Inactive',
-    'लंबित':'Pending','पूर्ण':'Completed','रद्द':'Cancelled','स्वीकृत':'Approved',
-    'अस्वीकृत':'Rejected','संसाधित':'Processed','भेजा गया':'Sent','डिलीवर':'Delivered',
-    'पढ़ा गया':'Read','अपठित':'Unread','देखा गया':'Seen','छिपा हुआ':'Hidden',
-    'प्रकाशित':'Published','ड्राफ्ट':'Draft','संग्रहीत':'Archived','हटाया गया':'Deleted',
-    'स्थायी रूप से हटाएं':'Delete Permanently','पुनर्स्थापित करें':'Restore',
-    'बैकअप':'Backup','पुनर्प्राप्ति':'Recovery','सिंक करें':'Sync',
-    'अपडेट करें':'Update','अपग्रेड करें':'Upgrade','डाउनग्रेड करें':'Downgrade',
-    'इंस्टॉल करें':'Install','अनइंस्टॉल करें':'Uninstall','सक्षम करें':'Enable',
-    'अक्षम करें':'Disable','चालू करें':'Turn On','बंद करें':'Turn Off',
-    'पुनः आरंभ करें':'Restart','शटडाउन':'Shutdown','स्लीप':'Sleep','जागृत':'Wake',
-    'लॉक':'Lock','अनलॉक':'Unlock','एन्क्रिप्ट':'Encrypt','डिक्रिप्ट':'Decrypt',
-    'सत्यापित करें':'Verify','प्रमाणित करें':'Authenticate','अधिकृत करें':'Authorize',
-    'अनुमति':'Permission','पहुंच':'Access','भूमिका':'Role','व्यवस्थापक':'Administrator',
-    'मॉडरेटर':'Moderator','संपादक':'Editor','लेखक':'Author','योगदानकर्ता':'Contributor',
-    'ग्राहक':'Subscriber','सदस्य':'Member','अतिथि':'Guest','उपयोगकर्ता':'User',
-    'दर्शक':'Viewer','अनुयायी':'Follower','मित्र':'Friend','सहकर्मी':'Colleague',
-    'साझेदार':'Partner','ग्राहक':'Client','विक्रेता':'Vendor','आपूर्तिकर्ता':'Supplier',
-    'निर्माता':'Manufacturer','वितरक':'Distributor','खुदरा विक्रेता':'Retailer',
-    'थोक विक्रेता':'Wholesaler','ग्राहक सेवा':'Customer Service',
-    'तकनीकी सहायता':'Technical Support','बिक्री':'Sales','विपणन':'Marketing',
-    'विज्ञापन':'Advertising','प्रचार':'Promotion','ब्रांड':'Brand','उत्पाद':'Product',
-    'सेवा':'Service','सुविधा':'Feature','लाभ':'Benefit','विशेषता':'Specification',
-    'प्रशंसापत्र':'Testimonial','प्रतिक्रिया':'Feedback','शिकायत':'Complaint',
-    'सुझाव':'Suggestion','अनुरोध':'Request','पूछताछ':'Inquiry','उद्धरण':'Quote',
-    'चालान':'Invoice','रसीद':'Receipt','आदेश':'Order','खरीद':'Purchase',
-    'धनवापसी':'Refund','विनिमय':'Exchange','वापसी':'Return','रद्दीकरण':'Cancellation',
-    'नवीनीकरण':'Renewal','सदस्यता':'Subscription','योजना':'Plan','पैकेज':'Package',
-    'बंडल':'Bundle','ऐड ऑन':'Add On','एक्सटेंशन':'Extension','प्लगइन':'Plugin',
-    'थीम':'Theme','टेम्पलेट':'Template','लेआउट':'Layout','डिज़ाइन':'Design',
-    'शैली':'Style','फ़ॉन्ट':'Font','आकार':'Size','पृष्ठभूमि':'Background',
-    'अग्रभूमि':'Foreground','सीमा':'Border','मार्जिन':'Margin','पैडिंग':'Padding',
-    'चौड़ाई':'Width','ऊंचाई':'Height','गहराई':'Depth','वजन':'Weight','लंबाई':'Length',
-    'दूरी':'Distance','गति':'Speed','तापमान':'Temperature','दबाव':'Pressure',
-    'आयतन':'Volume','द्रव्यमान':'Mass','घनत्व':'Density','ऊर्जा':'Energy','शक्ति':'Power',
-    'वोल्टेज':'Voltage','करंट':'Current','प्रतिरोध':'Resistance','आवृत्ति':'Frequency',
-    'बैंडविड्थ':'Bandwidth','डेटा':'Data','जानकारी':'Information','ज्ञान':'Knowledge',
-    'बुद्धि':'Wisdom','कौशल':'Skill','प्रतिभा':'Talent','अनुभव':'Experience',
-    'विशेषज्ञता':'Expertise','योग्यता':'Qualification','प्रमाणन':'Certification',
-    'लाइसेंस':'License','पंजीकरण':'Registration','साइन अप':'Sign Up',
-    'साइन इन':'Sign In','लॉग इन':'Log In','लॉग आउट':'Log Out',
-    'खाता बनाएं':'Create Account','पासवर्ड रीसेट करें':'Reset Password',
-    'ईमेल भेजें':'Send Email','लिंक भेजें':'Send Link','कोड भेजें':'Send Code',
-    'सत्यापन कोड':'Verification Code','कैप्चा':'Captcha','रोबोट नहीं':'Not a Robot',
-    'सुरक्षा जांच':'Security Check','दो चरणीय सत्यापन':'Two Factor Authentication',
-    'बायोमेट्रिक':'Biometric','फ़िंगरप्रिंट':'Fingerprint','फेस आईडी':'Face ID',
-    'वॉयस रिकग्निशन':'Voice Recognition','पिन':'PIN','पैटर्न':'Pattern',
-    'यूज़रनेम':'Username','उपनाम':'Nickname','डिस्प्ले नाम':'Display Name',
-    'प्रथम नाम':'First Name','अंतिम नाम':'Last Name','मध्य नाम':'Middle Name',
-    'उपसर्ग':'Prefix','प्रत्यय':'Suffix','जन्म':'Birth','मृत्यु':'Death',
-    'जीवन':'Life','स्वर्ग':'Heaven','नरक':'Hell','आत्मा':'Soul','शरीर':'Body',
-    'मन':'Mind','हृदय':'Heart','दिमाग':'Brain','आंख':'Eye','कान':'Ear',
-    'नाक':'Nose','मुंह':'Mouth','हाथ':'Hand','पैर':'Leg','सिर':'Head',
-    'बाल':'Hair','त्वचा':'Skin','खून':'Blood','हड्डी':'Bone','मांसपेशी':'Muscle',
-    'तंत्रिका':'Nerve','कोशिका':'Cell','जीन':'Gene','डीएनए':'DNA','आरएनए':'RNA',
-    'प्रोटीन':'Protein','एंजाइम':'Enzyme','हार्मोन':'Hormone','विटामिन':'Vitamin',
-    'खनिज':'Mineral','पोषक':'Nutrient','कैलोरी':'Calorie','वसा':'Fat',
-    'कार्बोहाइड्रेट':'Carbohydrate','फाइबर':'Fiber','चीनी':'Sugar','नमक':'Salt',
-    'पानी':'Water','हवा':'Air','आग':'Fire','पृथ्वी':'Earth','आकाश':'Sky',
-    'अंतरिक्ष':'Space','ब्रह्मांड':'Universe','आकाशगंगा':'Galaxy',
-    'तारामंडल':'Constellation','सौर मंडल':'Solar System','उपग्रह':'Satellite',
-    'चंद्रमा':'Moon','धूमकेतु':'Comet','उल्का':'Meteor','क्षुद्रग्रह':'Asteroid',
-    'ब्लैक होल':'Black Hole','गुरुत्वाकर्षण':'Gravity','प्रकाश':'Light',
-    'ध्वनि':'Sound','तरंग':'Wave','कण':'Particle','परमाणु':'Atom','अणु':'Molecule',
-    'तत्व':'Element','यौगिक':'Compound','मिश्रण':'Mixture','विलयन':'Solution',
-    'ठोस':'Solid','द्रव':'Liquid','गैस':'Gas','प्लाज्मा':'Plasma','ऊष्मा':'Heat',
-    'ठंड':'Cold','गर्म':'Hot','नम':'Wet','सूखा':'Dry','तेज':'Fast','धीमा':'Slow',
-    'ऊंचा':'High','नीचा':'Low','बड़ा':'Big','छोटा':'Small','लंबा':'Long',
-    'मोटा':'Thick','पतला':'Thin','भारी':'Heavy','हल्का':'Light','कठोर':'Hard',
-    'नरम':'Soft','चिकना':'Smooth','खुरदरा':'Rough','तेज':'Sharp','कुंद':'Blunt',
-    'साफ':'Clean','गंदा':'Dirty','नया':'New','पुराना':'Old','युवा':'Young',
-    'वृद्ध':'Elderly','अमीर':'Rich','गरीब':'Poor','खुश':'Happy','उदास':'Sad',
-    'क्रोधित':'Angry','शांत':'Calm','उत्साहित':'Excited','थका हुआ':'Tired',
-    'ऊर्जावान':'Energetic','स्वस्थ':'Healthy','बीमार':'Sick','मजबूत':'Strong',
-    'कमजोर':'Weak','बहादुर':'Brave','डरपोक':'Cowardly','ईमानदार':'Honest',
-    'बेईमान':'Dishonest','वफादार':'Loyal','विश्वासघाती':'Traitorous','दयालु':'Kind',
-    'क्रूर':'Cruel','विनम्र':'Polite','अशिष्ट':'Rude','बुद्धिमान':'Intelligent',
-    'मूर्ख':'Foolish','रचनात्मक':'Creative','विनाशकारी':'Destructive',
-    'उत्पादक':'Productive','अनुत्पादक':'Unproductive','कुशल':'Efficient',
-    'अकुशल':'Inefficient','प्रभावी':'Effective','अप्रभावी':'Ineffective',
-    'सफल':'Successful','असफल':'Unsuccessful','विजेता':'Winner','हारने वाला':'Loser',
-    'चैंपियन':'Champion','प्रतियोगी':'Competitor','प्रतिद्वंद्वी':'Rival',
-    'दुश्मन':'Enemy','सहयोगी':'Ally','समर्थक':'Supporter','प्रशंसक':'Fan',
-    'आलोचक':'Critic','प्रेरक':'Motivator','सलाहकार':'Advisor','गुरु':'Guru',
-    'शिक्षक':'Teacher','छात्र':'Student','शिक्षार्थी':'Learner','शोधकर्ता':'Researcher',
-    'वैज्ञानिक':'Scientist','इंजीनियर':'Engineer','वकील':'Lawyer','न्यायाधीश':'Judge',
-    'पुलिस':'Police','सैनिक':'Soldier','किसान':'Farmer','श्रमिक':'Worker',
-    'कर्मचारी':'Employee','नियोक्ता':'Employer','प्रबंधक':'Manager','निदेशक':'Director',
-    'अधिकारी':'Officer','कार्यकारी':'Executive','सीईओ':'CEO','संस्थापक':'Founder',
-    'सह संस्थापक':'Co Founder','निवेशक':'Investor','शेयरधारक':'Shareholder',
-    'हितधारक':'Stakeholder','मालिक':'Owner','किरायेदार':'Tenant','मकान मालिक':'Landlord',
-    'खरीदार':'Buyer','विक्रेता':'Seller','दलाल':'Broker','एजेंट':'Agent',
-    'प्रतिनिधि':'Representative','वार्ताकार':'Negotiator','मध्यस्थ':'Mediator',
-    'सलाहकार':'Consultant','ठेकेदार':'Contractor','फ्रीलांसर':'Freelancer',
-    'स्वयंसेवक':'Volunteer','इंटर्न':'Intern','प्रशिक्षु':'Trainee','शिक्षु':'Apprentice',
-    'सहायक':'Assistant','सचिव':'Secretary','लेखाकार':'Accountant','विश्लेषक':'Analyst',
-    'डेवलपर':'Developer','प्रोग्रामर':'Programmer','डिजाइनर':'Designer',
-    'कलाकार':'Artist','लेखक':'Writer','संपादक':'Editor','पत्रकार':'Journalist',
-    'फोटोग्राफर':'Photographer','संगीतकार':'Musician','गायक':'Singer',
-    'अभिनेता':'Actor','अभिनेत्री':'Actress','नर्तक':'Dancer','एथलीट':'Athlete',
-    'खिलाड़ी':'Player','कोच':'Coach','रेफरी':'Referee','दर्शक':'Spectator',
-    'यात्री':'Traveler','पर्यटक':'Tourist','नागरिक':'Citizen','निवासी':'Resident',
-    'आप्रवासी':'Immigrant','प्रवासी':'Expatriate','शरणार्थी':'Refugee',
-    'मानव':'Human','जानवर':'Animal','पौधा':'Plant','पेड़':'Tree','फूल':'Flower',
-    'फल':'Fruit','सब्जी':'Vegetable','अनाज':'Grain','मसाला':'Spice',
-    'जड़ी बूटी':'Herb','जहर':'Poison','रसायन':'Chemical','धातु':'Metal',
-    'प्लास्टिक':'Plastic','लकड़ी':'Wood','कागज':'Paper','कपड़ा':'Cloth',
-    'चमड़ा':'Leather','रबर':'Rubber','कांच':'Glass','सीमेंट':'Cement',
-    'ईंट':'Brick','पत्थर':'Stone','मिट्टी':'Clay','रेत':'Sand','तेल':'Oil',
-    'गैसोलीन':'Gasoline','डीजल':'Diesel','बिजली':'Electricity','कोयला':'Coal',
-    'प्राकृतिक गैस':'Natural Gas','सौर ऊर्जा':'Solar Energy','पवन ऊर्जा':'Wind Energy',
-    'जल ऊर्जा':'Hydro Energy','परमाणु ऊर्जा':'Nuclear Energy','नवीकरणीय':'Renewable',
-    'गैर नवीकरणीय':'Non Renewable','टिकाऊ':'Sustainable','प्रदूषण':'Pollution',
-    'अपशिष्ट':'Waste','पुनर्चक्रण':'Recycling','संरक्षण':'Conservation',
-    'पर्यावरण':'Environment','जलवायु':'Climate','मौसम':'Weather','बारिश':'Rain',
-    'बर्फ':'Snow','तूफान':'Storm','बाढ़':'Flood','सूखा':'Drought',
-    'भूकंप':'Earthquake','ज्वालामुखी':'Volcano','सुनामी':'Tsunami','आपदा':'Disaster',
-    'आपातकाल':'Emergency','बचाव':'Rescue','राहत':'Relief','दान':'Charity',
-    'स्वयंसेवा':'Volunteering','समुदाय':'Community','समाज':'Society',
-    'संस्कृति':'Culture','परंपरा':'Tradition','रीति रिवाज':'Custom','त्योहार':'Festival',
-    'उत्सव':'Celebration','छुट्टी':'Holiday','जन्मदिन':'Birthday','सालगिरह':'Anniversary',
-    'शादी':'Wedding','सगाई':'Engagement','गोद भराई':'Baby Shower',
-    'गृह प्रवेश':'Housewarming','नामकरण':'Naming Ceremony','अंतिम संस्कार':'Funeral',
-    'शोक':'Mourning','संवेदना':'Condolence','बधाई':'Congratulations',
-    'शुभकामनाएं':'Best Wishes','शुभ रात्रि':'Good Night','शुभ प्रभात':'Good Morning',
-    'शुभ दोपहर':'Good Afternoon','शुभ संध्या':'Good Evening','नमस्ते':'Hello',
-    'अलविदा':'Goodbye','फिर मिलेंगे':'See You Later','जल्दी मिलते हैं':'See You Soon',
-    'कल मिलते हैं':'See You Tomorrow','ध्यान रखना':'Take Care',
-    'शुभ यात्रा':'Safe Travels','आपका दिन शुभ हो':'Have a Nice Day',
-    'आपका सप्ताहांत शुभ हो':'Have a Good Weekend','खुश रहो':'Be Happy',
-    'स्वस्थ रहो':'Stay Healthy','सुरक्षित रहो':'Stay Safe','मजबूत रहो':'Stay Strong',
-    'सकारात्मक रहो':'Stay Positive','विश्वास रखो':'Keep Faith','प्रार्थना करो':'Pray',
-    'आशीर्वाद':'Blessings','कृपा':'Grace','दया':'Mercy','क्षमा':'Forgiveness',
-    'प्रेम':'Love','शांति':'Peace','आनंद':'Joy','सुख':'Happiness','दुख':'Sorrow',
-    'पीड़ा':'Pain','आशा':'Hope','विश्वास':'Faith','साहस':'Courage','धैर्य':'Patience',
-    'ईमानदारी':'Honesty','सच्चाई':'Truth','झूठ':'Lie','न्याय':'Justice',
-    'स्वतंत्रता':'Freedom','समानता':'Equality','बंधुत्व':'Fraternity','एकता':'Unity',
-    'विविधता':'Diversity','समावेश':'Inclusion','सम्मान':'Respect','गरिमा':'Dignity',
-    'प्रतिष्ठा':'Prestige','प्रसिद्धि':'Fame','धन':'Wealth','विवेक':'Prudence',
-    'सदाचार':'Virtue','पाप':'Sin','पुण्य':'Merit','कर्म':'Deed','भाग्य':'Fate',
-    'नियति':'Destiny','संयोग':'Coincidence','चमत्कार':'Miracle','जादू':'Magic',
-    'विज्ञान':'Science','प्रौद्योगिकी':'Technology','इंजीनियरिंग':'Engineering',
-    'गणित':'Mathematics','भौतिकी':'Physics','रसायन विज्ञान':'Chemistry',
-    'जीव विज्ञान':'Biology','भूविज्ञान':'Geology','खगोल विज्ञान':'Astronomy',
-    'चिकित्सा विज्ञान':'Medicine','मनोविज्ञान':'Psychology','समाजशास्त्र':'Sociology',
-    'अर्थशास्त्र':'Economics','राजनीति विज्ञान':'Political Science','इतिहास':'History',
-    'भूगोल':'Geography','दर्शनशास्त्र':'Philosophy','साहित्य':'Literature','कला':'Art',
-    'संगीत':'Music','नृत्य':'Dance','नाटक':'Drama','सिनेमा':'Cinema',
-    'फोटोग्राफी':'Photography','मूर्तिकला':'Sculpture','चित्रकला':'Painting',
-    'वास्तुकला':'Architecture','फैशन':'Fashion','खाना बनाना':'Cooking',
-    'बेकिंग':'Baking','बागवानी':'Gardening','मछली पालन':'Fishing','शिकार':'Hunting',
-    'लंबी पैदल यात्रा':'Hiking','कैम्पिंग':'Camping','पर्वतारोहण':'Mountaineering',
-    'तैराकी':'Swimming','दौड़ना':'Running','साइकिल चलाना':'Cycling',
-    'पढ़ना':'Reading','लिखना':'Writing','चित्रकारी':'Drawing','गाना':'Singing',
-    'अभिनय':'Acting','यात्रा':'Traveling','खरीदारी':'Shopping','खेल':'Sports',
-    'क्रिकेट':'Cricket','फुटबॉल':'Football','हॉकी':'Hockey','टेनिस':'Tennis',
-    'बैडमिंटन':'Badminton','बास्केटबॉल':'Basketball','वॉलीबॉल':'Volleyball',
-    'टेबल टेनिस':'Table Tennis','मुक्केबाजी':'Boxing','कुश्ती':'Wrestling',
-    'एथलेटिक्स':'Athletics','जिमनास्टिक':'Gymnastics','गोल्फ':'Golf',
-    'बिलियर्ड्स':'Billiards','शतरंज':'Chess','ताश':'Cards','लूडो':'Ludo',
-    'सांप सीढ़ी':'Snakes and Ladders','कैरम':'Carrom','वीडियो गेम':'Video Game',
-    'मोबाइल गेम':'Mobile Game','पहेली':'Puzzle','क्विज़':'Quiz',
-    'प्रतियोगिता':'Competition','टूर्नामेंट':'Tournament','चैंपियनशिप':'Championship',
-    'विश्व कप':'World Cup','ओलंपिक':'Olympics','पदक':'Medal','स्वर्ण':'Gold',
-    'रजत':'Silver','कांस्य':'Bronze','ट्रॉफी':'Trophy','पुरस्कार':'Award',
-    'सम्मान':'Honor','प्रशंसा':'Praise','आलोचना':'Criticism','सलाह':'Advice',
-    'मार्गदर्शन':'Guidance','सहायता':'Assistance','समर्थन':'Support',
-    'प्रोत्साहन':'Encouragement','प्रेरणा':'Inspiration','उद्देश्य':'Purpose',
-    'लक्ष्य':'Goal','सपना':'Dream','इच्छा':'Desire','आकांक्षा':'Aspiration',
-    'महत्वाकांक्षा':'Ambition','योजना':'Plan','रणनीति':'Strategy','कार्य':'Action',
-    'परिणाम':'Result','उपलब्धि':'Achievement','विफलता':'Failure','गलती':'Mistake',
-    'सबक':'Lesson','सीख':'Learning','विकास':'Growth','प्रगति':'Progress',
-    'सुधार':'Improvement','परिवर्तन':'Change','नवाचार':'Innovation',
-    'आविष्कार':'Invention','खोज':'Discovery','अनुसंधान':'Research','मूल्यांकन':'Evaluation',
-    'निष्कर्ष':'Conclusion','सिफारिश':'Recommendation','कार्यान्वयन':'Implementation',
-    'निष्पादन':'Execution','निगरानी':'Monitoring','नियंत्रण':'Control',
-    'प्रबंधन':'Management','प्रशासन':'Administration','शासन':'Governance',
-    'नेतृत्व':'Leadership','टीम':'Team','सहयोग':'Collaboration','संचार':'Communication',
-    'बातचीत':'Negotiation','समझौता':'Compromise','सहमति':'Consensus',
-    'असहमति':'Disagreement','संघर्ष':'Conflict','समाधान':'Resolution',
-    'युद्ध':'War','लड़ाई':'Battle','जीत':'Victory','हार':'Defeat','संधि':'Treaty',
-    'गठबंधन':'Alliance','साझेदारी':'Partnership','सहयोग':'Cooperation',
-    'प्रतिस्पर्धा':'Competition','एकाधिकार':'Monopoly','अल्पाधिकार':'Oligopoly',
-    'बाजार':'Market','अर्थव्यवस्था':'Economy','व्यापार':'Trade','वाणिज्य':'Commerce',
-    'उद्योग':'Industry','कृषि':'Agriculture','विनिर्माण':'Manufacturing',
-    'खुदरा':'Retail','थोक':'Wholesale','आयात':'Import','निर्यात':'Export',
-    'सीमा शुल्क':'Customs','टैरिफ':'Tariff','कर':'Tax','बजट':'Budget',
-    'राजस्व':'Revenue','व्यय':'Expenditure','घाटा':'Deficit','अधिशेष':'Surplus',
-    'ऋण':'Debt','क्रेडिट':'Credit','ब्याज':'Interest','मुद्रा':'Currency',
-    'मुद्रास्फीति':'Inflation','अपस्फीति':'Deflation','मंदी':'Recession',
-    'तेजी':'Boom','शेयर':'Share','बांड':'Bond','म्यूचुअल फंड':'Mutual Fund',
-    'बीमा':'Insurance','पेंशन':'Pension','संपत्ति':'Asset','देयता':'Liability',
-    'इक्विटी':'Equity','पूंजी':'Capital','लाभांश':'Dividend','रिटर्न':'Return',
-    'जोखिम':'Risk','इनाम':'Reward','विविधीकरण':'Diversification',
-    'पोर्टफोलियो':'Portfolio','बैंकिंग':'Banking','बंधक':'Mortgage','जमा':'Deposit',
-    'निकासी':'Withdrawal','स्थानांतरण':'Transfer','लेनदेन':'Transaction',
-    'बिल':'Bill','शेष':'Balance','विवरण':'Statement','ऑडिट':'Audit',
-    'अनुपालन':'Compliance','विनियमन':'Regulation','कानून':'Law','अधिनियम':'Act',
-    'धारा':'Section','अनुच्छेद':'Article','खंड':'Clause','प्रावधान':'Provision',
-    'संशोधन':'Amendment','अध्यादेश':'Ordinance','अधिसूचना':'Notification',
-    'परिपत्र':'Circular','आदेश':'Order','निर्णय':'Judgment','डिक्री':'Decree',
-    'याचिका':'Petition','अपील':'Appeal','समीक्षा':'Review','पुनर्विचार':'Reconsideration',
-    'स्थगन':'Stay','निषेधाज्ञा':'Injunction','सम्मन':'Summons','वारंट':'Warrant',
-    'गिरफ्तारी':'Arrest','जमानत':'Bail','सजा':'Punishment','जुर्माना':'Fine',
-    'कारावास':'Imprisonment','मृत्युदंड':'Death Penalty','क्षमादान':'Pardon',
-    'रिहाई':'Release','पैरोल':'Parole','परिवीक्षा':'Probation',
-    'समुदाय सेवा':'Community Service','पुनर्वास':'Rehabilitation','सुधार':'Correction',
-    'न्याय':'Justice','अन्याय':'Injustice','भेदभाव':'Discrimination',
-    'उत्पीड़न':'Harassment','शोषण':'Exploitation','दुर्व्यवहार':'Abuse',
-    'हिंसा':'Violence','अहिंसा':'Non Violence','प्रतिरोध':'Resistance',
-    'विद्रोह':'Rebellion','क्रांति':'Revolution','स्वतंत्रता':'Independence',
-    'गणतंत्र':'Republic','लोकतंत्र':'Democracy','राजतंत्र':'Monarchy',
-    'तानाशाही':'Dictatorship','सरकार':'Government','संसद':'Parliament',
-    'कांग्रेस':'Congress','सीनेट':'Senate','विधानसभा':'Assembly','चुनाव':'Election',
-    'मतदान':'Voting','मतदाता':'Voter','उम्मीदवार':'Candidate','अभियान':'Campaign',
-    'घोषणापत्र':'Manifesto','नीति':'Policy','कानून':'Legislation','बहस':'Debate',
-    'भाषण':'Speech','रैली':'Rally','विरोध':'Protest','हड़ताल':'Strike',
-    'धरना':'Sit In','मार्च':'March','प्रदर्शन':'Demonstration',
-    'जनमत संग्रह':'Referendum','जनमत':'Public Opinion','सर्वेक्षण':'Survey',
-    'मतदान':'Poll','मीडिया':'Media','समाचार':'News','अखबार':'Newspaper',
-    'पत्रिका':'Magazine','टेलीविजन':'Television','रेडियो':'Radio',
-    'इंटरनेट':'Internet','सोशल मीडिया':'Social Media','ब्लॉग':'Blog',
-    'व्लॉग':'Vlog','पॉडकास्ट':'Podcast','स्ट्रीमिंग':'Streaming',
-    'लाइव':'Live','प्रसारण':'Broadcast','प्रकाशन':'Publication',
-    'संपादकीय':'Editorial','लेख':'Article','साक्षात्कार':'Interview',
-    'प्रेस कॉन्फ्रेंस':'Press Conference','प्रेस विज्ञप्ति':'Press Release',
-    'विज्ञापन':'Advertisement','जनसंपर्क':'Public Relations','ब्रांडिंग':'Branding',
-    'लोगो':'Logo','नारा':'Slogan','मिशन':'Mission','विजन':'Vision',
-    'मूल्य':'Values','उद्देश्य':'Objectives','युक्ति':'Tactics',
-    'कार्य योजना':'Action Plan','रोडमैप':'Roadmap','मील का पत्थर':'Milestone',
-    'समय सीमा':'Deadline','कार्यक्रम':'Schedule','एजेंडा':'Agenda',
-    'मिनट्स':'Minutes','बैठक':'Meeting','सम्मेलन':'Conference','सेमिनार':'Seminar',
-    'कार्यशाला':'Workshop','प्रशिक्षण':'Training','वेबिनार':'Webinar',
-    'पाठ्यक्रम':'Course','कार्यक्रम':'Program','परियोजना':'Project','कार्य':'Task',
-    'गतिविधि':'Activity','घटना':'Event','अवसर':'Occasion','समारोह':'Ceremony',
-    'अनुष्ठान':'Ritual','विरासत':'Heritage','पारिस्थितिकी':'Ecology',
-    'प्रकृति':'Nature','वन्यजीव':'Wildlife','जैव विविधता':'Biodiversity',
-    'स्थिरता':'Sustainability','उत्सर्जन':'Emission','कार्बन':'Carbon',
-    'ग्रीनहाउस':'Greenhouse','ग्लोबल वार्मिंग':'Global Warming',
-    'जलवायु परिवर्तन':'Climate Change','समुद्र स्तर':'Sea Level',
-    'ग्लेशियर':'Glacier','ध्रुवीय':'Polar','रेगिस्तान':'Desert','वन':'Forest',
-    'वर्षावन':'Rainforest','महासागर':'Ocean','समुद्र':'Sea','नदी':'River',
-    'झील':'Lake','तालाब':'Pond','झरना':'Waterfall','पहाड़':'Mountain',
-    'पहाड़ी':'Hill','घाटी':'Valley','मैदान':'Plain','पठार':'Plateau',
-    'द्वीप':'Island','प्रायद्वीप':'Peninsula','तट':'Coast','समुद्र तट':'Beach',
-    'खाड़ी':'Bay','जलडमरूमध्य':'Strait','नहर':'Canal','बंदरगाह':'Port',
-    'कस्बा':'Town','गांव':'Village','राजधानी':'Capital','महानगर':'Metropolis',
-    'उपनगर':'Suburb','ग्रामीण':'Rural','शहरी':'Urban','सड़क':'Road',
-    'राजमार्ग':'Highway','एक्सप्रेसवे':'Expressway','पुल':'Bridge','सुरंग':'Tunnel',
-    'रेलवे':'Railway','स्टेशन':'Station','हवाई अड्डा':'Airport','बंदरगाह':'Seaport',
-    'बस स्टॉप':'Bus Stop','टैक्सी':'Taxi','ऑटो':'Auto','ट्रेन':'Train',
-    'विमान':'Airplane','जहाज':'Ship','नाव':'Boat','कार':'Car','बाइक':'Bike',
-    'साइकिल':'Bicycle','पैदल':'Walk','दौड़':'Run','यात्रा':'Journey',
-    'यात्रा':'Trip','पर्यटन':'Tourism','छुट्टी':'Vacation','होटल':'Hotel',
-    'रेस्तरां':'Restaurant','कैफे':'Cafe','बार':'Bar','क्लब':'Club','पार्क':'Park',
-    'बगीचा':'Garden','चिड़ियाघर':'Zoo','संग्रहालय':'Museum','पुस्तकालय':'Library',
-    'थिएटर':'Theater','सिनेमा':'Cinema','स्टेडियम':'Stadium','जिम':'Gym',
-    'स्विमिंग पूल':'Swimming Pool','खेल का मैदान':'Playground','क्लिनिक':'Clinic',
-    'फार्मेसी':'Pharmacy','एटीएम':'ATM','डाकघर':'Post Office',
-    'पुलिस स्टेशन':'Police Station','अदालत':'Court','मंदिर':'Temple',
-    'मस्जिद':'Mosque','चर्च':'Church','गुरुद्वारा':'Gurudwara','बाजार':'Market',
-    'मॉल':'Mall','दुकान':'Shop','स्टोर':'Store','सुपरमार्केट':'Supermarket',
-    'कार्यालय':'Office','कारखाना':'Factory','गोदाम':'Warehouse','निर्माण':'Construction',
-    'भवन':'Building','अपार्टमेंट':'Apartment','फ्लैट':'Flat','घर':'Home',
-    'कमरा':'Room','रसोई':'Kitchen','बाथरूम':'Bathroom','बेडरूम':'Bedroom',
-    'लिविंग रूम':'Living Room','बालकनी':'Balcony','छत':'Terrace','आंगन':'Courtyard',
-    'दरवाजा':'Door','खिड़की':'Window','दीवार':'Wall','फर्श':'Floor','छत':'Ceiling',
-    'सीढ़ियां':'Stairs','लिफ्ट':'Elevator','फर्नीचर':'Furniture','बिस्तर':'Bed',
-    'सोफा':'Sofa','कुर्सी':'Chair','मेज':'Table','अलमारी':'Cupboard','पंखा':'Fan',
-    'एयर कंडीशनर':'Air Conditioner','हीटर':'Heater','रेफ्रिजरेटर':'Refrigerator',
-    'वॉशिंग मशीन':'Washing Machine','माइक्रोवेव':'Microwave','ओवन':'Oven',
-    'स्टोव':'Stove','बर्तन':'Utensils','कप':'Cup','प्लेट':'Plate','चम्मच':'Spoon',
-    'कांटा':'Fork','चाकू':'Knife','भोजन':'Food','नाश्ता':'Breakfast',
-    'दोपहर का भोजन':'Lunch','रात का खाना':'Dinner','स्नैक्स':'Snacks',
-    'मिठाई':'Dessert','पेय':'Beverage','चाय':'Tea','कॉफी':'Coffee','दूध':'Milk',
-    'जूस':'Juice','शराब':'Alcohol','बीयर':'Beer','वाइन':'Wine','व्हिस्की':'Whiskey',
-    'वोदका':'Vodka','रम':'Rum','जिन':'Gin','शैंपेन':'Champagne','कॉकटेल':'Cocktail',
-    'मॉकटेल':'Mocktail','सोडा':'Soda','शीतल पेय':'Soft Drink','ऊर्जा पेय':'Energy Drink',
-    'सेब':'Apple','केला':'Banana','संतरा':'Orange','अंगूर':'Grapes','आम':'Mango',
-    'अनानास':'Pineapple','तरबूज':'Watermelon','खरबूजा':'Melon','पपीता':'Papaya',
-    'अमरूद':'Guava','अनार':'Pomegranate','कीवी':'Kiwi','स्ट्रॉबेरी':'Strawberry',
-    'ब्लूबेरी':'Blueberry','रास्पबेरी':'Raspberry','ब्लैकबेरी':'Blackberry',
-    'चेरी':'Cherry','आड़ू':'Peach','नाशपाती':'Pear','बेर':'Plum','खुबानी':'Apricot',
-    'नींबू':'Lemon','नारियल':'Coconut','बादाम':'Almond','अखरोट':'Walnut',
-    'काजू':'Cashew','पिस्ता':'Pistachio','मूंगफली':'Peanut','किशमिश':'Raisin',
-    'खजूर':'Date','अंजीर':'Fig','आलू':'Potato','टमाटर':'Tomato','प्याज':'Onion',
-    'लहसुन':'Garlic','अदरक':'Ginger','हरी मिर्च':'Green Chilli','लाल मिर्च':'Red Chilli',
-    'शिमला मिर्च':'Capsicum','बैंगन':'Eggplant','भिंडी':'Okra','फूलगोभी':'Cauliflower',
-    'पत्तागोभी':'Cabbage','ब्रोकली':'Broccoli','पालक':'Spinach','मेथी':'Fenugreek',
-    'धनिया':'Coriander','पुदीना':'Mint','करी पत्ता':'Curry Leaf','गाजर':'Carrot',
-    'मूली':'Radish','चुकंदर':'Beetroot','शकरकंद':'Sweet Potato','कद्दू':'Pumpkin',
-    'लौकी':'Bottle Gourd','तोरी':'Ridge Gourd','करेला':'Bitter Gourd','खीरा':'Cucumber',
-    'मटर':'Peas','बीन्स':'Beans','मक्का':'Corn','मशरूम':'Mushroom','मांस':'Meat',
-    'चिकन':'Chicken','मटन':'Mutton','बीफ':'Beef','पोर्क':'Pork','मछली':'Fish',
-    'झींगा':'Prawn','केकड़ा':'Crab','लॉबस्टर':'Lobster','अंडा':'Egg','पनीर':'Cheese',
-    'मक्खन':'Butter','घी':'Ghee','दही':'Yogurt','क्रीम':'Cream','ब्रेड':'Bread',
-    'रोटी':'Roti','चावल':'Rice','दाल':'Lentils','राजमा':'Kidney Beans',
-    'छोले':'Chickpeas','इडली':'Idli','डोसा':'Dosa','पराठा':'Paratha','पूरी':'Puri',
-    'भटूरा':'Bhatura','नान':'Naan','कुल्चा':'Kulcha','पाव':'Pav','पिज्जा':'Pizza',
-    'बर्गर':'Burger','सैंडविच':'Sandwich','पास्ता':'Pasta','नूडल्स':'Noodles',
-    'मोमोज':'Momos','समोसा':'Samosa','पकौड़ा':'Pakora','चाट':'Chaat',
-    'गोलगप्पे':'Golgappe','भेलपुरी':'Bhelpuri','पाव भाजी':'Pav Bhaji',
-    'वड़ा पाव':'Vada Pav','मिसल पाव':'Misal Pav','ढोकला':'Dhokla','खांडवी':'Khandvi',
-    'पानी पुरी':'Pani Puri','दही पुरी':'Dahi Puri','सेव पुरी':'Sev Puri',
-    'राज कचौरी':'Raj Kachori','आलू टिक्की':'Aloo Tikki','चोले भटूरे':'Chole Bhature',
-    'हलवा':'Halwa','जलेबी':'Jalebi','गुलाब जामुन':'Gulab Jamun','रसगुल्ला':'Rasgulla',
-    'रसमलाई':'Rasmalai','बर्फी':'Barfi','लड्डू':'Laddu','पेड़ा':'Peda',
-    'कलाकंद':'Kalakand','संदेश':'Sandesh','मैसूर पाक':'Mysore Pak','खीर':'Kheer',
-    'फिरनी':'Firni','रबड़ी':'Rabri','मालपुआ':'Malpua','शाही टुकड़ा':'Shahi Tukda',
-    'गाजर का हलवा':'Gajar ka Halwa','मूंग दाल हलवा':'Moong Dal Halwa',
-    'आइसक्रीम':'Ice Cream','कुल्फी':'Kulfi','फालूदा':'Falooda','शरबत':'Sharbat',
-    'लस्सी':'Lassi','छाछ':'Buttermilk','शिकंजी':'Shikanji','जलजीरा':'Jaljeera',
-    'आम पन्ना':'Aam Panna','बेल का शरबत':'Bel ka Sharbat','गन्ने का रस':'Sugarcane Juice',
-    'नारियल पानी':'Coconut Water','नींबू पानी':'Lemonade','स्मूदी':'Smoothie',
-    'मिल्कशेक':'Milkshake','हॉट चॉकलेट':'Hot Chocolate','ग्रीन टी':'Green Tea',
-    'ब्लैक टी':'Black Tea','ब्लैक कॉफी':'Black Coffee','कैपुचीनो':'Cappuccino',
-    'लट्टे':'Latte','एस्प्रेसो':'Espresso','मोचा':'Mocha','अमेरिकनो':'Americano',
-    'मैकियाटो':'Macchiato','फ्रैपे':'Frappe','कोल्ड कॉफी':'Cold Coffee',
-    'आइस्ड टी':'Iced Tea','बबल टी':'Bubble Tea','हर्बल चाय':'Herbal Tea',
-    'मसाला चाय':'Masala Tea','अदरक चाय':'Ginger Tea','इलायची चाय':'Cardamom Tea',
-    'तुलसी चाय':'Tulsi Tea','पुदीना चाय':'Mint Tea','कैमोमाइल चाय':'Chamomile Tea',
-    'सौंफ की चाय':'Fennel Tea','दालचीनी चाय':'Cinnamon Tea','हल्दी चाय':'Turmeric Tea',
-    'शहद':'Honey','गुड़':'Jaggery','शक्कर':'Sugar','मिश्री':'Rock Sugar',
-    'काला नमक':'Black Salt','सेंधा नमक':'Rock Salt','समुद्री नमक':'Sea Salt',
-    'टोफू':'Tofu','सोया':'Soya','बेसन':'Gram Flour','गेहूं का आटा':'Wheat Flour',
-    'मैदा':'Refined Flour','सूजी':'Semolina','चावल का आटा':'Rice Flour',
-    'मक्के का आटा':'Corn Flour','बाजरे का आटा':'Millet Flour','ज्वार का आटा':'Sorghum Flour',
-    'रागी का आटा':'Finger Millet Flour','सिंघाड़े का आटा':'Water Chestnut Flour',
-    'कुट्टू का आटा':'Buckwheat Flour','राजगिरा का आटा':'Amaranth Flour',
-    'साबूदाना':'Sago','सेंवई':'Vermicelli','मुरमुरे':'Puffed Rice',
-    'चिउड़ा':'Flattened Rice','मखाना':'Fox Nut','दलिया':'Porridge','ओट्स':'Oats',
-    'मूसली':'Muesli','कॉर्नफ्लेक्स':'Cornflakes','चोकर':'Bran','बीज':'Seed',
-    'हल्दी':'Turmeric','जीरा':'Cumin','काली मिर्च':'Black Pepper',
-    'सफेद मिर्च':'White Pepper','लौंग':'Clove','इलायची':'Cardamom',
-    'दालचीनी':'Cinnamon','तेज पत्ता':'Bay Leaf','जावित्री':'Mace','जायफल':'Nutmeg',
-    'सौंफ':'Fennel','अजवाइन':'Carom Seeds','मंगरैला':'Nigella',
-    'मेथी दाना':'Fenugreek Seeds','राई':'Mustard','सरसों':'Mustard','तिल':'Sesame',
-    'खसखस':'Poppy Seeds','अमचूर':'Dry Mango Powder','अनारदाना':'Pomegranate Seeds',
-    'गरम मसाला':'Garam Masala','चाट मसाला':'Chaat Masala',
-    'पाव भाजी मसाला':'Pav Bhaji Masala','छोले मसाला':'Chole Masala',
-    'राजमा मसाला':'Rajma Masala','सांभर मसाला':'Sambar Masala',
-    'बिरयानी मसाला':'Biryani Masala','टिक्का मसाला':'Tikka Masala',
-    'तंदूरी मसाला':'Tandoori Masala','करी पाउडर':'Curry Powder','हींग':'Asafoetida',
-    'केसर':'Saffron','गुलाब जल':'Rose Water','केवड़ा जल':'Kewra Water',
-    'वेनिला':'Vanilla','चॉकलेट':'Chocolate','कोको':'Cocoa','स्वाद':'Taste',
-    'मीठा':'Sweet','नमकीन':'Salty','खट्टा':'Sour','कड़वा':'Bitter','तीखा':'Spicy',
-    'चटपटा':'Tangy','स्वादिष्ट':'Delicious','बेस्वाद':'Tasteless','सुगंध':'Aroma',
-    'बदबू':'Stench','रसोई':'Kitchen','भोजन':'Meal','थाली':'Platter','बुफे':'Buffet',
-    'आ ला कार्टे':'A La Carte','मेनू':'Menu','ऑर्डर':'Order','टिप':'Tip',
-    'गुणवत्ता':'Quality','मात्रा':'Quantity','महंगा':'Expensive','सस्ता':'Cheap',
-    'उचित':'Reasonable','नकद':'Cash','क्यूआर':'QR','ऑनलाइन':'Online',
-    'ऑफलाइन':'Offline','डिलीवरी':'Delivery','टेकअवे':'Takeaway',
-    'डाइन इन':'Dine In','होम डिलीवरी':'Home Delivery','पार्सल':'Parcel',
-    'पैकिंग':'Packing','डिस्पोजेबल':'Disposable','पुन: प्रयोज्य':'Reusable',
-    'पर्यावरण अनुकूल':'Eco Friendly','जैविक':'Organic','प्राकृतिक':'Natural',
-    'कृत्रिम':'Artificial','सिंथेटिक':'Synthetic','ताजा':'Fresh','बासी':'Stale',
-    'गुनगुना':'Lukewarm','जमा हुआ':'Frozen','पिघला हुआ':'Melted','उबला हुआ':'Boiled',
-    'तला हुआ':'Fried','भुना हुआ':'Roasted','ग्रिल्ड':'Grilled','बेक्ड':'Baked',
-    'स्टीम्ड':'Steamed','सौते':'Sauteed','भाप में पकाया':'Steamed','कच्चा':'Raw',
-    'पका हुआ':'Cooked','अधपका':'Undercooked','जला हुआ':'Burnt','मसालेदार':'Spicy',
-    'हल्का':'Mild','गाढ़ा':'Thick','मलाईदार':'Creamy','कुरकुरा':'Crispy',
-    'चबाने योग्य':'Chewy','रसदार':'Juicy','चिकना':'Greasy','तेलयुक्त':'Oily',
-    'अस्वस्थ':'Unhealthy','पौष्टिक':'Nutritious','पेट भरने वाला':'Filling',
-    'ताज़ा':'Refreshing','संतोषजनक':'Satisfying','स्वादिष्ट':'Tasty','लजीज':'Yummy',
-    'उंगली चाटने वाला':'Finger Licking','मुंह में पानी लाने वाला':'Mouth Watering',
-    'भूख':'Hunger','प्यास':'Thirst','भूखा':'Hungry','प्यासा':'Thirsty','भरा हुआ':'Full',
-    'संतुष्ट':'Satisfied','तृप्त':'Satiated','दावत':'Banquet','पार्टी':'Party',
-    'उपवास':'Fasting','व्रत':'Fast','पोषण':'Nutrition','एंटीऑक्सीडेंट':'Antioxidant',
-    'ओमेगा':'Omega','प्रोबायोटिक':'Probiotic','प्रीबायोटिक':'Prebiotic',
-    'ग्लूटेन':'Gluten','लैक्टोज':'Lactose','शाकाहारी':'Vegetarian',
-    'मांसाहारी':'Non Vegetarian','शुद्ध शाकाहारी':'Pure Vegetarian',
-    'अंडाहारी':'Eggetarian','वीगन':'Vegan','जैन':'Jain','हलाल':'Halal',
-    'कोषेर':'Kosher','एलर्जी':'Allergy','असहिष्णुता':'Intolerance',
-    'मधुमेह':'Diabetes','रक्तचाप':'Blood Pressure','कोलेस्ट्रॉल':'Cholesterol',
-    'हृदय':'Heart','जिगर':'Liver','गुर्दा':'Kidney','फेफड़े':'Lungs','पेट':'Stomach',
-    'आंत':'Intestine','मस्तिष्क':'Brain','जोड़':'Joint','नाखून':'Nail','दांत':'Tooth',
-    'मसूड़े':'Gums','जीभ':'Tongue','गला':'Throat','चेहरा':'Face','गर्दन':'Neck',
-    'कंधा':'Shoulder','हाथ':'Arm','कोहनी':'Elbow','कलाई':'Wrist','हथेली':'Palm',
-    'उंगली':'Finger','अंगूठा':'Thumb','छाती':'Chest','पीठ':'Back','कमर':'Waist',
-    'पेट':'Belly','नाभि':'Navel','कूल्हा':'Hip','पैर':'Leg','जांघ':'Thigh',
-    'घुटना':'Knee','पिंडली':'Calf','टखना':'Ankle','एड़ी':'Heel','पैर':'Foot',
-    'पंजा':'Toe','दायां':'Right','बायां':'Left','ऊपर':'Up','नीचे':'Down',
-    'अंदर':'Inside','बाहर':'Outside','आगे':'Front','पीछे':'Behind','बीच':'Middle',
-    'किनारा':'Edge','कोना':'Corner','केंद्र':'Center','सतह':'Surface','तल':'Bottom',
-    'शीर्ष':'Top','ऊंचाई':'Height','निकट':'Near','दूर':'Far','यहां':'Here',
-    'वहां':'There','कहां':'Where','कब':'When','क्यों':'Why','कैसे':'How',
-    'कौन':'Who','क्या':'What','किसका':'Whose','किसको':'Whom','यह':'This',
-    'वह':'That','ये':'These','वे':'Those','मैं':'I','तुम':'You','आप':'You',
-    'हम':'We','मेरा':'My','तुम्हारा':'Your','आपका':'Your','हमारा':'Our',
-    'उसका':'His','उनका':'Their','मुझे':'Me','तुम्हें':'You','आपको':'You',
-    'हमें':'Us','उसे':'Him','उन्हें':'Them','शायद':'Maybe','निश्चित':'Definitely',
-    'बिल्कुल':'Absolutely','कभी नहीं':'Never','हमेशा':'Always','कभी कभी':'Sometimes',
-    'अक्सर':'Often','शायद ही':'Rarely','आमतौर पर':'Usually','फिर से':'Again',
-    'पहले से':'Already','अभी तक':'Yet','बस':'Just','केवल':'Only','भी':'Also',
-    'बहुत':'Very','बहुत ज्यादा':'Too','काफी':'Quite','थोड़ा':'Little','कम':'Less',
-    'अधिक':'More','सबसे':'Most','कम से कम':'Least','सब':'All','कुछ':'Some',
-    'कोई':'Any','कोई नहीं':'None','हर':'Every','प्रत्येक':'Each','दोनों':'Both',
-    'या तो':'Either','न तो':'Neither','और':'And','या':'Or','लेकिन':'But',
-    'इसलिए':'So','क्योंकि':'Because','यदि':'If','तो':'Then','जब':'When',
-    'जबकि':'While','हालांकि':'Although','हालाँकि':'Though','जब तक':'Until',
-    'जब से':'Since','के लिए':'For','से':'From','को':'To','में':'In','पर':'On',
-    'के पास':'At','द्वारा':'By','के साथ':'With','बिना':'Without',
-    'के बारे में':'About','के खिलाफ':'Against','के बीच':'Between',
-    'के बीच में':'Among','के दौरान':'During','के माध्यम से':'Through',
-    'के पार':'Across','के साथ':'Along','के आस पास':'Around','की ओर':'Towards',
-    'से दूर':'Away','ऊपर':'Above','के ऊपर':'Over','के नीचे':'Under',
-    'बाद':'After','पहले':'Before','अंदर':'Within','पास':'Beside','अलावा':'Besides',
-    'बजाय':'Instead','के बावजूद':'Despite','के बदले':'In Spite Of',
-    'के कारण':'Due To','के अनुसार':'According To','के बजाय':'Rather Than',
-    'जैसे':'Like','वैसे':'As','ऐसा':'Such','इतना':'So','उतना':'As',
-    'जितना':'As Much','उतना ही':'As Many','से ज्यादा':'More Than',
-    'से कम':'Less Than','के बराबर':'Equal To','समान':'Same','अलग':'Different',
-    'विपरीत':'Opposite','समान':'Similar','भिन्न':'Various','विविध':'Diverse',
-    'अनेक':'Many','कई':'Several','कुछ':'Few','एक':'One','दो':'Two','तीन':'Three',
-    'चार':'Four','पांच':'Five','छह':'Six','सात':'Seven','आठ':'Eight','नौ':'Nine',
-    'दस':'Ten','ग्यारह':'Eleven','बारह':'Twelve','तेरह':'Thirteen','चौदह':'Fourteen',
-    'पंद्रह':'Fifteen','सोलह':'Sixteen','सत्रह':'Seventeen','अठारह':'Eighteen',
-    'उन्नीस':'Nineteen','बीस':'Twenty','तीस':'Thirty','चालीस':'Forty',
-    'पचास':'Fifty','साठ':'Sixty','सत्तर':'Seventy','अस्सी':'Eighty','नब्बे':'Ninety',
-    'सौ':'Hundred','हज़ार':'Thousand','लाख':'Lakh','करोड़':'Crore','अरब':'Billion',
-    'पहला':'First','दूसरा':'Second','तीसरा':'Third','चौथा':'Fourth',
-    'पांचवां':'Fifth','आखिरी':'Last','अंतिम':'Final','अगला':'Next','पिछला':'Previous',
-    'प्रथम':'Primary','द्वितीय':'Secondary','बूढ़ा':'Old','संकीर्ण':'Narrow',
-    'उथला':'Shallow','सरल':'Simple','जटिल':'Complex','गीला':'Wet',
-    'जल्दी':'Quick','देर से':'Late','जल्दी':'Early','सही':'Right','गलत':'Wrong',
-    'अच्छा':'Good','बुरा':'Bad','बेहतर':'Better','बदतर':'Worse',
-    'सर्वश्रेष्ठ':'Best','सबसे खराब':'Worst','महान':'Great','भयानक':'Terrible',
-    'अद्भुत':'Wonderful','शानदार':'Fantastic','उत्कृष्ट':'Excellent','घटिया':'Poor',
-    'सुंदर':'Beautiful','बदसूरत':'Ugly','सुंदर':'Pretty','आकर्षक':'Handsome',
-    'आकर्षक':'Attractive','प्यारा':'Cute','स्मार्ट':'Smart','मूर्ख':'Stupid',
-    'कायर':'Coward','प्रसन्न':'Glad','ऊब गया':'Bored','नींद':'Sleepy',
-    'जागृत':'Awake','जीवित':'Alive','मृत':'Dead','सच':'True','झूठ':'False',
-    'वास्तविक':'Real','नकली':'Fake','पूर्ण':'Full','खाली':'Empty','खुला':'Open',
-    'बंद':'Closed','दृश्यमान':'Visible','अदृश्य':'Invisible','मौजूद':'Present',
-    'अनुपस्थित':'Absent','उपलब्ध':'Available','अनुपलब्ध':'Unavailable',
-    'संभव':'Possible','असंभव':'Impossible','आवश्यक':'Necessary',
-    'अनावश्यक':'Unnecessary','महत्वपूर्ण':'Important','महत्वहीन':'Unimportant',
-    'दिलचस्प':'Interesting','उबाऊ':'Boring','मजेदार':'Funny','गंभीर':'Serious',
-    'सुरक्षित':'Safe','खतरनाक':'Dangerous','निजी':'Private','सार्वजनिक':'Public',
-    'आधिकारिक':'Official','अनौपचारिक':'Unofficial','औपचारिक':'Formal',
-    'स्थानीय':'Local','राष्ट्रीय':'National','अंतरराष्ट्रीय':'International',
-    'वैश्विक':'Global','क्षेत्रीय':'Regional','घरेलू':'Domestic','विदेशी':'Foreign',
-    'आंतरिक':'Internal','बाहरी':'External','ऊपरी':'Upper','निचला':'Lower',
-    'भीतरी':'Inner','बाहरी':'Outer','मध्य':'Middle','केंद्रीय':'Central',
-    'मुख्य':'Main','प्रमुख':'Major','गौण':'Minor','एकल':'Single',
-    'विवाहित':'Married','तलाकशुदा':'Divorced','विधवा':'Widowed',
-    'अविवाहित':'Unmarried','रिश्ते में':'In Relationship','नियोजित':'Employed',
-    'बेरोजगार':'Unemployed','स्वरोजगार':'Self Employed','सेवानिवृत्त':'Retired',
-    'गृहिणी':'Homemaker','व्यवसायी':'Businessman','नौकरीपेशा':'Professional',
-    'श्रमिक':'Laborer','प्रोफेसर':'Professor','बॉस':'Boss','अधीनस्थ':'Subordinate',
-    'ग्राहक':'Customer','भागीदार':'Partner','सबसे अच्छा दोस्त':'Best Friend',
-    'परिचित':'Acquaintance','अजनबी':'Stranger','पड़ोसी':'Neighbor',
-    'रूममेट':'Roommate','फ्लैटमेट':'Flatmate','सहपाठी':'Classmate',
-    'बैचमेट':'Batchmate','प्रिंसिपल':'Principal','डीन':'Dean','चांसलर':'Chancellor',
-    'वाइस चांसलर':'Vice Chancellor','रजिस्ट्रार':'Registrar','परीक्षक':'Examiner',
-    'परीक्षार्थी':'Examinee','उम्मीदवार':'Candidate','आवेदक':'Applicant',
-    'भर्तीकर्ता':'Recruiter','साक्षात्कारकर्ता':'Interviewer',
-    'साक्षात्कारार्थी':'Interviewee','प्रशिक्षक':'Trainer','संरक्षक':'Mentor',
-    'शागिर्द':'Mentee','शिष्य':'Disciple','नेता':'Leader','अनुयायी':'Follower',
-    'रिसेप्शनिस्ट':'Receptionist','क्लर्क':'Clerk','खजांची':'Cashier',
-    'सामान्यज्ञ':'Generalist','तकनीशियन':'Technician','कोडर':'Coder',
-    'वास्तुकार':'Architect','योजनाकार':'Planner','रणनीतिकार':'Strategist',
-    'प्रशासक':'Administrator','समन्वयक':'Coordinator','आयोजक':'Organizer',
-    'पर्यवेक्षक':'Supervisor','निरीक्षक':'Inspector','लेखा परीक्षक':'Auditor',
-    'नियामक':'Regulator','प्रवर्तक':'Enforcer','मजिस्ट्रेट':'Magistrate',
-    'अटॉर्नी':'Attorney','वकील':'Advocate','बैरिस्टर':'Barrister',
-    'सॉलिसिटर':'Solicitor','अभियोजक':'Prosecutor','बचाव पक्ष':'Defendant',
-    'वादी':'Plaintiff','प्रतिवादी':'Respondent','याचिकाकर्ता':'Petitioner',
-    'गवाह':'Witness','जूरी':'Jury','कांस्टेबल':'Constable','इंस्पेक्टर':'Inspector',
-    'सुपरिटेंडेंट':'Superintendent','आयुक्त':'Commissioner','जासूस':'Detective',
-    'जांचकर्ता':'Investigator','सुरक्षा गार्ड':'Security Guard','चौकीदार':'Watchman',
-    'दरबान':'Gatekeeper','अटेंडेंट':'Attendant','सहायक':'Helper','नौकर':'Servant',
-    'नौकरानी':'Maid','ड्राइवर':'Driver','चालक':'Driver','पायलट':'Pilot',
-    'कप्तान':'Captain','नाविक':'Sailor','कमांडर':'Commander','जनरल':'General',
-    'एडमिरल':'Admiral','मार्शल':'Marshal','राजा':'King','रानी':'Queen',
-    'राजकुमार':'Prince','राजकुमारी':'Princess','सम्राट':'Emperor',
-    'महारानी':'Empress','राष्ट्रपति':'President','प्रधान मंत्री':'Prime Minister',
-    'मंत्री':'Minister','राज्यपाल':'Governor','मेयर':'Mayor','पार्षद':'Councilor',
-    'सांसद':'MP','विधायक':'MLA','राजनेता':'Politician','नौकरशाह':'Bureaucrat',
-    'राजनयिक':'Diplomat','राजदूत':'Ambassador','वाणिज्य दूत':'Consul',
-    'प्रतिनिधि':'Delegate','दूत':'Envoy','संदेशवाहक':'Messenger','हेराल्ड':'Herald',
-    'उद्घोषक':'Announcer','प्रस्तुतकर्ता':'Presenter','मेजबान':'Host',
-    'श्रोता':'Listener','पाठक':'Reader','सब्सक्राइबर':'Subscriber',
-    'उपभोक्ता':'Consumer','व्यापारी':'Trader','व्यापारी':'Merchant',
-    'दुकानदार':'Shopkeeper','फेरीवाला':'Hawker','व्यापारी':'Businessman',
-    'उद्योगपति':'Industrialist','उत्पादक':'Producer','थोक व्यापारी':'Wholesaler',
-    'खुदरा विक्रेता':'Retailer','मध्यस्थ':'Middleman','कार्यकर्ता':'Activist',
-    'भक्त':'Devotee','तीर्थयात्री':'Pilgrim','यात्री':'Passenger','आगंतुक':'Visitor',
-    'प्रवासी':'Emigrant','बाहरी व्यक्ति':'Outsider','अंदरूनी सूत्र':'Insider',
-    'देशी':'Native','आदिवासी':'Indigenous','जनजातीय':'Tribal','ग्रामीण':'Villager',
-    'शहरी':'Urbanite','महानगरीय':'Cosmopolitan','प्रांतीय':'Provincial',
-    'सार्वभौमिक':'Universal','वैश्विक':'Worldwide','विदेशी':'Overseas',
-    'सीमापार':'Cross Border','ऑफशोर':'Offshore','ऑनशोर':'Onshore',
-    'अंतर्देशीय':'Inland','तटीय':'Coastal','समुद्री':'Maritime',
-    'महाद्वीपीय':'Continental','द्वीपीय':'Insular','प्रायद्वीपीय':'Peninsular',
-    'पर्वतीय':'Mountainous','पहाड़ी':'Hilly','मैदानी':'Plain','रेगिस्तानी':'Desert',
-    'वनाच्छादित':'Forested','जंगली':'Wild','उपनगरीय':'Suburban','दूरस्थ':'Remote',
-    'पृथक':'Isolated','सुलभ':'Accessible','दुर्गम':'Inaccessible',
-    'सुविधाजनक':'Convenient','असुविधाजनक':'Inconvenient','आरामदायक':'Comfortable',
-    'असुविधाजनक':'Uncomfortable','शानदार':'Luxurious','सादा':'Plain',
-    'विस्तृत':'Elaborate','अलंकृत':'Ornate','सजावटी':'Decorative',
-    'कार्यात्मक':'Functional','व्यावहारिक':'Practical','सैद्धांतिक':'Theoretical',
-    'अमूर्त':'Abstract','ठोस':'Concrete','मूर्त':'Tangible','अमूर्त':'Intangible',
-    'भौतिक':'Physical','आभासी':'Virtual','डिजिटल':'Digital','एनालॉग':'Analog',
-    'इलेक्ट्रॉनिक':'Electronic','यांत्रिक':'Mechanical','विद्युत':'Electrical',
-    'हाइड्रोलिक':'Hydraulic','वायवीय':'Pneumatic','थर्मल':'Thermal',
-    'परमाणु':'Nuclear','सौर':'Solar','पवन':'Wind','जल':'Hydro','भूतापीय':'Geothermal',
-    'जैव':'Bio','रासायनिक':'Chemical','जैविक':'Organic','अकार्बनिक':'Inorganic',
-    'धातु':'Metallic','अधातु':'Non Metallic','सिरेमिक':'Ceramic','लकड़ी':'Wooden',
-    'कागज':'Paper','कपड़ा':'Textile','पत्थर':'Stone','कंक्रीट':'Concrete',
-    'इस्पात':'Steel','लोहा':'Iron','तांबा':'Copper','एल्यूमीनियम':'Aluminum',
-    'जस्ता':'Zinc','सीसा':'Lead','टिन':'Tin','निकल':'Nickel','क्रोम':'Chrome',
-    'चांदी':'Silver','सोना':'Gold','प्लैटिनम':'Platinum','हीरा':'Diamond',
-    'ग्रेफाइट':'Graphite','कार्बन':'Carbon','ऑक्सीजन':'Oxygen','हाइड्रोजन':'Hydrogen',
-    'नाइट्रोजन':'Nitrogen','हीलियम':'Helium','नियॉन':'Neon','आर्गन':'Argon',
-    'क्लोरीन':'Chlorine','फ्लोरीन':'Fluorine','आयोडीन':'Iodine','सल्फर':'Sulfur',
-    'फास्फोरस':'Phosphorus','सोडियम':'Sodium','पोटेशियम':'Potassium',
-    'कैल्शियम':'Calcium','मैग्नीशियम':'Magnesium','मैंगनीज':'Manganese',
-    'कोबाल्ट':'Cobalt','क्रोमियम':'Chromium','वैनेडियम':'Vanadium',
-    'टाइटेनियम':'Titanium','स्कैंडियम':'Scandium','गैलियम':'Gallium',
-    'जर्मेनियम':'Germanium','आर्सेनिक':'Arsenic','सेलेनियम':'Selenium',
-    'ब्रोमीन':'Bromine','क्रिप्टन':'Krypton','जेनॉन':'Xenon','रेडॉन':'Radon',
-    'यूरेनियम':'Uranium','प्लूटोनियम':'Plutonium','थोरियम':'Thorium',
-    'रेडियम':'Radium','पोलोनियम':'Polonium','एक्टिनियम':'Actinium',
-    'प्रोटैक्टीनियम':'Protactinium','नेप्ट्यूनियम':'Neptunium',
-    'अमेरिकियम':'Americium','क्यूरियम':'Curium','बर्केलियम':'Berkelium',
-    'कैलीफोर्नियम':'Californium','आइंस्टीनियम':'Einsteinium','फर्मियम':'Fermium',
-    'मेंडेलीवियम':'Mendelevium','नोबेलियम':'Nobelium','लॉरेंसियम':'Lawrencium',
-    'रदरफोर्डियम':'Rutherfordium','डब्नियम':'Dubnium','सीबोर्गियम':'Seaborgium',
-    'बोरियम':'Bohrium','हैसियम':'Hassium','मेइट्नेरियम':'Meitnerium',
-    'डार्मस्टेडियम':'Darmstadtium','रोएंटजेनियम':'Roentgenium',
-    'कॉपरनिकियम':'Copernicium','निहोनियम':'Nihonium','फ्लेरोवियम':'Flerovium',
-    'मोस्कोवियम':'Moscovium','लिवरमोरियम':'Livermorium','टेनेसीन':'Tennessine',
-    'ओगनेसन':'Oganesson','लैंथेनम':'Lanthanum','सीरियम':'Cerium',
-    'प्रेजोडिमियम':'Praseodymium','नियोडिमियम':'Neodymium','प्रोमेथियम':'Promethium',
-    'समेरियम':'Samarium','यूरोपियम':'Europium','गैडोलिनियम':'Gadolinium',
-    'टर्बियम':'Terbium','डिस्प्रोसियम':'Dysprosium','होल्मियम':'Holmium',
-    'अर्बियम':'Erbium','थुलियम':'Thulium','इटर्बियम':'Ytterbium',
-    'लुटेटियम':'Lutetium','हैफनियम':'Hafnium','टैंटलम':'Tantalum',
-    'टंगस्टन':'Tungsten','रेनियम':'Rhenium','ऑस्मियम':'Osmium','इरिडियम':'Iridium',
-    'पारा':'Mercury','थैलियम':'Thallium','बिस्मथ':'Bismuth','एस्टैटिन':'Astatine',
-    'फ्रैंशियम':'Francium','शक्तियां':'Strengths','कमजोरियां':'Weaknesses',
-    'छुपा गुण':'Hidden Talent','व्यवहार':'Behavior','व्यक्तित्व झलक':'Personality Glimpse',
-    'सर्वश्रेष्ठ क्षेत्र':'Best Field','नौकरी vs व्यापार':'Job vs Business',
-    'सफलता की आयु':'Age of Success','धन वृद्धि':'Wealth Growth',
-    'प्रेम स्वभाव':'Love Nature','विवाह का समय':'Marriage Time',
-    'विवाह प्रकार':'Marriage Type','रिश्ते का पैटर्न':'Relationship Pattern',
-    'जीवन टाइमलाइन':'Life Timeline','5 साल का भविष्य':'5 Year Future',
-    'जीवन की चुनौतियां':'Life Challenges','विशेष उपाय':'Special Remedies',
-    'विशेष रहस्योद्घाटन':'Special Revelation','शुभ कारक':'Lucky Factors',
-    'करियर संकेत':'Career Hints','प्रेम संकेत':'Love Hints',
-    'व्यक्तिगत जानकारी':'Personal Information','ज्योतिषीय जानकारी':'Astrological Info',
-    'ग्रहों की स्थिति':'Planetary Positions','भाव फल':'House Results'
+  /* Single words */
+  'साल':'Year','मकर':'Capricorn','मीन':'Pisces','दिन':'Day',
+  'धनु':'Sagittarius','मेष':'Aries','वृष':'Taurus','होम':'Home',
+  'सिंह':'Leo','कर्क':'Cancer','उपाय':'Remedies','राशि':'Zodiac',
+  'कुंभ':'Aquarius','तुला':'Libra','अन्य':'Other','/माह':'/month',
+  '/साल':'/year','6 माह':'6 Months','मासिक':'Monthly','महीना':'Month',
+  'मिथुन':'Gemini','कन्या':'Virgo','कस्टम':'Custom','महिला':'Female',
+  'चुनें':'Select','मुफ्त':'Free','पुरुष':'Male','वापस':'Back',
+  'नाम':'Name','वर्ष':'years','बेटे':'son','बेटी':'daughter','बच्चे':'child',
+  'नवजात':'newborn','महीने के':'months old',
+
+  /* Phrases — longer ones first (important for tx() matching) */
+  'वैदिक ज्योतिष का सटीक संगम':'The Science of Vedic Astrology',
+  '✨ ग्रह · नक्षत्र · कुंडली · भविष्यफल ✨':'✨ Planets · Stars · Kundli · Horoscope ✨',
+  '🔮 भविष्य जानने की तैयारी हो रही है...':'🔮 Preparing your cosmic reading...',
+  '⭐ ग्रहों की स्थिति जांची जा रही है...':'⭐ Analyzing planetary positions...',
+  '✨ कुंडली तैयार हो रही है...':'✨ Preparing your Kundli...',
+  '🔮 Bhavishya Dekho — भविष्य बन रहा है...':'🔮 Bhavishya Dekho — Building your future...',
+  'ग्रहों की स्थिति का विश्लेषण हो रहा है':'Analyzing your planetary positions...',
+  'AI आपकी 10 साल की Timeline देख रहा है...':'AI is preparing your 10-year timeline...',
+  'जन्म तिथि से नक्षत्र स्वतः पहचाना जाएगा':'Nakshatra auto-detected from birth date',
+  'नाम से राशि auto-detect • 24 घंटे valid':'Auto-detect zodiac from name • Valid 24 hours',
+  'Auto Detect — राशि रिपोर्ट में दिखेगी':'Auto Detect — Zodiac shown in report',
+  '✅ राशि auto-detect होगी':'✅ Zodiac will be auto-detected',
+  'सिर्फ ₹5 में सटीक राशि जानें':'Know Accurate Zodiac for just ₹5',
+  '⏰ 24 घंटे के लिए सक्रिय':'⏰ Active for 24 hours',
+  'नाम से राशि auto-detect • 24hr valid':'Auto-detect zodiac from name • 24hr valid',
+
+  /* Nav & Menu */
+  '← वापस':'← Back','▼ और देखें':'▼ See More','▲ कम दिखाएं':'▲ Show Less',
+  'होम':'Home','दैनिक राशिफल':'Daily Horoscope','मासिक राशिफल':'Monthly Horoscope',
+  'वार्षिक राशिफल':'Yearly Horoscope','कुंडली मिलान':'Kundli Matching',
+  'रत्न सुझाव':'Gemstone Guide','उपाय':'Remedies',
+  'मेरी रिपोर्ट्स (हिस्ट्री)':'My Reports (History)',
+  'हमारे बारे में':'About Us','संपर्क करें':'Contact Us',
+  'गोपनीयता नीति':'Privacy Policy','नियम और शर्तें':'Terms & Conditions',
+  'प्रीमियम प्लान':'Premium Plan','सब्सक्राइब करें':'Subscribe',
+
+  /* Feature cards */
+  'लव कैलकुलेटर':'Love Calculator','विस्तृत कुंडली':'Detailed Kundli',
+  'प्रीमियम कुंडली':'Premium Kundli','प्यार का प्रतिशत जानें':'Calculate Love %',
+  'आज का भविष्यफल':"Today's Prediction",'जीवन विश्लेषण':'Life Analysis',
+  'संपूर्ण जीवन दर्शन':'Complete Life Reading',
+
+  /* Form labels */
+  'नाम *':'Name *','लिंग *':'Gender *','जन्म तिथि *':'Date of Birth *',
+  'जन्म समय *':'Birth Time *','जन्म स्थान *':'Birth Place *',
+  'जन्म तिथि':'Date of Birth','जन्म समय':'Birth Time','जन्म स्थान':'Birth Place',
+  'लिंग':'Gender','आपका नाम *':'Your Name *','आपका नाम':'Your name',
+  'अपना नाम':'Your Name','साथी का नाम *':"Partner's Name *",
+  'साथी का नाम':"Partner's name",'अपना नाम लिखें':'Enter your name',
+  'जन्म स्थान दर्ज करें':'Enter Birth Place','शहर का नाम':'City name',
+  'समय':'Time','दिन':'Day','महीना':'Month','आयु':'Age','वार':'Weekday',
+
+  /* Select options */
+  '-- अपनी राशि चुनें --':'-- Select your zodiac --',
+  'अपनी राशि चुनें':'Select Your Zodiac','राशि चुनें':'Select Zodiac',
+  'लिंग चुनें':'Select Gender',
+
+  /* Zodiac names */
+  'मेष (Aries)':'Aries','वृष (Taurus)':'Taurus','मिथुन (Gemini)':'Gemini',
+  'कर्क (Cancer)':'Cancer','सिंह (Leo)':'Leo','कन्या (Virgo)':'Virgo',
+  'तुला (Libra)':'Libra','वृश्चिक (Scorpio)':'Scorpio','धनु (Sagittarius)':'Sagittarius',
+  'मकर (Capricorn)':'Capricorn','कुंभ (Aquarius)':'Aquarius','मीन (Pisces)':'Pisces',
+  'वृश्चिक':'Scorpio',
+
+  /* Days */
+  'मंगलवार':'Tuesday','शुक्रवार':'Friday','बुधवार':'Wednesday',
+  'सोमवार':'Monday','रविवार':'Sunday','गुरुवार':'Thursday','शनिवार':'Saturday',
+
+  /* Months */
+  'जनवरी':'January','फरवरी':'February','मार्च':'March','अप्रैल':'April',
+  'मई':'May','जून':'June','जुलाई':'July','अगस्त':'August',
+  'सितंबर':'September','अक्टूबर':'October','नवंबर':'November','दिसंबर':'December',
+
+  /* Panchang */
+  'तिथि':'Date','नक्षत्र':'Nakshatra',
+
+  /* Buttons & CTAs */
+  'मेरा भविष्य देखें (मुफ्त)':'See My Future (Free)',
+  'मेरा भविष्य देखें':'See My Future',
+  'मुफ्त भविष्यफल देखें':'Get Free Prediction',
+  'राशिफल देखें':'View Horoscope',
+  'लव परसेंटेज देखें':'See Love %',
+  '💕 मिलान करें':'💕 Match Now',
+  '🔮 भविष्य देखें':'🔮 See Future',
+  '🗑️ साफ़ करें':'🗑️ Clear','🗑️ पूरी History साफ़ करें':'🗑️ Clear All History',
+  'शेयर करें':'Share','📲 शेयर करें':'📲 Share',
+  '📲 Share करें — 1 और मुफ्त पाएं':'📲 Share — Get 1 more free',
+  '📲 इस रिपोर्ट को शेयर करें':'📲 Share this report',
+  '📲 दोस्तों के साथ शेयर करें':'📲 Share with friends',
+  '🔁 दोस्तों के साथ शेयर करें':'🔁 Share with friends',
+  '🙏 कृपया हमें सपोर्ट करें':'🙏 Please support us',
+  'दान करें':'Donate',
+  'प्रीमियम प्लान देखें':'View Premium Plan',
+  '✨ प्रीमियम प्लान':'✨ Premium Plan',
+  'संपर्क करें':'Contact Us',
+
+  /* Payment */
+  '💳 भुगतान करें':'💳 Make Payment',
+  '🔐 सुरक्षित भुगतान करें':'🔐 Secure Payment',
+  'भुगतान प्रक्रिया जारी...':'Processing payment...',
+  '100% Secure Payment — भुगतान होते ही सेवा तुरंत मिलेगी!':'100% Secure Payment — Service activated instantly!',
+  'सभी payment methods accept होते हैं':'All payment methods accepted',
+  'लिंक कॉपी करें':'Copy Link',
+
+  /* Kundli report labels */
+  'व्यक्तिगत जानकारी':'Personal Information',
+  'ज्योतिषीय जानकारी':'Astrological Information',
+  'ग्रहों की स्थिति':'Planetary Positions',
+  'भाव फल':'House Results',
+  'विशेष उपाय':'Special Remedies',
+  'शुभ अंक और रंग':'Lucky Numbers & Colors',
+  'शुभ अंक':'Lucky Numbers','शुभ रंग':'Lucky Colors',
+  'शुभ दिन':'Lucky Day','शुभ दिशा':'Lucky Direction',
+  'शुभ समय':'Auspicious Time','शुभ मुहूर्त':'Auspicious Time',
+  'कुंडली रिपोर्ट':'Kundli Report',
+  'विस्तृत कुंडली रिपोर्ट':'Detailed Kundli Report',
+  'प्रीमियम कुंडली रिपोर्ट':'Premium Kundli Report',
+  'विस्तृत रिपोर्ट':'Detailed Report',
+  'मुफ्त कुंडली':'Free Kundli',
+
+  /* House names */
+  'प्रथम भाव':'1st House','द्वितीय भाव':'2nd House','तृतीय भाव':'3rd House',
+  'चतुर्थ भाव':'4th House','पंचम भाव':'5th House','षष्ठ भाव':'6th House',
+  'सप्तम भाव':'7th House','अष्टम भाव':'8th House','नवम भाव':'9th House',
+  'दशम भाव':'10th House','एकादश भाव':'11th House','द्वादश भाव':'12th House',
+  'तनु भाव':'Tanu Bhav (Self)','धन भाव':'Dhan Bhav (Wealth)',
+  'सहज भाव':'Sahaj Bhav (Siblings)','सुख भाव':'Sukh Bhav (Happiness)',
+  'पुत्र भाव':'Putra Bhav (Children)','रिपु भाव':'Ripu Bhav (Enemies)',
+  'कलत्र भाव':'Kalatra Bhav (Spouse)','आयु भाव':'Aayu Bhav (Longevity)',
+  'भाग्य भाव':'Bhagya Bhav (Fortune)','कर्म भाव':'Karma Bhav (Career)',
+  'लाभ भाव':'Labh Bhav (Gains)','व्यय भाव':'Vyay Bhav (Expenses)',
+
+  /* Planets */
+  'सूर्य':'Sun','चंद्र':'Moon','मंगल':'Mars','बुध':'Mercury',
+  'गुरु':'Jupiter','शुक्र':'Venus','शनि':'Saturn',
+  'चंद्र राशि':'Moon Sign','सूर्य राशि':'Sun Sign',
+
+  /* Bhav section */
+  'शरीर, स्वभाव, व्यक्तित्व':'Body, Nature, Personality',
+  'धन, परिवार, वाणी':'Wealth, Family, Speech',
+  'साहस, भाई-बहन, पराक्रम':'Courage, Siblings, Valor',
+  'माता, सुख, वाहन':'Mother, Happiness, Vehicle',
+  'बुद्धि, संतान, मंत्र':'Intellect, Children, Mantras',
+  'शत्रु, रोग, ऋण':'Enemies, Disease, Debt',
+  'विवाह, व्यापार, भागीदारी':'Marriage, Business, Partnership',
+  'आयु, रहस्य, मृत्यु':'Longevity, Secrets, Death',
+  'भाग्य, गुरु, धर्म':'Fortune, Guru, Dharma',
+  'कर्म, पिता, मान':'Karma, Father, Honor',
+  'लाभ, आय, इच्छा':'Gains, Income, Desires',
+  'व्यय, मोक्ष, दान':'Expenses, Moksha, Charity',
+
+  /* Premium section */
+  'प्रीमियम में बनें एड-फ्री':'Go Ad-Free with Premium',
+  'बिना किसी रुकावट के ज्योतिषीय सेवाओं का लाभ उठाएं':'Enjoy astrological services without interruption',
+  'एड-फ्री अनुभव':'Ad-Free Experience','एड-फ्री':'Ad-Free',
+  'बिना रुकावट':'No interruptions',
+  '₹19 वाली कुंडली':'₹19 Kundli','₹49 वाली कुंडली':'₹49 Kundli',
+  '4 बार मुफ्त':'4 times free','3 बार मुफ्त':'3 times free',
+  '8 बार मुफ्त':'8 times free','5 बार मुफ्त':'5 times free',
+  '10 बार':'10 times','20 बार':'20 times','30 बार':'30 times',
+  '12 माह':'12 months','/6 माह':'/6 months',
+  'मुफ्त भविष्य —':'Free Prediction —','लव कैलकुलेटर —':'Love Calculator —',
+  'दैनिक राशिफल —':'Daily Horoscope —',
+  'विशेष रत्न सुझाव':'Special Gemstone Guide',
+  'दैनिक राशिफल नोटिफिकेशन':'Daily Horoscope Notification',
+  'प्राथमिकता समर्थन':'Priority Support',
+  'सभी प्रीमियम प्लान में ऑटो-नवीनीकरण की सुविधा':'All premium plans include auto-renewal',
+  'प्रीमियम में मिलेंगे ये अतिरिक्त लाभ':'Additional Benefits in Premium',
+  'आपके Premium लाभ':'Your Premium Benefits',
+  'आप प्रीमियम सदस्य हैं':'You are a Premium Member',
+  '6 माह':'6 Months','/माह':'/month','/साल':'/year',
+
+  /* Result / prediction */
+  '📋 विस्तृत भविष्यफल':'📋 Detailed Prediction',
+  '🏠 भाव अनुसार फल':'🏠 House Results',
+  '🍀 शुभ अंक एवं रंग':'🍀 Lucky Numbers & Colors',
+  '🔮 भविष्यफल':'🔮 Prediction',
+  '🔮 मुख्य भविष्यवाणी':'🔮 Main Prediction',
+  '【 विस्तृत भविष्यफल 】':'【 Detailed Prediction 】',
+  '【 व्यक्तिगत जानकारी 】':'【 Personal Information 】',
+  'प्रीमियम कुंडली में पाएं और भी विस्तृत जानकारी':'Get even more detail in Premium Kundli',
+  '👑 और विस्तृत जानकारी?':'👑 Want more details?',
+  'में रिपोर्ट खरीदें':'Buy Report',
+  'में प्रीमियम रिपोर्ट खरीदें':'Buy Premium Report',
+
+  /* Upsell */
+  '📜 ₹19 विस्तृत कुंडली':'📜 ₹19 Detailed Kundli',
+  '👑 ₹49 प्रीमियम कुंडली':'👑 ₹49 Premium Kundli',
+  '📜 ₹19 कुंडली':'📜 ₹19 Kundli',
+  '👑 ₹49 प्रीमियम':'👑 ₹49 Premium',
+  '₹19 — 4 बार':'₹19 — 4 times','₹49 — 3 बार':'₹49 — 3 times',
+  'मुफ्त प्रीमियम':'Free Premium',
+  'ग्रह उपाय':'Planetary Remedies','ग्रहों के उपाय':'Planetary Remedies',
+  'दशा विश्लेषण':'Dasha Analysis',
+  'प्राथमिकता':'Priority','तेज सहायता':'Fast Support',
+  '5 साल का भविष्य':'5-Year Future','अगले 3–6 महीने':'Next 3-6 Months',
+  'जीवन टाइमलाइन':'Life Timeline','12 भाव फल':'12 House Results',
+  'शुभ कारक':'Lucky Factors',
+
+  /* Kundli comparison */
+  'विस्तृत कुंडली (₹19)':'Detailed Kundli (₹19)',
+  'प्रीमियम कुंडली (₹49)':'Premium Kundli (₹49)',
+  'फ्री भविष्य':'Free Prediction',
+  '12 भावों का फल':'12 House Results',
+  '12 भावों का विस्तृत फल':'Detailed 12 House Results',
+  'राशि और नक्षत्र':'Zodiac & Nakshatra',
+  'करियर भविष्यवाणी':'Career Prediction',
+  'प्रेम और विवाह':'Love & Marriage',
+  'दोष निवारण':'Dosha Removal','दोष निवारण के उपाय':'Dosha Removal Remedies',
+  'दोष निवारण के लिए सरल उपाय':'Simple Remedies for Dosha Removal',
+  'व्यक्तिगत रत्न सिफारिशें':'Personal Gemstone Recommendations',
+  'विशेषज्ञ ज्योतिषी से सलाह':'Expert Astrologer Advice',
+  'ग्रहों की विस्तृत स्थिति':'Detailed Planetary Positions',
+  'ग्रहों की स्थिति नहीं':'No Planetary Positions',
+  'आपकी सटीक राशि और नक्षत्र की जानकारी':'Your Accurate Zodiac & Nakshatra Info',
+  '9 ग्रहों की विस्तृत स्थिति और प्रभाव':'Position & Effect of 9 Planets',
+  'सभी 12 भावों का विस्तृत विश्लेषण':'Detailed Analysis of all 12 Houses',
+  'प्रेम जीवन और विवाह की संभावनाएं':'Love Life & Marriage Possibilities',
+  'महत्वपूर्ण कार्यों के लिए शुभ समय':'Auspicious Time for Important Tasks',
+  'नौकरी और व्यवसाय में उन्नति के योग':'Career & Business Growth Prospects',
+  'शुभ समय और मुहूर्त':'Auspicious Time & Muhurta',
+  'करियर, प्रेम, धन फल':'Career, Love & Money',
+  'संपूर्ण जीवन विश्लेषण':'Complete Life Analysis',
+  'सामान्य भविष्यवाणी':'General Prediction',
+  'आपकी कुंडली के अनुसार भविष्यफल':'Prediction as per your Kundli',
+  'व्यक्तिगत राशिफल':'Personal Horoscope',
+  'जीवन विश्लेषण':'Life Analysis',
+
+  /* Love calculator */
+  '❤️ प्यार का प्रतिशत जानें':'❤️ Calculate Love %',
+  'साथी की राशि':'Partner Zodiac',
+  '👰 वधू':'👰 Bride','🤵 वर':'🤵 Groom',
+  'गुण मिलान':'Guna Milan',
+  '🌟 उत्कृष्ट मिलान!':'🌟 Excellent Match!',
+  '✅ अच्छा मिलान।':'✅ Good Match.',
+  '⚠️ सावधानी आवश्यक।':'⚠️ Caution Advised.',
+  'कुंडली मिलान':'Kundli Matching',
+
+  /* Horoscope section */
+  'आज का राशिफल':'Today\'s Horoscope',
+  'इस महीने':'This Month',
+  '☀️ दैनिक राशिफल':'☀️ Daily Horoscope',
+  '📆 मासिक राशिफल':'📆 Monthly Horoscope',
+  '📅 वार्षिक राशिफल':'📅 Yearly Horoscope',
+  'आज का भविष्यफल':"Today's Prediction",
+  'लोड हो रहा है...':'Loading...',
+  '⏳ लोड हो रहा है...':'⏳ Loading...',
+  '🔮 ग्रहों की स्थिति देखी जा रही है...':'🔮 Reading planetary positions...',
+  '🔮 भविष्य देखा जा रहा है...':'🔮 Preparing your future...',
+
+  /* Timeline */
+  'आपकी भविष्य की Timeline':'Your Future Timeline',
+  '⏳ आपकी भविष्य की Timeline':'⏳ Your Future Timeline',
+  'अगले 1 साल':'Next 1 Year','अगले 5 साल':'Next 5 Years','अगले 10 साल':'Next 10 Years',
+
+  /* Revisit message */
+  'आज का भविष्यफल यही है!':'This is your prediction for today!',
+  'ध्यान दें:':'Note:',
+  'ग्रह-नक्षत्र हर दिन बदलते हैं — इसलिए कल का भविष्यफल आज से बिल्कुल अलग हो सकता है।':'Planetary positions change every day — so tomorrow\'s prediction will be different from today\'s.',
+  'रोज़ भविष्य देखते रहें':'Check your future daily',
+  'और जानें कि ग्रह आपके लिए क्या लेकर आ रहे हैं। जो लोग रोज़ अपना भविष्य देखते हैं, वे जीवन की चुनौतियों के लिए पहले से तैयार रहते हैं!':'and know what the planets have in store for you. People who check daily stay prepared for life\'s challenges!',
+  'Website को Bookmark करें और हर रोज़ अपना भविष्य देखें!':'Bookmark this site & check your future every day!',
+  '📲 Website को Bookmark करें और हर रोज़ अपना भविष्य देखें!':'📲 Bookmark this site & check your future daily!',
+
+  /* Header prediction title */
+  'का भविष्यफल':'\'s Prediction',
+  'वैदिक ज्योतिष':'Vedic Astrology',
+  'जी, आपकी व्यक्तिगत कुंडली':'\'s Personal Kundli Report',
+  'यह रिपोर्ट आपके प्रीमियम प्लान के तहत मुफ्त है':'This report is free under your Premium plan',
+
+  /* History */
+  '📋 मेरी रिपोर्ट्स':'📋 My Reports',
+  'कोई रिपोर्ट नहीं देखी गई':'No reports viewed yet',
+  'कोई रिपोर्ट नहीं मिली':'No reports found',
+  'कोई रिपोर्ट नहीं':'No Reports Found',
+  'अभी तक कोई भविष्यफल नहीं देखा। पहले भविष्य देखें!':'No predictions yet. See your future first!',
+  'मुफ्त भविष्य':'Free Prediction',
+
+  /* Alert / error messages */
+  'कृपया सभी जानकारी भरें':'Please fill all information',
+  'कृपया सभी जानकारी भरें!':'Please fill all information!',
+  'कृपया राशि चुनें':'Please select your zodiac sign',
+  'नाम दर्ज करना आवश्यक है':'Name is required',
+  'कृपया जन्म तिथि भरें':'Please enter date of birth',
+  'कोई history नहीं है':'No history found',
+  'रिपोर्ट नहीं मिली':'Report not found',
+  'कोई भविष्यफल नहीं मिला। पहले भविष्य देखें।':'No prediction found. Please see your future first.',
+  'कोई रिपोर्ट नहीं मिली। पहले कुंडली देखें।':'No report found. Please check kundli first.',
+  'कृपया प्रतीक्षा करें':'Please wait...',
+  'परिणाम तैयार हो रहा है...':'Preparing your result...',
+  'आपका भविष्य तैयार हो रहा है 🌟':'Your future is being prepared 🌟',
+  '⚠️ यह तारीख अभी नहीं आई है। सही जन्म तिथि डालें।':'⚠️ This date is in the future. Please enter correct date of birth.',
+  '⚠️ यह तारीख अभी नहीं आई है!':'⚠️ This date is in the future!',
+
+  /* Misc labels in results */
+  'मुफ्त':'Free','रिपोर्ट':'Report','नक्षत्र':'Nakshatra',
+  'आपकी राशि':'Your Zodiac','आपके लिए भाग्यशाली अंक और रंग':'Your Lucky Numbers & Colors',
+  'दशा विश्लेषण':'Dasha Analysis','करियर, प्रेम, धन फल':'Career, Love & Money',
+  'महत्वपूर्ण कार्य':'Important Tasks',
+  'प्रीमियम सदस्यता के लाभ':'Premium Membership Benefits',
+  'सभी प्रीमियम सुविधाएं':'All Premium Features',
+  '🔱 12 भाव (Houses)':'🔱 12 Houses',
+  'जन्म तिथि चुनें':'Select Birth Date',
+  '₹19 में रिपोर्ट खरीदें':'Buy Report for ₹19',
+  '₹49 में प्रीमियम रिपोर्ट खरीदें':'Buy Premium Report for ₹49',
+  'विस्तृत कुंडली (₹19)':'Detailed Kundli (₹19)',
+  'प्रीमियम कुंडली (₹49)':'Premium Kundli (₹49)',
+  '✨ इस रिपोर्ट में क्या मिलेगा?':"✨ What's in this report?",
+  'अपनी जानकारी दर्ज करें (मुफ्त भविष्य)':'Enter your details (Free Prediction)',
+  'आपके सहयोग से हम और बेहतर सेवाएं दे सकते हैं':'With your support we can serve you better',
+  'यह रिपोर्ट ज्योतिषीय मान्यताओं पर आधारित है।':'This report is based on astrological beliefs.',
+  'यह website केवल मनोरंजन और सामान्य मार्गदर्शन के उद्देश्य से बनाई गई है।':'This website is for entertainment and general guidance only.',
+  '⚠️ यह भविष्यफल वैदिक ज्योतिष पर आधारित है। महत्वपूर्ण निर्णयों के लिए विशेषज्ञ से परामर्श लें।':'⚠️ This prediction is based on Vedic astrology. Consult an expert for important decisions.',
+  '* 5 मिनट के उपयोग के बाद यह विकल्प दिखाई देता है':'* This option appears after 5 minutes of use',
+  'भुगतान प्रक्रिया जारी...':'Processing payment...',
+
+  /* Kundli form auto-detect placeholders */
+  'ऑटो-डिटेक्ट (नाम से)':'Auto-detect (from name)',
+  'ऑटो-डिटेक्ट (तिथि से)':'Auto-detect (from birth date)',
+
+  /* Legal */
+  '✦ सभी payments एक बार के होते हैं':'✦ All payments are one-time',
+  '✦ Report generate होने के बाद refund नहीं होगा':'✦ No refund after report is generated',
+  '✦ हम किसी भी गलत उपयोग के लिए जिम्मेदार नहीं होंगे':'✦ We are not responsible for any misuse',
+  '✦ User को अपनी सही जानकारी भरनी जरूरी है':'✦ User must enter correct information',
+  '✦ यह service केवल digital report के रूप में प्रदान की जाती है':'✦ This service is provided as digital report only',
+  '🌐 भाषा / Language':'🌐 Language',
 };
 
+/* Reverse map EN→HI */
 var E = {};
-Object.keys(H).forEach(function(hi){ E[H[hi]] = hi; });
+Object.keys(H).forEach(function(h){ E[H[h]] = h; });
 
-var _lang='hi', _isEn=false;
-window._currentLangCode='hi'; window._isEn=false;
+/* ── STATE ─────────────────────────────────────────────── */
+var _lang = 'hi', _isEn = false;
+window._currentLangCode = 'hi';
+window._isEn = false;
 
-var USD={basic:0.25,premium:0.60,rashi:0.07,monthly:1.20,sixMonth:6.00,yearly:12.00};
-window.BD_CURRENCY_SETTINGS=USD;
+/* ── USD PRICES ─────────────────────────────────────────── */
+var USD = {basic:0.25,premium:0.60,rashi:0.07,monthly:1.20,sixMonth:6.00,yearly:12.00};
+window.BD_CURRENCY_SETTINGS = USD;
 
-function detectLang(cb){
-  var saved=localStorage.getItem('bd_lang');
-  if(saved==='hi'||saved==='en'){
-    _lang=saved;_isEn=(saved==='en');
-    window._currentLangCode=_lang;window._isEn=_isEn;cb();return;
+/* ── SAFE TRANSLATE — works even before init ────────────── */
+function tx(text, toEn) {
+  if (!text || typeof text !== 'string') return text;
+  var t = text.trim();
+  if (!t) return text;
+  var map = toEn ? H : E;
+  var keys = Object.keys(map).sort(function(a,b){ return b.length - a.length; });
+  var r = text;
+  for (var i = 0; i < keys.length; i++) {
+    var k = keys[i];
+    if (r.indexOf(k) > -1) r = r.split(k).join(map[k]);
   }
-  fetch('https://ipapi.co/json/')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      var eng=['US','GB','CA','AU','NZ','IE','SG','ZA'];
-      _lang=(eng.indexOf(d.country_code)>-1)?'en':'hi';
-      _isEn=(_lang==='en');
-      window._currentLangCode=_lang;window._isEn=_isEn;cb();
-    })
-    .catch(function(){_lang='hi';_isEn=false;window._currentLangCode='hi';window._isEn=false;cb();});
-}
-
-function tx(text, toEn){
-  if(!text||!text.trim())return text;
-  var r=text;
-  var map=toEn?H:E;
-  var keys=Object.keys(map).sort(function(a,b){return b.length-a.length;});
-  keys.forEach(function(k){
-    if(r.indexOf(k)>-1) r=r.split(k).join(map[k]);
-  });
   return r;
 }
 
-function walkDOM(toEn){
-  var skipTags={'SCRIPT':1,'STYLE':1,'META':1,'LINK':1,'NOSCRIPT':1,'SVG':1,'PATH':1};
-  var walker=document.createTreeWalker(
-    document.body, NodeFilter.SHOW_TEXT,
-    {acceptNode:function(n){
-      if(!n.parentElement||skipTags[n.parentElement.tagName])return NodeFilter.FILTER_REJECT;
-      if(!n.nodeValue||!n.nodeValue.trim())return NodeFilter.FILTER_SKIP;
-      return NodeFilter.FILTER_ACCEPT;
-    }}
-  );
-  var nodes=[];
-  var n;
-  while((n=walker.nextNode()))nodes.push(n);
-  nodes.forEach(function(nd){
-    var t=tx(nd.nodeValue,toEn);
-    if(t!==nd.nodeValue)nd.nodeValue=t;
-  });
-  document.querySelectorAll('[placeholder]').forEach(function(el){
-    var t=tx(el.getAttribute('placeholder'),toEn);
-    el.setAttribute('placeholder',t);
-  });
-  document.querySelectorAll('option').forEach(function(o){
-    var t=tx(o.textContent,toEn);
-    if(t!==o.textContent)o.textContent=t;
-  });
-  if(toEn){
-    document.title='Bhavishya Dekho - Free Kundli, Horoscope & Vedic Astrology Online';
-  } else {
-    document.title='Bhavishya Dekho - मुफ्त कुंडली, राशिफल और वैदिक ज्योतिष | Free Kundli Online';
-  }
-}
-
-window.bdTranslateDynamic = function(rootEl){
-  if(!_isEn) return;
-  rootEl = rootEl || document.body;
-  var skipTags={'SCRIPT':1,'STYLE':1,'META':1,'LINK':1,'NOSCRIPT':1,'SVG':1,'PATH':1};
-  var walker=document.createTreeWalker(
-    rootEl, NodeFilter.SHOW_TEXT,
-    {acceptNode:function(n){
-      if(!n.parentElement||skipTags[n.parentElement.tagName])return NodeFilter.FILTER_REJECT;
-      if(!n.nodeValue||!n.nodeValue.trim())return NodeFilter.FILTER_SKIP;
-      return NodeFilter.FILTER_ACCEPT;
-    }}
-  );
-  var nodes=[];var n;
-  while((n=walker.nextNode()))nodes.push(n);
-  nodes.forEach(function(nd){var t=tx(nd.nodeValue,true);if(t!==nd.nodeValue)nd.nodeValue=t;});
-  rootEl.querySelectorAll&&rootEl.querySelectorAll('[placeholder]').forEach(function(el){
-    var t=tx(el.getAttribute('placeholder'),true);el.setAttribute('placeholder',t);
-  });
-  rootEl.querySelectorAll&&rootEl.querySelectorAll('option').forEach(function(o){
-    var t=tx(o.textContent,true);if(t!==o.textContent)o.textContent=t;
-  });
-};
-
-function startObserver(){
-  if(typeof MutationObserver==='undefined')return;
-  var obs=new MutationObserver(function(muts){
-    if(!_isEn)return;
-    muts.forEach(function(m){
-      m.addedNodes.forEach(function(nd){
-        if(nd.nodeType===1){
-          setTimeout(function(){window.bdTranslateDynamic(nd);},120);
-        }
-      });
-    });
-  });
-  obs.observe(document.body,{childList:true,subtree:true});
-}
-
-function pr(type){
-  var p=window._adminPricing||{basic:19,premium:49,rashi:5,monthly:99,sixMonth:499,yearly:999};
-  if(_isEn){
-    var m={basic:USD.basic,premium:USD.premium,rashi:USD.rashi,monthly:USD.monthly,sixMonth:USD.sixMonth,yearly:USD.yearly};
-    return '$'+(m[type]||0).toFixed(2);
-  }
-  var nv={basic:p.basic,premium:p.premium,rashi:p.rashi,monthly:p.monthly,sixMonth:p.sixMonth,yearly:p.yearly};
-  return '₹'+(nv[type]||0);
-}
-
-function applyPricing(){
-  var p=window._adminPricing||{basic:19,premium:49,rashi:5,monthly:99,sixMonth:499,yearly:999};
-  function st(id,t){var e=document.getElementById(id);if(e&&t!==undefined)e.textContent=t;}
-  var buyTxt=_isEn?'Buy Report':'में रिपोर्ट खरीदें';
-  var buyPTxt=_isEn?'Buy Premium Report':'में प्रीमियम रिपोर्ट खरीदें';
-  st('basicKundliPrice',pr('basic'));st('basicKundliBadge',pr('basic'));
-  st('basicKundliBtnText',pr('basic')+' '+buyTxt);
-  st('premiumKundliPrice',pr('premium'));st('premiumKundliBadge',pr('premium'));
-  st('premiumKundliBtnText',pr('premium')+' '+buyPTxt);
-  var bA=_isEn?USD.basic:p.basic, pA=_isEn?USD.premium:p.premium;
-  var bb=document.getElementById('basicKundliBtn');
-  if(bb)bb.setAttribute('onclick',"processKundliPayment("+bA+",'basic')");
-  var pb=document.getElementById('premiumKundliBtn');
-  if(pb)pb.setAttribute('onclick',"processKundliPayment("+pA+",'premium')");
-  var pm=_isEn?'/month':'/माह', ps=_isEn?'/6 months':'/6 माह', py=_isEn?'/year':'/साल';
-  document.querySelectorAll('.premium-card').forEach(function(c){
-    var oc=c.getAttribute('onclick')||'';
-    var pe=c.querySelector('.premium-price');
-    if(oc.indexOf("'monthly'")>-1){
-      if(pe)pe.innerHTML=pr('monthly')+'<small>'+pm+'</small>';
-      c.setAttribute('onclick',"showPremiumPayment("+(_isEn?USD.monthly:p.monthly)+",'monthly')");
-    }else if(oc.indexOf("'6months'")>-1){
-      if(pe)pe.innerHTML=pr('sixMonth')+'<small>'+ps+'</small>';
-      c.setAttribute('onclick',"showPremiumPayment("+(_isEn?USD.sixMonth:p.sixMonth)+",'6months')");
-    }else if(oc.indexOf("'yearly'")>-1){
-      if(pe)pe.innerHTML=pr('yearly')+'<small>'+py+'</small>';
-      c.setAttribute('onclick',"showPremiumPayment("+(_isEn?USD.yearly:p.yearly)+",'yearly')");
-    }
-  });
-  document.querySelectorAll('.kundli-comparison h4').forEach(function(el){
-    var t=el.textContent.trim();
-    if(t.indexOf('फ्री')>-1||t.indexOf('Free Prediction')>-1)
-      el.textContent=_isEn?'Free Prediction':'फ्री भविष्य';
-    else if(t.indexOf('विस्तृत')>-1||t.indexOf('Detailed Kundli')>-1)
-      el.textContent=_isEn?'Detailed Kundli ('+pr('basic')+')':'विस्तृत कुंडली ('+pr('basic')+')';
-    else if(t.indexOf('प्रीमियम')>-1||t.indexOf('Premium Kundli')>-1)
-      el.textContent=_isEn?'Premium Kundli ('+pr('premium')+')':'प्रीमियम कुंडली ('+pr('premium')+')';
-  });
-  document.querySelectorAll('.upsell-btn').forEach(function(el){
-    var oc=el.getAttribute('onclick')||'';
-    if(oc.indexOf('showKundliSection')>-1&&oc.indexOf('Premium')===-1)
-      el.textContent='📜 '+pr('basic')+(_isEn?' Detailed Kundli':' विस्तृत कुंडली');
-    if(oc.indexOf('showPremiumKundliSection')>-1)
-      el.textContent='👑 '+pr('premium')+(_isEn?' Premium Kundli':' प्रीमियम कुंडली');
-  });
-  document.querySelectorAll('.comparison-price').forEach(function(el){
-    var t=el.textContent.trim();
-    if(t==='मुफ्त'||t==='Free')el.textContent=_isEn?'Free':'मुफ्त';
-    else if(t.match(/^[₹\$]/)){
-      if(t.match(/19|0\.25/))el.textContent=pr('basic');
-      else if(t.match(/49|0\.60/))el.textContent=pr('premium');
-    }
-  });
-  document.querySelectorAll('#loveRashiBuyMsg,#horoRashiBuyMsg,#rashiBuyHint').forEach(function(c){
-    var b=c.querySelector('span[style*="border-radius:20px"]');
-    var t=c.querySelector('div[style*="ffd700"]');
-    if(b)b.textContent=pr('rashi');
-    if(t)t.textContent=_isEn?('Just '+pr('rashi')+' for accurate zodiac'):('सिर्फ '+pr('rashi')+' में सटीक राशि जानें');
-  });
-  window._langPricing={basic:bA,premium:pA,currency:_isEn?'USD':'INR'};
-}
-window.applyPricingLang=applyPricing;
-
-function loadUSD(){
-  try{
-    if(typeof database==='undefined')return;
-    database.ref('settings/usdPricing').once('value').then(function(s){
-      var d=s.val();if(!d)return;
-      USD.basic=d.basic||USD.basic;USD.premium=d.premium||USD.premium;
-      USD.rashi=d.rashi||USD.rashi;USD.monthly=d.monthly||USD.monthly;
-      USD.sixMonth=d.sixMonth||USD.sixMonth;USD.yearly=d.yearly||USD.yearly;
-      window.BD_CURRENCY_SETTINGS=USD;
-      if(_isEn)applyPricing();
-    });
-  }catch(e){}
-}
-
-function updateBtns(){
-  var hi=document.getElementById('lang-btn-hi');
-  var en=document.getElementById('lang-btn-en');
-  if(!hi||!en)return;
-  var activeStyle='flex:1;padding:10px 0;border:1.5px solid rgba(255,215,0,0.5);border-radius:12px;background:rgba(255,215,0,0.18);color:#ffd700;font-size:0.88rem;font-weight:700;cursor:pointer;font-family:inherit;';
-  var inactiveStyle='flex:1;padding:10px 0;border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;background:rgba(255,255,255,0.05);color:#aaa;font-size:0.88rem;font-weight:700;cursor:pointer;font-family:inherit;';
-  hi.style.cssText=_isEn?inactiveStyle:activeStyle;
-  en.style.cssText=_isEn?activeStyle:inactiveStyle;
-}
-
-function applyLang(lang){
-  if(lang!=='hi'&&lang!=='en')lang='hi';
-  _lang=lang;_isEn=(lang==='en');
-  window._currentLangCode=lang;window._isEn=_isEn;
-  localStorage.setItem('bd_lang',lang);
-  document.documentElement.lang=lang;
-  window._splashMsgs=_isEn?
-    ['🔮 Preparing your cosmic reading...','⭐ Analyzing planetary positions...','✨ Your horoscope is being prepared...']:
-    ['🔮 भविष्य जानने की तैयारी हो रही है...','⭐ ग्रहों की स्थिति जांची जा रही है...','✨ कुंडली तैयार हो रही है...'];
-  walkDOM(_isEn);
-  applyPricing();
-  updateBtns();
-}
-
-window.bdSetLang = function(lang) { applyLang(lang); };
-window.bdTx = function(text) { if(!text)return text; return _isEn ? tx(text,true) : text; };
+/* Export IMMEDIATELY so script.js can use it any time */
+window.bdTx = function(text) { return _isEn ? tx(text, true) : text; };
 window.bdIsEn = function() { return _isEn; };
 
-function init(){
-  detectLang(function(){
-    setTimeout(function(){
-      if(_isEn)walkDOM(true);
-      applyPricing();
-      updateBtns();
-      loadUSD();
-      startObserver();
-      var hiBtn = document.getElementById('lang-btn-hi');
-      var enBtn = document.getElementById('lang-btn-en');
-      if(hiBtn) hiBtn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); applyLang('hi'); });
-      if(enBtn) enBtn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); applyLang('en'); });
-    },800);
+/* ── WALK ALL DOM NODES — includes hidden elements ──────── */
+function walkAll(toEn) {
+  var skipTags = {SCRIPT:1,STYLE:1,META:1,LINK:1,NOSCRIPT:1,SVG:1,PATH:1,TEXTAREA:1};
+
+  /* ① Walk ALL text nodes including inside hidden elements */
+  function walkNode(root) {
+    var walker = document.createTreeWalker(
+      root, NodeFilter.SHOW_TEXT,
+      {acceptNode: function(n) {
+        if (!n.parentElement) return NodeFilter.FILTER_REJECT;
+        if (skipTags[n.parentElement.tagName]) return NodeFilter.FILTER_REJECT;
+        if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_SKIP;
+        return NodeFilter.FILTER_ACCEPT;
+      }}
+    );
+    var nodes = [], nd;
+    while ((nd = walker.nextNode())) nodes.push(nd);
+    nodes.forEach(function(nd) {
+      var t = tx(nd.nodeValue, toEn);
+      if (t !== nd.nodeValue) nd.nodeValue = t;
+    });
+  }
+
+  walkNode(document.documentElement); /* walk entire page including hidden */
+
+  /* ② Placeholders */
+  document.querySelectorAll('[placeholder]').forEach(function(el) {
+    var t = tx(el.getAttribute('placeholder'), toEn);
+    el.setAttribute('placeholder', t);
+  });
+
+  /* ③ Select options */
+  document.querySelectorAll('option').forEach(function(o) {
+    var t = tx(o.textContent, toEn);
+    if (t !== o.textContent) o.textContent = t;
+  });
+
+  /* ④ Title */
+  document.title = toEn
+    ? 'Bhavishya Dekho - Free Kundli, Horoscope & Vedic Astrology Online'
+    : 'Bhavishya Dekho - मुफ्त कुंडली, राशिफल और वैदिक ज्योतिष | Free Kundli Online';
+}
+
+/* ── TRANSLATE DYNAMICALLY ADDED CONTENT ───────────────── */
+window.bdTranslateDynamic = function(rootEl) {
+  if (!_isEn) return;
+  if (!rootEl || !rootEl.nodeType) return;
+  var skipTags = {SCRIPT:1,STYLE:1,META:1,LINK:1,NOSCRIPT:1,SVG:1,PATH:1,TEXTAREA:1};
+  try {
+    var walker = document.createTreeWalker(
+      rootEl, NodeFilter.SHOW_TEXT,
+      {acceptNode: function(n) {
+        if (!n.parentElement) return NodeFilter.FILTER_REJECT;
+        if (skipTags[n.parentElement.tagName]) return NodeFilter.FILTER_REJECT;
+        if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_SKIP;
+        return NodeFilter.FILTER_ACCEPT;
+      }}
+    );
+    var nodes = [], nd;
+    while ((nd = walker.nextNode())) nodes.push(nd);
+    nodes.forEach(function(nd) {
+      var t = tx(nd.nodeValue, true);
+      if (t !== nd.nodeValue) nd.nodeValue = t;
+    });
+    if (rootEl.querySelectorAll) {
+      rootEl.querySelectorAll('[placeholder]').forEach(function(el) {
+        el.setAttribute('placeholder', tx(el.getAttribute('placeholder'), true));
+      });
+      rootEl.querySelectorAll('option').forEach(function(o) {
+        var t = tx(o.textContent, true);
+        if (t !== o.textContent) o.textContent = t;
+      });
+    }
+  } catch(e) {}
+};
+
+/* ── MUTATION OBSERVER — catches every innerHTML injection ─ */
+var _observer = null;
+function startObserver() {
+  if (typeof MutationObserver === 'undefined') return;
+  if (_observer) return;
+  _observer = new MutationObserver(function(muts) {
+    if (!_isEn) return;
+    muts.forEach(function(m) {
+      m.addedNodes.forEach(function(nd) {
+        if (nd.nodeType === 1) {
+          setTimeout(function() { window.bdTranslateDynamic(nd); }, 80);
+        } else if (nd.nodeType === 3) {
+          /* text node directly added */
+          var t = tx(nd.nodeValue, true);
+          if (t !== nd.nodeValue) nd.nodeValue = t;
+        }
+      });
+      /* Also handle characterData changes */
+      if (m.type === 'characterData' && _isEn) {
+        var t = tx(m.target.nodeValue, true);
+        if (t !== m.target.nodeValue) m.target.nodeValue = t;
+      }
+    });
+  });
+  _observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    characterData: true
   });
 }
 
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',function(){setTimeout(init,600);});
-}else{
-  setTimeout(init,600);
+/* ── PRICE DISPLAY ──────────────────────────────────────── */
+function pr(type) {
+  var p = window._adminPricing || {basic:19,premium:49,rashi:5,monthly:99,sixMonth:499,yearly:999};
+  if (_isEn) {
+    var m = {basic:USD.basic,premium:USD.premium,rashi:USD.rashi,monthly:USD.monthly,sixMonth:USD.sixMonth,yearly:USD.yearly};
+    return '$' + (m[type] || 0).toFixed(2);
+  }
+  return '₹' + (p[type] || 0);
+}
+
+/* ── APPLY PRICING ──────────────────────────────────────── */
+function applyPricing() {
+  var p = window._adminPricing || {basic:19,premium:49,rashi:5,monthly:99,sixMonth:499,yearly:999};
+  function st(id,t){ var e=document.getElementById(id); if(e&&t!==undefined) e.textContent=t; }
+  var buyTxt = _isEn ? 'Buy Report' : 'में रिपोर्ट खरीदें';
+  var buyPTxt = _isEn ? 'Buy Premium Report' : 'में प्रीमियम रिपोर्ट खरीदें';
+  st('basicKundliPrice', pr('basic'));
+  st('basicKundliBadge', pr('basic'));
+  st('basicKundliBtnText', pr('basic') + ' ' + buyTxt);
+  st('premiumKundliPrice', pr('premium'));
+  st('premiumKundliBadge', pr('premium'));
+  st('premiumKundliBtnText', pr('premium') + ' ' + buyPTxt);
+  var bA = _isEn ? USD.basic : p.basic;
+  var pA = _isEn ? USD.premium : p.premium;
+  var bb = document.getElementById('basicKundliBtn');
+  if (bb) bb.setAttribute('onclick', "processKundliPayment("+bA+",'basic')");
+  var pb = document.getElementById('premiumKundliBtn');
+  if (pb) pb.setAttribute('onclick', "processKundliPayment("+pA+",'premium')");
+  var pm = _isEn?'/month':'/माह', ps = _isEn?'/6 months':'/6 माह', py = _isEn?'/year':'/साल';
+  document.querySelectorAll('.premium-card').forEach(function(c) {
+    var oc = c.getAttribute('onclick') || '';
+    var pe = c.querySelector('.premium-price');
+    if (oc.indexOf("'monthly'") > -1) {
+      if (pe) pe.innerHTML = pr('monthly') + '<small>' + pm + '</small>';
+      c.setAttribute('onclick', "showPremiumPayment("+(_isEn?USD.monthly:p.monthly)+",'monthly')");
+    } else if (oc.indexOf("'6months'") > -1) {
+      if (pe) pe.innerHTML = pr('sixMonth') + '<small>' + ps + '</small>';
+      c.setAttribute('onclick', "showPremiumPayment("+(_isEn?USD.sixMonth:p.sixMonth)+",'6months')");
+    } else if (oc.indexOf("'yearly'") > -1) {
+      if (pe) pe.innerHTML = pr('yearly') + '<small>' + py + '</small>';
+      c.setAttribute('onclick', "showPremiumPayment("+(_isEn?USD.yearly:p.yearly)+",'yearly')");
+    }
+  });
+  document.querySelectorAll('.kundli-comparison h4').forEach(function(el) {
+    var t = el.textContent.trim();
+    if (t.indexOf('फ्री') > -1 || t.indexOf('Free Prediction') > -1)
+      el.textContent = _isEn ? 'Free Prediction' : 'फ्री भविष्य';
+    else if (t.indexOf('विस्तृत') > -1 || t.indexOf('Detailed Kundli') > -1)
+      el.textContent = _isEn ? 'Detailed Kundli (' + pr('basic') + ')' : 'विस्तृत कुंडली (' + pr('basic') + ')';
+    else if (t.indexOf('प्रीमियम') > -1 || t.indexOf('Premium Kundli') > -1)
+      el.textContent = _isEn ? 'Premium Kundli (' + pr('premium') + ')' : 'प्रीमियम कुंडली (' + pr('premium') + ')';
+  });
+  document.querySelectorAll('.upsell-btn').forEach(function(el) {
+    var oc = el.getAttribute('onclick') || '';
+    if (oc.indexOf('showKundliSection') > -1 && oc.indexOf('Premium') === -1)
+      el.textContent = '📜 ' + pr('basic') + (_isEn ? ' Detailed Kundli' : ' विस्तृत कुंडली');
+    if (oc.indexOf('showPremiumKundliSection') > -1)
+      el.textContent = '👑 ' + pr('premium') + (_isEn ? ' Premium Kundli' : ' प्रीमियम कुंडली');
+  });
+  document.querySelectorAll('.comparison-price').forEach(function(el) {
+    var t = el.textContent.trim();
+    if (t === 'मुफ्त' || t === 'Free') el.textContent = _isEn ? 'Free' : 'मुफ्त';
+    else if (t.match(/^[₹$]/)) {
+      if (t.match(/19|0\.25/)) el.textContent = pr('basic');
+      else if (t.match(/49|0\.60/)) el.textContent = pr('premium');
+    }
+  });
+  document.querySelectorAll('#loveRashiBuyMsg,#horoRashiBuyMsg,#rashiBuyHint').forEach(function(c) {
+    var b = c.querySelector('span[style*="border-radius:20px"]');
+    var t = c.querySelector('div[style*="ffd700"]');
+    if (b) b.textContent = pr('rashi');
+    if (t) t.textContent = _isEn
+      ? ('Just ' + pr('rashi') + ' for accurate zodiac')
+      : ('सिर्फ ' + pr('rashi') + ' में सटीक राशि जानें');
+  });
+  window._langPricing = {basic:bA, premium:pA, currency:_isEn?'USD':'INR'};
+}
+window.applyPricingLang = applyPricing;
+
+/* ── LOAD USD FROM FIREBASE ─────────────────────────────── */
+function loadUSD() {
+  try {
+    if (typeof database === 'undefined') return;
+    database.ref('settings/usdPricing').once('value').then(function(s) {
+      var d = s.val(); if (!d) return;
+      USD.basic=d.basic||USD.basic; USD.premium=d.premium||USD.premium;
+      USD.rashi=d.rashi||USD.rashi; USD.monthly=d.monthly||USD.monthly;
+      USD.sixMonth=d.sixMonth||USD.sixMonth; USD.yearly=d.yearly||USD.yearly;
+      window.BD_CURRENCY_SETTINGS = USD;
+      if (_isEn) applyPricing();
+    });
+  } catch(e) {}
+}
+
+/* ── UPDATE LANG BUTTONS ────────────────────────────────── */
+function updateBtns() {
+  var hi = document.getElementById('lang-btn-hi');
+  var en = document.getElementById('lang-btn-en');
+  if (!hi || !en) return;
+  var ON  = 'flex:1;padding:10px 0;border:1.5px solid rgba(255,215,0,0.5);border-radius:12px;background:rgba(255,215,0,0.18);color:#ffd700;font-size:0.88rem;font-weight:700;cursor:pointer;font-family:inherit;';
+  var OFF = 'flex:1;padding:10px 0;border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;background:rgba(255,255,255,0.05);color:#aaa;font-size:0.88rem;font-weight:700;cursor:pointer;font-family:inherit;';
+  hi.style.cssText = _isEn ? OFF : ON;
+  en.style.cssText = _isEn ? ON  : OFF;
+}
+
+/* ── DETECT LOCATION ────────────────────────────────────── */
+function detectLang(cb) {
+  var saved = localStorage.getItem('bd_lang');
+  if (saved === 'hi' || saved === 'en') {
+    _lang = saved; _isEn = (saved === 'en');
+    window._currentLangCode = _lang; window._isEn = _isEn;
+    /* Update bdTx immediately after state set */
+    window.bdTx = function(text){ return _isEn ? tx(text, true) : text; };
+    cb(); return;
+  }
+  fetch('https://ipapi.co/json/')
+    .then(function(r){ return r.json(); })
+    .then(function(d) {
+      var eng = ['US','GB','CA','AU','NZ','IE','SG','ZA'];
+      _lang = (eng.indexOf(d.country_code) > -1) ? 'en' : 'hi';
+      _isEn = (_lang === 'en');
+      window._currentLangCode = _lang; window._isEn = _isEn;
+      window.bdTx = function(text){ return _isEn ? tx(text, true) : text; };
+      cb();
+    })
+    .catch(function() {
+      _lang = 'hi'; _isEn = false;
+      window._currentLangCode = 'hi'; window._isEn = false;
+      cb();
+    });
+}
+
+/* ── APPLY LANGUAGE (called when user clicks button) ─────── */
+function applyLang(lang) {
+  if (lang !== 'hi' && lang !== 'en') lang = 'hi';
+  _lang = lang; _isEn = (lang === 'en');
+  window._currentLangCode = lang; window._isEn = _isEn;
+  localStorage.setItem('bd_lang', lang);
+  document.documentElement.lang = lang;
+
+  /* Update bdTx FIRST so any code running after can use it */
+  window.bdTx = function(text){ return _isEn ? tx(text, true) : text; };
+  window.bdIsEn = function(){ return _isEn; };
+
+  window._splashMsgs = _isEn
+    ? ['🔮 Preparing your cosmic reading...','⭐ Analyzing planetary positions...','✨ Your horoscope is being prepared...']
+    : ['🔮 भविष्य जानने की तैयारी हो रही है...','⭐ ग्रहों की स्थिति जांची जा रही है...','✨ कुंडली तैयार हो रही है...'];
+
+  /* Translate entire page including hidden sections */
+  walkAll(_isEn);
+  applyPricing();
+  updateBtns();
+  console.log('✅ Language set:', lang);
+}
+
+/* ── GLOBAL EXPORTS ─────────────────────────────────────── */
+window.bdSetLang = function(lang) { applyLang(lang); };
+window.applyLanguage = window.bdSetLang;
+
+/* ── INIT ───────────────────────────────────────────────── */
+function init() {
+  detectLang(function() {
+    if (_isEn) walkAll(true);
+    applyPricing();
+    updateBtns();
+    loadUSD();
+    startObserver();
+  });
+}
+
+/* Start as early as possible */
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
 }
 
 })();
