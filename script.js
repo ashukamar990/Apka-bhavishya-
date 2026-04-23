@@ -432,23 +432,21 @@
 
         // Clear history
         function clearKundliHistory() {
-            if (confirm('क्या आप सच में हिस्ट्री साफ़ करना चाहते हैं?')) {
-                kundliHistory = [];
-                // localStorage clear
-                try { localStorage.removeItem('bd_hist'); } catch(e) {}
-                try { localStorage.removeItem('kundliHistoryData'); } catch(e) {}
-                // Firebase clear
-                try {
-                    const userId = localStorage.getItem('userId') || generateUserId();
-                    database.ref('users/' + userId + '/kundliHistory').remove();
-                    database.ref('users/' + userId + '/reports').remove();
-                } catch(e) {}
-                // UI update
-                updateKundliHistoryDisplay();
-                renderHistoryPage();
-                alert('✅ हिस्ट्री साफ़ हो गई!');
-            }
-        }
+    var isEn = window._isEn;
+    if (confirm(isEn ? 'Are you sure you want to clear history?' : 'क्या आप सच में हिस्ट्री साफ़ करना चाहते हैं?')) {
+        kundliHistory = [];
+        try { localStorage.removeItem('bd_hist'); } catch(e) {}
+        try { localStorage.removeItem('kundliHistoryData'); } catch(e) {}
+        try {
+            const userId = localStorage.getItem('userId') || generateUserId();
+            database.ref('users/' + userId + '/kundliHistory').remove();
+            database.ref('users/' + userId + '/reports').remove();
+        } catch(e) {}
+        updateKundliHistoryDisplay();
+        renderHistoryPage();
+        alert(isEn ? '✅ History cleared!' : '✅ हिस्ट्री साफ़ हो गई!');
+    }
+}
 
         // Scroll to top
         function scrollToTop() {
@@ -680,79 +678,85 @@
         function updatePanchang() {
             const panchangBar = document.getElementById('panchangBar');
             if (!panchangBar) return;
-            
-            const now = new Date();
-            const days = ['रविवार', 'सोमवार', 'मंगलवार', 'बुधवार', 'गुरुवार', 'शुक्रवार', 'शनिवार'];
-            const months = ['जनवरी', 'फरवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर'];
-            const nakshatras = ['अश्विनी', 'भरणी', 'कृत्तिका', 'रोहिणी', 'मृगशिरा', 'आर्द्रा', 'पुनर्वसु', 'पुष्य', 'अश्लेषा', 'मघा', 'पूर्वाफाल्गुनी', 'उत्तराफाल्गुनी', 'हस्त', 'चित्रा', 'स्वाती', 'विशाखा', 'अनुराधा', 'ज्येष्ठा', 'मूल', 'पूर्वाषाढ़ा', 'उत्तराषाढ़ा', 'श्रवण', 'धनिष्ठा', 'शतभिषा', 'पूर्वाभाद्रपद', 'उत्तराभाद्रपद', 'रेवती'];
-            
-            const items = panchangBar.children;
-            if (items.length >= 4) {
-                items[0].querySelector('.panchang-value').innerText = days[now.getDay()];
-                items[1].querySelector('.panchang-value').innerText = `${now.getDate()} ${months[now.getMonth()]}`;
-                items[2].querySelector('.panchang-value').innerText = nakshatras[now.getDate() % 27];
-                items[3].querySelector('.panchang-value').innerText = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
-            } else {
-                panchangBar.innerHTML = `
-                    <div class="panchang-item">
-                        <div class="panchang-label">वार</div>
-                        <div class="panchang-value">${days[now.getDay()]}</div>
-                    </div>
-                    <div class="panchang-item">
-                        <div class="panchang-label">तिथि</div>
-                        <div class="panchang-value">${now.getDate()} ${months[now.getMonth()]}</div>
-                    </div>
-                    <div class="panchang-item">
-                        <div class="panchang-label">नक्षत्र</div>
-                        <div class="panchang-value">${nakshatras[now.getDate() % 27]}</div>
-                    </div>
-                    <div class="panchang-item">
-                        <div class="panchang-label">समय</div>
-                        <div class="panchang-value">${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}</div>
-                    </div>
-                `;
-            }
-        }
+    
+    var isEn = window._isEn;
+    
+    const now = new Date();
+    const daysHi = ['रविवार', 'सोमवार', 'मंगलवार', 'बुधवार', 'गुरुवार', 'शुक्रवार', 'शनिवार'];
+    const daysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const days = isEn ? daysEn : daysHi;
+    
+    const monthsHi = ['जनवरी', 'फरवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर'];
+    const monthsEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const months = isEn ? monthsEn : monthsHi;
+    
+    const nakshatrasHi = ['अश्विनी', 'भरणी', 'कृत्तिका', 'रोहिणी', 'मृगशिरा', 'आर्द्रा', 'पुनर्वसु', 'पुष्य', 'अश्लेषा', 'मघा', 'पूर्वाफाल्गुनी', 'उत्तराफाल्गुनी', 'हस्त', 'चित्रा', 'स्वाती', 'विशाखा', 'अनुराधा', 'ज्येष्ठा', 'मूल', 'पूर्वाषाढ़ा', 'उत्तराषाढ़ा', 'श्रवण', 'धनिष्ठा', 'शतभिषा', 'पूर्वाभाद्रपद', 'उत्तराभाद्रपद', 'रेवती'];
+    const nakshatrasEn = ['Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashira', 'Ardra', 'Punarvasu', 'Pushya', 'Ashlesha', 'Magha', 'Purva Phalguni', 'Uttara Phalguni', 'Hasta', 'Chitra', 'Swati', 'Vishakha', 'Anuradha', 'Jyeshtha', 'Mula', 'Purva Ashadha', 'Uttara Ashadha', 'Shravana', 'Dhanishta', 'Shatabhisha', 'Purva Bhadrapada', 'Uttara Bhadrapada', 'Revati'];
+    const nakshatras = isEn ? nakshatrasEn : nakshatrasHi;
+    
+    panchangBar.innerHTML = `
+        <div class="panchang-item">
+            <div class="panchang-label">${isEn ? 'Day' : 'वार'}</div>
+            <div class="panchang-value">${days[now.getDay()]}</div>
+        </div>
+        <div class="panchang-item">
+            <div class="panchang-label">${isEn ? 'Tithi' : 'तिथि'}</div>
+            <div class="panchang-value">${now.getDate()} ${months[now.getMonth()]}</div>
+        </div>
+        <div class="panchang-item">
+            <div class="panchang-label">${isEn ? 'Nakshatra' : 'नक्षत्र'}</div>
+            <div class="panchang-value">${nakshatras[now.getDate() % 27]}</div>
+        </div>
+        <div class="panchang-item">
+            <div class="panchang-label">${isEn ? 'Time' : 'समय'}</div>
+            <div class="panchang-value">${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}</div>
+        </div>
+    `;
+}
         updatePanchang();
         setInterval(updatePanchang, 60000); // Har minute update kaafi hai
 
         function initDateFields() {
-            const daySelects = ['dobDay', 'kundliDay', 'premiumKundliDay'];
-            const monthSelects = ['dobMonth', 'kundliMonth', 'premiumKundliMonth'];
-            const yearSelects = ['dobYear', 'kundliYear', 'premiumKundliYear'];
-            
-            for (let i = 1; i <= 31; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i;
-                daySelects.forEach(id => {
-                    const select = document.getElementById(id);
-                    if (select) select.appendChild(option.cloneNode(true));
-                });
-            }
-            
-            const months = ['जनवरी', 'फरवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर'];
-            for (let i = 0; i < 12; i++) {
-                const option = document.createElement('option');
-                option.value = i+1;
-                option.textContent = months[i];
-                monthSelects.forEach(id => {
-                    const select = document.getElementById(id);
-                    if (select) select.appendChild(option.cloneNode(true));
-                });
-            }
-            
-            const currentYear = new Date().getFullYear();
-            for (let i = currentYear; i >= 1900; i--) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i;
-                yearSelects.forEach(id => {
-                    const select = document.getElementById(id);
-                    if (select) select.appendChild(option.cloneNode(true));
-                });
-            }
-        }
+    const daySelects = ['dobDay', 'kundliDay', 'premiumKundliDay'];
+    const monthSelects = ['dobMonth', 'kundliMonth', 'premiumKundliMonth'];
+    const yearSelects = ['dobYear', 'kundliYear', 'premiumKundliYear'];
+    
+    for (let i = 1; i <= 31; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        daySelects.forEach(id => {
+            const select = document.getElementById(id);
+            if (select) select.appendChild(option.cloneNode(true));
+        });
+    }
+    
+    var isEn = window._isEn;
+    const monthsHi = ['जनवरी', 'फरवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर'];
+    const monthsEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const months = isEn ? monthsEn : monthsHi;
+    
+    for (let i = 0; i < 12; i++) {
+        const option = document.createElement('option');
+        option.value = i+1;
+        option.textContent = months[i];
+        monthSelects.forEach(id => {
+            const select = document.getElementById(id);
+            if (select) select.appendChild(option.cloneNode(true));
+        });
+    }
+    
+    const currentYear = new Date().getFullYear();
+    for (let i = currentYear; i >= 1900; i--) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        yearSelects.forEach(id => {
+            const select = document.getElementById(id);
+            if (select) select.appendChild(option.cloneNode(true));
+        });
+    }
+}
         initDateFields();
 
         function initBhav() {
@@ -870,95 +874,159 @@
         };
 
         function showDailyRashi(r) {
-            var today = new Date().toDateString();
-            var rashiIdx = ['मेष','वृष','मिथुन','कर्क','सिंह','कन्या','तुला','वृश्चिक','धनु','मकर','कुंभ','मीन'].indexOf(r);
-            var allPreds = {
-                'मेष':['आज आपकी ऊर्जा चरम पर है — कोई भी बड़ा काम शुरू करने के लिए यह सबसे अच्छा दिन है। करियर में एक महत्वपूर्ण मौका दस्तक दे सकता है। शुभ अंक: 9, रंग: लाल, दिशा: पूर्व।','आज आत्मविश्वास से लबरेज़ रहेंगे। बॉस या वरिष्ठों से काम की तारीफ मिलेगी। शाम को परिवार के साथ सुखद समय बीतेगा। शुभ अंक: 1, रंग: नारंगी।','आज किसी पुराने मित्र से मुलाकात या संदेश आ सकता है। व्यवसाय में एक अच्छा प्रस्ताव आएगा। स्वास्थ्य उत्तम रहेगा। शुभ अंक: 3, रंग: लाल।'],
-                'वृष':['आज आर्थिक मोर्चे पर राहत की खबर मिल सकती है। परिवार में सुखद माहौल रहेगा। किसी पुराने निवेश से लाभ की संभावना है। शुभ अंक: 6, रंग: सफेद, दिशा: दक्षिण।','आज आपकी व्यावहारिक सोच किसी बड़ी समस्या का हल निकालेगी। संपत्ति-सम्बंधी खबर अच्छी होगी। शुभ अंक: 2, रंग: गुलाबी।','आज स्वाद और सौंदर्य के प्रति आपकी रुचि बढ़ेगी। किसी कला या संगीत से जुड़ी गतिविधि मन को सुकून देगी। शुभ अंक: 8, रंग: हरा।'],
-                'मिथुन':['आज आपकी वाणी में असाधारण प्रभाव होगा — जो बोलेंगे वह सुना जाएगा। व्यापार में उन्नति के योग हैं। नई जानकारी मिलेगी। शुभ अंक: 3, रंग: हरा, दिशा: पश्चिम।','आज कोई महत्वपूर्ण बातचीत या मीटिंग सफल रहेगी। नए संपर्क बनेंगे जो भविष्य में काम आएंगे। शुभ अंक: 5, रंग: पीला।','आज दोहरे कार्यों को एक साथ संभालने की आपकी क्षमता कमाल करेगी। सोशल मीडिया या लेखन से कोई लाभ हो सकता है। शुभ अंक: 7, रंग: हल्का नीला।'],
-                'कर्क':['आज मानसिक शांति और घरेलू सुख का दिन है। माँ या किसी बड़े से विशेष आशीर्वाद मिलेगा। भावनाओं को सही दिशा दें। शुभ अंक: 2, रंग: सिल्वर, दिशा: उत्तर।','आज घर में कोई सुखद घटना होगी। रसोई या गृह-सज्जा से जुड़ा कोई काम पूरा होगा। शुभ अंक: 4, रंग: सफेद।','आज संतान या किसी प्रिय की खुशी आपको भी खुश करेगी। पुरानी यादें मन को प्रसन्न करेंगी। शुभ अंक: 6, रंग: समुद्री नीला।'],
-                'सिंह':['आज आत्मविश्वास की लहर पर सवार होकर किसी बड़े काम को अंजाम दें। कार्यक्षेत्र में आपकी प्रशंसा होगी। शुभ अंक: 1, रंग: सुनहरा, दिशा: पूर्व।','आज नेतृत्व करने का अवसर मिलेगा — इसे मत गंवाएं। आपकी सोच और योजना दूसरों को प्रभावित करेगी। शुभ अंक: 9, रंग: नारंगी।','आज आपकी रचनात्मकता कमाल करेगी। कोई नया आइडिया जो आया है उसे आज ही शुरू करें। शुभ अंक: 5, रंग: पीला।'],
-                'कन्या':['आज विश्लेषण और सटीकता का समय है — कोई भी जटिल काम आज हल हो सकता है। स्वास्थ्य पर ध्यान दें। शुभ अंक: 5, रंग: हरा, दिशा: दक्षिण।','आज किसी पुरानी समस्या का व्यावहारिक हल निकलेगा। काम में परफेक्शन की आपकी आदत आज रंग लाएगी। शुभ अंक: 3, रंग: भूरा।','आज स्वास्थ्य-सम्बंधी कोई अच्छी खबर मिल सकती है। सेवा और मदद की भावना से कोई काम करें — फल मिलेगा। शुभ अंक: 7, रंग: हल्का हरा।'],
-                'तुला':['आज प्रेम और सौहार्द का विशेष दिन है। रिश्तों में मिठास आएगी और कोई पुरानी बात सुलझेगी। शुभ अंक: 7, रंग: गुलाबी, दिशा: पश्चिम।','आज साझेदारी में एक नया और लाभकारी मोड़ आएगा। न्याय और संतुलन की आपकी भावना आज काम आएगी। शुभ अंक: 2, रंग: आसमानी।','आज कलात्मक गतिविधियों से मन को सुकून मिलेगा। किसी से मिलने की योजना बनाएं — वह मुलाकात यादगार होगी। शुभ अंक: 6, रंग: सफेद।'],
-                'वृश्चिक':['आज आपकी गहरी सोच और तीक्ष्ण बुद्धि से एक जटिल समस्या हल होगी। आर्थिक लाभ के योग हैं। शुभ अंक: 8, रंग: लाल, दिशा: उत्तर।','आज किसी गुप्त बात का खुलासा आपके पक्ष में होगा। किसी मामले में सत्य सामने आएगा। शुभ अंक: 4, रंग: गहरा लाल।','आज किसी की मदद करने से आपको अप्रत्याशित लाभ होगा। परिवर्तन को स्वीकार करें — यह आपके लिए अच्छा है। शुभ अंक: 9, रंग: भूरा-लाल।'],
-                'धनु':['आज यात्रा या कोई नई खोज आपके दिन को रोमांचक बना देगी। भाग्य का पूरा साथ है। उत्साह बनाए रखें। शुभ अंक: 9, रंग: पीला, दिशा: पूर्व।','आज किसी शिक्षक, गुरु या मार्गदर्शक से ज्ञान मिलेगा जो जीवन बदल दे। विदेश से कोई शुभ समाचार आ सकता है। शुभ अंक: 3, रंग: नारंगी।','आज आपका आशावाद दूसरों को प्रेरित करेगा। कोई बड़ा सपना आज अपने पास लिखें — वह पूरा होगा। शुभ अंक: 7, रंग: बैंगनी।'],
-                'मकर':['आज करियर में एक ठोस कदम उठाने का दिन है। मेहनत का फल मिलने का समय करीब है। अनुशासन बनाए रखें। शुभ अंक: 8, रंग: नीला, दिशा: दक्षिण।','आज किसी बड़े अधिकारी या वरिष्ठ से महत्वपूर्ण बातचीत होगी जो आपके पक्ष में जाएगी। शुभ अंक: 4, रंग: काला।','आज दीर्घकालिक योजना बनाने का सबसे सही समय है। किसी बड़े लक्ष्य के लिए पहला कदम उठाएं। शुभ अंक: 6, रंग: गहरा नीला।'],
-                'कुंभ':['आज आपके अभिनव विचारों को सराहना मिलेगी। समाज में आपकी एक नई पहचान बन रही है। मित्रों का सहयोग मिलेगा। शुभ अंक: 4, रंग: नीला, दिशा: पश्चिम।','आज तकनीक या नवाचार से जुड़ा कोई काम आपको सफलता देगा। किसी समूह या संगठन में आपकी भूमिका महत्वपूर्ण होगी। शुभ अंक: 11, रंग: बैंगनी।','आज मानवता की सेवा से जुड़ा कोई काम करें — उसका फल तुरंत मिलेगा। एक पुरानी दोस्ती आज और मज़बूत होगी। शुभ अंक: 7, रंग: आसमानी।'],
-                'मीन':['आज आध्यात्मिकता और सृजनशीलता का सुखद मेल होगा। दान और पूजा से मन को शांति मिलेगी। कला से जुड़ी कोई उपलब्धि होगी। शुभ अंक: 7, रंग: समुद्री नीला, दिशा: उत्तर।','आज किसी की मदद करने से आपको अपार आत्म-संतोष मिलेगा। सपनों में कोई संकेत आ सकता है — उसे नज़रअंदाज न करें। शुभ अंक: 3, रंग: सफेद।','आज संगीत, कविता या किसी कला-माध्यम से खुद को व्यक्त करें। आपकी भावनाएं दूसरों को छू लेंगी। शुभ अंक: 9, रंग: हल्का नीला।']
-            };
-            var key = hindiToKey[r] || '';
-            var el = document.getElementById('dailyRashiRes');
-            el.style.display = 'block';
-            el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">☀️ ' + r + ' — आज का राशिफल</h3><p style="color:#ddd;line-height:1.8;">⏳ लोड हो रहा है...</p>';
-            getFbPredictions('daily').then(function(fb) {
-                // Admin panel saves as: predictions/daily/aries/text
-                var fbText = fb[key] && fb[key].text ? fb[key].text : '';
-                var pred;
-                if (fbText) {
-                    pred = fbText;
-                } else {
-                    var predArr = allPreds[r] || ['आज का दिन शुभ और मंगलमय रहेगा।'];
-                    var todayHash = makePredSeed ? makePredSeed(r + today) : (new Date().getDate() + rashiIdx * 7);
-                    pred = predArr[todayHash % predArr.length];
-                }
-                el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">☀️ ' + r + ' — आज का राशिफल</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
-            });
+    var isEn = window._isEn;
+    var today = new Date().toDateString();
+    var rashiIdx = ['मेष','वृष','मिथुन','कर्क','सिंह','कन्या','तुला','वृश्चिक','धनु','मकर','कुंभ','मीन'].indexOf(r);
+    
+    var allPredsHi = {
+        'मेष':['आज आपकी ऊर्जा चरम पर है — कोई भी बड़ा काम शुरू करने के लिए यह सबसे अच्छा दिन है। करियर में एक महत्वपूर्ण मौका दस्तक दे सकता है। शुभ अंक: 9, रंग: लाल, दिशा: पूर्व।','आज आत्मविश्वास से लबरेज़ रहेंगे। बॉस या वरिष्ठों से काम की तारीफ मिलेगी। शाम को परिवार के साथ सुखद समय बीतेगा। शुभ अंक: 1, रंग: नारंगी।','आज किसी पुराने मित्र से मुलाकात या संदेश आ सकता है। व्यवसाय में एक अच्छा प्रस्ताव आएगा। स्वास्थ्य उत्तम रहेगा। शुभ अंक: 3, रंग: लाल।'],
+        'वृष':['आज आर्थिक मोर्चे पर राहत की खबर मिल सकती है। परिवार में सुखद माहौल रहेगा। किसी पुराने निवेश से लाभ की संभावना है। शुभ अंक: 6, रंग: सफेद, दिशा: दक्षिण।','आज आपकी व्यावहारिक सोच किसी बड़ी समस्या का हल निकालेगी। संपत्ति-सम्बंधी खबर अच्छी होगी। शुभ अंक: 2, रंग: गुलाबी।','आज स्वाद और सौंदर्य के प्रति आपकी रुचि बढ़ेगी। किसी कला या संगीत से जुड़ी गतिविधि मन को सुकून देगी। शुभ अंक: 8, रंग: हरा।'],
+        'मिथुन':['आज आपकी वाणी में असाधारण प्रभाव होगा — जो बोलेंगे वह सुना जाएगा। व्यापार में उन्नति के योग हैं। नई जानकारी मिलेगी। शुभ अंक: 3, रंग: हरा, दिशा: पश्चिम।','आज कोई महत्वपूर्ण बातचीत या मीटिंग सफल रहेगी। नए संपर्क बनेंगे जो भविष्य में काम आएंगे। शुभ अंक: 5, रंग: पीला।','आज दोहरे कार्यों को एक साथ संभालने की आपकी क्षमता कमाल करेगी। सोशल मीडिया या लेखन से कोई लाभ हो सकता है। शुभ अंक: 7, रंग: हल्का नीला।'],
+        'कर्क':['आज मानसिक शांति और घरेलू सुख का दिन है। माँ या किसी बड़े से विशेष आशीर्वाद मिलेगा। भावनाओं को सही दिशा दें। शुभ अंक: 2, रंग: सिल्वर, दिशा: उत्तर।','आज घर में कोई सुखद घटना होगी। रसोई या गृह-सज्जा से जुड़ा कोई काम पूरा होगा। शुभ अंक: 4, रंग: सफेद।','आज संतान या किसी प्रिय की खुशी आपको भी खुश करेगी। पुरानी यादें मन को प्रसन्न करेंगी। शुभ अंक: 6, रंग: समुद्री नीला।'],
+        'सिंह':['आज आत्मविश्वास की लहर पर सवार होकर किसी बड़े काम को अंजाम दें। कार्यक्षेत्र में आपकी प्रशंसा होगी। शुभ अंक: 1, रंग: सुनहरा, दिशा: पूर्व।','आज नेतृत्व करने का अवसर मिलेगा — इसे मत गंवाएं। आपकी सोच और योजना दूसरों को प्रभावित करेगी। शुभ अंक: 9, रंग: नारंगी।','आज आपकी रचनात्मकता कमाल करेगी। कोई नया आइडिया जो आया है उसे आज ही शुरू करें। शुभ अंक: 5, रंग: पीला।'],
+        'कन्या':['आज विश्लेषण और सटीकता का समय है — कोई भी जटिल काम आज हल हो सकता है। स्वास्थ्य पर ध्यान दें। शुभ अंक: 5, रंग: हरा, दिशा: दक्षिण।','आज किसी पुरानी समस्या का व्यावहारिक हल निकलेगा। काम में परफेक्शन की आपकी आदत आज रंग लाएगी। शुभ अंक: 3, रंग: भूरा।','आज स्वास्थ्य-सम्बंधी कोई अच्छी खबर मिल सकती है। सेवा और मदद की भावना से कोई काम करें — फल मिलेगा। शुभ अंक: 7, रंग: हल्का हरा।'],
+        'तुला':['आज प्रेम और सौहार्द का विशेष दिन है। रिश्तों में मिठास आएगी और कोई पुरानी बात सुलझेगी। शुभ अंक: 7, रंग: गुलाबी, दिशा: पश्चिम।','आज साझेदारी में एक नया और लाभकारी मोड़ आएगा। न्याय और संतुलन की आपकी भावना आज काम आएगी। शुभ अंक: 2, रंग: आसमानी।','आज कलात्मक गतिविधियों से मन को सुकून मिलेगा। किसी से मिलने की योजना बनाएं — वह मुलाकात यादगार होगी। शुभ अंक: 6, रंग: सफेद।'],
+        'वृश्चिक':['आज आपकी गहरी सोच और तीक्ष्ण बुद्धि से एक जटिल समस्या हल होगी। आर्थिक लाभ के योग हैं। शुभ अंक: 8, रंग: लाल, दिशा: उत्तर।','आज किसी गुप्त बात का खुलासा आपके पक्ष में होगा। किसी मामले में सत्य सामने आएगा। शुभ अंक: 4, रंग: गहरा लाल।','आज किसी की मदद करने से आपको अप्रत्याशित लाभ होगा। परिवर्तन को स्वीकार करें — यह आपके लिए अच्छा है। शुभ अंक: 9, रंग: भूरा-लाल।'],
+        'धनु':['आज यात्रा या कोई नई खोज आपके दिन को रोमांचक बना देगी। भाग्य का पूरा साथ है। उत्साह बनाए रखें। शुभ अंक: 9, रंग: पीला, दिशा: पूर्व।','आज किसी शिक्षक, गुरु या मार्गदर्शक से ज्ञान मिलेगा जो जीवन बदल दे। विदेश से कोई शुभ समाचार आ सकता है। शुभ अंक: 3, रंग: नारंगी।','आज आपका आशावाद दूसरों को प्रेरित करेगा। कोई बड़ा सपना आज अपने पास लिखें — वह पूरा होगा। शुभ अंक: 7, रंग: बैंगनी।'],
+        'मकर':['आज करियर में एक ठोस कदम उठाने का दिन है। मेहनत का फल मिलने का समय करीब है। अनुशासन बनाए रखें। शुभ अंक: 8, रंग: नीला, दिशा: दक्षिण।','आज किसी बड़े अधिकारी या वरिष्ठ से महत्वपूर्ण बातचीत होगी जो आपके पक्ष में जाएगी। शुभ अंक: 4, रंग: काला।','आज दीर्घकालिक योजना बनाने का सबसे सही समय है। किसी बड़े लक्ष्य के लिए पहला कदम उठाएं। शुभ अंक: 6, रंग: गहरा नीला।'],
+        'कुंभ':['आज आपके अभिनव विचारों को सराहना मिलेगी। समाज में आपकी एक नई पहचान बन रही है। मित्रों का सहयोग मिलेगा। शुभ अंक: 4, रंग: नीला, दिशा: पश्चिम।','आज तकनीक या नवाचार से जुड़ा कोई काम आपको सफलता देगा। किसी समूह या संगठन में आपकी भूमिका महत्वपूर्ण होगी। शुभ अंक: 11, रंग: बैंगनी।','आज मानवता की सेवा से जुड़ा कोई काम करें — उसका फल तुरंत मिलेगा। एक पुरानी दोस्ती आज और मज़बूत होगी। शुभ अंक: 7, रंग: आसमानी।'],
+        'मीन':['आज आध्यात्मिकता और सृजनशीलता का सुखद मेल होगा। दान और पूजा से मन को शांति मिलेगी। कला से जुड़ी कोई उपलब्धि होगी। शुभ अंक: 7, रंग: समुद्री नीला, दिशा: उत्तर।','आज किसी की मदद करने से आपको अपार आत्म-संतोष मिलेगा। सपनों में कोई संकेत आ सकता है — उसे नज़रअंदाज न करें। शुभ अंक: 3, रंग: सफेद।','आज संगीत, कविता या किसी कला-माध्यम से खुद को व्यक्त करें। आपकी भावनाएं दूसरों को छू लेंगी। शुभ अंक: 9, रंग: हल्का नीला।']
+    };
+    
+    var allPredsEn = {
+        'Aries':['Today your energy is at its peak — perfect day to start any major work. An important career opportunity may knock. Lucky Number: 9, Color: Red, Direction: East.','You will be full of confidence today. Boss or seniors will appreciate your work. Pleasant evening with family. Lucky Number: 1, Color: Orange.','You may meet or receive a message from an old friend. A good business proposal will come. Health will be excellent. Lucky Number: 3, Color: Red.'],
+        'Taurus':['Financial relief may come today. Happy atmosphere at home. Possible gain from old investment. Lucky Number: 6, Color: White, Direction: South.','Your practical thinking will solve a major problem. Good news related to property. Lucky Number: 2, Color: Pink.','Your interest in taste and beauty will increase. Artistic or musical activity will soothe your mind. Lucky Number: 8, Color: Green.'],
+        'Gemini':['Your speech will have extraordinary impact today — whatever you say will be heard. Business growth is indicated. New information will come. Lucky Number: 3, Color: Green, Direction: West.','An important conversation or meeting will be successful. New contacts will be made that will help in future. Lucky Number: 5, Color: Yellow.','Your ability to multitask will shine today. Social media or writing may bring benefits. Lucky Number: 7, Color: Light Blue.'],
+        'Cancer':['Day of mental peace and domestic happiness. Special blessings from mother or elder. Channel your emotions correctly. Lucky Number: 2, Color: Silver, Direction: North.','A happy event will occur at home. Kitchen or home decoration work will complete. Lucky Number: 4, Color: White.','Happiness of children or a loved one will make you happy too. Old memories will bring joy. Lucky Number: 6, Color: Ocean Blue.'],
+        'Leo':['Ride the wave of confidence to accomplish something big. You will be praised at work. Lucky Number: 1, Color: Golden, Direction: East.','You will get a leadership opportunity — don\'t miss it. Your thinking and planning will impress others. Lucky Number: 9, Color: Orange.','Your creativity will shine. Start working on any new idea you have today. Lucky Number: 5, Color: Yellow.'],
+        'Virgo':['Time for analysis and precision — any complex work can be solved today. Take care of health. Lucky Number: 5, Color: Green, Direction: South.','A practical solution to an old problem will emerge. Your habit of perfection will pay off today. Lucky Number: 3, Color: Brown.','Good health-related news may come. Do something with a spirit of service — you will be rewarded. Lucky Number: 7, Color: Light Green.'],
+        'Libra':['Special day for love and harmony. Sweetness in relationships and old matters will resolve. Lucky Number: 7, Color: Pink, Direction: West.','A new and profitable turn in partnership will come. Your sense of justice and balance will help today. Lucky Number: 2, Color: Sky Blue.','Artistic activities will soothe your mind. Plan to meet someone — the meeting will be memorable. Lucky Number: 6, Color: White.'],
+        'Scorpio':['Your deep thinking and sharp intellect will solve a complex problem. Financial gains are indicated. Lucky Number: 8, Color: Red, Direction: North.','A secret will be revealed in your favor. Truth will come out in a matter. Lucky Number: 4, Color: Dark Red.','Helping someone will bring unexpected benefits. Accept change — it is good for you. Lucky Number: 9, Color: Maroon.'],
+        'Sagittarius':['Travel or a new discovery will make your day exciting. Full support of luck. Stay enthusiastic. Lucky Number: 9, Color: Yellow, Direction: East.','Knowledge from a teacher, guru or mentor will be life-changing. Good news from abroad may come. Lucky Number: 3, Color: Orange.','Your optimism will inspire others. Write down a big dream today — it will come true. Lucky Number: 7, Color: Purple.'],
+        'Capricorn':['Day to take a solid step in career. Time for hard work to pay off is near. Maintain discipline. Lucky Number: 8, Color: Blue, Direction: South.','Important conversation with a senior official will go in your favor. Lucky Number: 4, Color: Black.','Best time to make long-term plans. Take the first step towards a big goal. Lucky Number: 6, Color: Dark Blue.'],
+        'Aquarius':['Your innovative ideas will be appreciated. A new identity is forming in society. Friends will support. Lucky Number: 4, Color: Blue, Direction: West.','Technology or innovation-related work will bring success. Your role in a group or organization will be important. Lucky Number: 11, Color: Purple.','Do something related to serving humanity — you will be rewarded immediately. An old friendship will strengthen today. Lucky Number: 7, Color: Sky Blue.'],
+        'Pisces':['Pleasant blend of spirituality and creativity today. Donation and worship will bring peace. Artistic achievement is indicated. Lucky Number: 7, Color: Ocean Blue, Direction: North.','Helping someone will bring immense self-satisfaction. A sign may come in dreams — don\'t ignore it. Lucky Number: 3, Color: White.','Express yourself through music, poetry or any art form. Your emotions will touch others. Lucky Number: 9, Color: Light Blue.']
+    };
+    
+    var rashiEnMap = { 'मेष':'Aries', 'वृष':'Taurus', 'मिथुन':'Gemini', 'कर्क':'Cancer', 'सिंह':'Leo', 'कन्या':'Virgo', 'तुला':'Libra', 'वृश्चिक':'Scorpio', 'धनु':'Sagittarius', 'मकर':'Capricorn', 'कुंभ':'Aquarius', 'मीन':'Pisces' };
+    
+    var key = hindiToKey[r] || '';
+    var el = document.getElementById('dailyRashiRes');
+    el.style.display = 'block';
+    var displayRashi = isEn ? rashiEnMap[r] : r;
+    el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">☀️ ' + displayRashi + ' — ' + (isEn ? 'Today\'s Horoscope' : 'आज का राशिफल') + '</h3><p style="color:#ddd;line-height:1.8;">' + (isEn ? '⏳ Loading...' : '⏳ लोड हो रहा है...') + '</p>';
+    
+    getFbPredictions('daily').then(function(fb) {
+        var fbText = fb[key] && fb[key].text ? fb[key].text : '';
+        var pred;
+        if (fbText) {
+            pred = fbText;
+        } else {
+            var predArr = isEn ? (allPredsEn[displayRashi] || ['Today will be auspicious and blessed.']) : (allPredsHi[r] || ['आज का दिन शुभ और मंगलमय रहेगा।']);
+            var todayHash = makePredSeed ? makePredSeed(r + today) : (new Date().getDate() + rashiIdx * 7);
+            pred = predArr[todayHash % predArr.length];
         }
+        el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">☀️ ' + displayRashi + ' — ' + (isEn ? 'Today\'s Horoscope' : 'आज का राशिफल') + '</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
+    });
+}
 
         function showMonthlyRashi(r) {
-            var month = new Date().getMonth();
-            var cacheKey = 'mhoro_' + r + '_' + new Date().getFullYear() + '_' + month;
-            var rashiMonthly = {
-                'मेष':'इस महीने आपका आत्मबल असाधारण ऊंचाई पर रहेगा। करियर में एक बड़ा निर्णय आपकी दिशा बदलेगा। परिवार में खुशनुमा माहौल रहेगा। शुभ रंग: लाल, शुभ दिन: मंगलवार।',
-                'वृष':'इस महीने आर्थिक मोर्चे पर राहत और स्थिरता आएगी। रुके हुए पैसे वापस मिलेंगे। किसी पुराने मित्र से लाभकारी मुलाकात होगी। शुभ रंग: हरा, शुभ दिन: शुक्रवार।',
-                'मिथुन':'इस महीने आपकी संचार-शक्ति अद्भुत रूप से प्रभावशाली रहेगी। व्यापार में नया अनुबंध या नई साझेदारी की संभावना है। शुभ रंग: पीला, शुभ दिन: बुधवार।',
-                'कर्क':'इस महीने परिवार के साथ बेहद सुखद समय बीतेगा। घर में कोई शुभ कार्य हो सकता है। मन की उलझनें सुलझेंगी और भावनात्मक शांति मिलेगी। शुभ रंग: सफेद, शुभ दिन: सोमवार।',
-                'सिंह':'इस महीने आपकी नेतृत्व-क्षमता को खुलकर पहचाना जाएगा। कार्यस्थल पर आपकी बात सुनी जाएगी। प्रेम जीवन में उत्साह रहेगा। शुभ रंग: सुनहरा, शुभ दिन: रविवार।',
-                'कन्या':'इस महीने आपकी सूक्ष्म-दृष्टि और विश्लेषण-क्षमता आपको आगे ले जाएगी। स्वास्थ्य पर ध्यान दें और किसी पुराने रोग का उपचार शुरू करें। शुभ रंग: नीला-हरा, शुभ दिन: बुधवार।',
-                'तुला':'इस महीने रिश्तों में संतुलन और मधुरता आएगी। कोई पुरानी बात सुलझेगी। व्यापारिक साझेदारी में शुभ संकेत हैं। शुभ रंग: गुलाबी, शुभ दिन: शुक्रवार।',
-                'वृश्चिक':'इस महीने आपकी गहरी सोच और दृढ़ता आपको लक्ष्य के करीब ले जाएगी। कोई गुप्त बात सामने आएगी जो आपके पक्ष में होगी। शुभ रंग: लाल-भूरा, शुभ दिन: मंगलवार।',
-                'धनु':'इस महीने यात्रा, नई जानकारी और विस्तार के अवसर आएंगे। कोई शुभ यात्रा आपके दृष्टिकोण को बदल देगी। शुभ रंग: पीला, शुभ दिन: गुरुवार।',
-                'मकर':'इस महीने आपकी मेहनत का सुखद परिणाम सामने आएगा। करियर में एक ठोस उपलब्धि आपको प्रसन्न करेगी। शुभ रंग: नीला, शुभ दिन: शनिवार।',
-                'कुंभ':'इस महीने आपके अभिनव विचारों को मान्यता मिलेगी। समाज में आपकी एक नई पहचान बनेगी। मित्रों का पूरा सहयोग मिलेगा। शुभ रंग: आसमानी, शुभ दिन: शनिवार।',
-                'मीन':'इस महीने आपकी कल्पना और सृजनशीलता चरम पर रहेगी। आध्यात्मिक अनुभव होंगे। प्रेम और करुणा से भरे क्षणों का आनंद लें। शुभ रंग: समुद्री नीला, शुभ दिन: गुरुवार।'
-            };
-            var key = hindiToKey[r] || '';
-            var el = document.getElementById('monthlyRashiRes');
-            el.style.display = 'block';
-            el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📆 ' + r + ' — इस महीने</h3><p style="color:#ddd;line-height:1.8;">⏳ लोड हो रहा है...</p>';
-            getFbPredictions('monthly').then(function(fb) {
-                var fbText = fb[key] && fb[key].text ? fb[key].text : '';
-                var pred = fbText || rashiMonthly[r] || 'इस महीने आपके जीवन में सकारात्मक बदलाव आएंगे।';
-                el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📆 ' + r + ' — इस महीने</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
-            });
-        }
+    var isEn = window._isEn;
+    var month = new Date().getMonth();
+    
+    var rashiEnMap = { 'मेष':'Aries', 'वृष':'Taurus', 'मिथुन':'Gemini', 'कर्क':'Cancer', 'सिंह':'Leo', 'कन्या':'Virgo', 'तुला':'Libra', 'वृश्चिक':'Scorpio', 'धनु':'Sagittarius', 'मकर':'Capricorn', 'कुंभ':'Aquarius', 'मीन':'Pisces' };
+    
+    var rashiMonthlyHi = {
+        'मेष':'इस महीने आपका आत्मबल असाधारण ऊंचाई पर रहेगा। करियर में एक बड़ा निर्णय आपकी दिशा बदलेगा। परिवार में खुशनुमा माहौल रहेगा। शुभ रंग: लाल, शुभ दिन: मंगलवार।',
+        'वृष':'इस महीने आर्थिक मोर्चे पर राहत और स्थिरता आएगी। रुके हुए पैसे वापस मिलेंगे। किसी पुराने मित्र से लाभकारी मुलाकात होगी। शुभ रंग: हरा, शुभ दिन: शुक्रवार।',
+        'मिथुन':'इस महीने आपकी संचार-शक्ति अद्भुत रूप से प्रभावशाली रहेगी। व्यापार में नया अनुबंध या नई साझेदारी की संभावना है। शुभ रंग: पीला, शुभ दिन: बुधवार।',
+        'कर्क':'इस महीने परिवार के साथ बेहद सुखद समय बीतेगा। घर में कोई शुभ कार्य हो सकता है। मन की उलझनें सुलझेंगी और भावनात्मक शांति मिलेगी। शुभ रंग: सफेद, शुभ दिन: सोमवार।',
+        'सिंह':'इस महीने आपकी नेतृत्व-क्षमता को खुलकर पहचाना जाएगा। कार्यस्थल पर आपकी बात सुनी जाएगी। प्रेम जीवन में उत्साह रहेगा। शुभ रंग: सुनहरा, शुभ दिन: रविवार।',
+        'कन्या':'इस महीने आपकी सूक्ष्म-दृष्टि और विश्लेषण-क्षमता आपको आगे ले जाएगी। स्वास्थ्य पर ध्यान दें और किसी पुराने रोग का उपचार शुरू करें। शुभ रंग: नीला-हरा, शुभ दिन: बुधवार।',
+        'तुला':'इस महीने रिश्तों में संतुलन और मधुरता आएगी। कोई पुरानी बात सुलझेगी। व्यापारिक साझेदारी में शुभ संकेत हैं। शुभ रंग: गुलाबी, शुभ दिन: शुक्रवार।',
+        'वृश्चिक':'इस महीने आपकी गहरी सोच और दृढ़ता आपको लक्ष्य के करीब ले जाएगी। कोई गुप्त बात सामने आएगी जो आपके पक्ष में होगी। शुभ रंग: लाल-भूरा, शुभ दिन: मंगलवार।',
+        'धनु':'इस महीने यात्रा, नई जानकारी और विस्तार के अवसर आएंगे। कोई शुभ यात्रा आपके दृष्टिकोण को बदल देगी। शुभ रंग: पीला, शुभ दिन: गुरुवार।',
+        'मकर':'इस महीने आपकी मेहनत का सुखद परिणाम सामने आएगा। करियर में एक ठोस उपलब्धि आपको प्रसन्न करेगी। शुभ रंग: नीला, शुभ दिन: शनिवार।',
+        'कुंभ':'इस महीने आपके अभिनव विचारों को मान्यता मिलेगी। समाज में आपकी एक नई पहचान बनेगी। मित्रों का पूरा सहयोग मिलेगा। शुभ रंग: आसमानी, शुभ दिन: शनिवार।',
+        'मीन':'इस महीने आपकी कल्पना और सृजनशीलता चरम पर रहेगी। आध्यात्मिक अनुभव होंगे। प्रेम और करुणा से भरे क्षणों का आनंद लें। शुभ रंग: समुद्री नीला, शुभ दिन: गुरुवार।'
+    };
+    
+    var rashiMonthlyEn = {
+        'Aries':'This month your confidence will be at an extraordinary high. A major career decision will change your direction. Happy atmosphere at home. Lucky Color: Red, Lucky Day: Tuesday.',
+        'Taurus':'This month brings financial relief and stability. Stuck money will return. A beneficial meeting with an old friend. Lucky Color: Green, Lucky Day: Friday.',
+        'Gemini':'Your communication skills will be remarkably effective this month. New contracts or partnerships in business. Lucky Color: Yellow, Lucky Day: Wednesday.',
+        'Cancer':'Very happy time with family this month. An auspicious event at home. Mental confusion will clear and emotional peace will come. Lucky Color: White, Lucky Day: Monday.',
+        'Leo':'Your leadership abilities will be openly recognized this month. You will be heard at work. Excitement in love life. Lucky Color: Golden, Lucky Day: Sunday.',
+        'Virgo':'Your keen eye and analytical skills will take you forward. Focus on health and start treating any old ailment. Lucky Color: Teal, Lucky Day: Wednesday.',
+        'Libra':'Balance and sweetness in relationships this month. An old issue will resolve. Good signs in business partnerships. Lucky Color: Pink, Lucky Day: Friday.',
+        'Scorpio':'Your deep thinking and determination will bring you closer to your goal. A secret will be revealed in your favor. Lucky Color: Maroon, Lucky Day: Tuesday.',
+        'Sagittarius':'Opportunities for travel, new information and expansion this month. An auspicious journey will change your perspective. Lucky Color: Yellow, Lucky Day: Thursday.',
+        'Capricorn':'The sweet result of your hard work will appear. A solid career achievement will make you happy. Lucky Color: Blue, Lucky Day: Saturday.',
+        'Aquarius':'Your innovative ideas will get recognition. A new identity will form in society. Full support from friends. Lucky Color: Sky Blue, Lucky Day: Saturday.',
+        'Pisces':'Your imagination and creativity will be at peak. Spiritual experiences. Enjoy moments filled with love and compassion. Lucky Color: Ocean Blue, Lucky Day: Thursday.'
+    };
+    
+    var key = hindiToKey[r] || '';
+    var el = document.getElementById('monthlyRashiRes');
+    el.style.display = 'block';
+    var displayRashi = isEn ? rashiEnMap[r] : r;
+    el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📆 ' + displayRashi + ' — ' + (isEn ? 'This Month' : 'इस महीने') + '</h3><p style="color:#ddd;line-height:1.8;">' + (isEn ? '⏳ Loading...' : '⏳ लोड हो रहा है...') + '</p>';
+    
+    getFbPredictions('monthly').then(function(fb) {
+        var fbText = fb[key] && fb[key].text ? fb[key].text : '';
+        var pred = fbText || (isEn ? (rashiMonthlyEn[displayRashi] || 'Positive changes will come in your life this month.') : (rashiMonthlyHi[r] || 'इस महीने आपके जीवन में सकारात्मक बदलाव आएंगे।'));
+        el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📆 ' + displayRashi + ' — ' + (isEn ? 'This Month' : 'इस महीने') + '</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
+    });
+}
 
         function showYearlyRashi(r) {
-            var year = new Date().getFullYear();
-            var rashiYearly = {
-                'मेष':year+'में आपके लिए नेतृत्व के नए अवसर आएंगे। करियर में एक बड़ा उछाल संभव है। प्रेम जीवन में गहराई आएगी। शुभ माह: फरवरी, जून, अक्टूबर।',
-                'वृष':year+'में आर्थिक स्थिति पहले से बेहतर होगी। संपत्ति में वृद्धि के योग हैं। परिवार में शुभ कार्य होंगे। शुभ माह: मार्च, जुलाई, नवंबर।',
-                'मिथुन':year+'में संचार और बुद्धि-कौशल से बड़ी उपलब्धियाँ मिलेंगी। नई शिक्षा या कोर्स आपके करियर को नई दिशा देगा। शुभ माह: अप्रैल, अगस्त, दिसंबर।',
-                'कर्क':year+'में पारिवारिक जीवन में बेहद खुशनुमा बदलाव आएंगे। घर से जुड़े सपने पूरे होंगे। माँ की ओर से विशेष आशीर्वाद मिलेगा। शुभ माह: जनवरी, मई, सितंबर।',
-                'सिंह':year+'में आपकी प्रतिष्ठा और सामाजिक दबदबा नई ऊँचाई पर होगा। सरकारी या प्रशासनिक क्षेत्र में सफलता के योग हैं। शुभ माह: फरवरी, जून, अक्टूबर।',
-                'कन्या':year+'में स्वास्थ्य और कार्यकुशलता पर विशेष ध्यान देने से बड़े लाभ होंगे। विश्लेषण-क्षमता से करियर में नई ऊँचाई मिलेगी। शुभ माह: मार्च, जुलाई, नवंबर।',
-                'तुला':year+'में साझेदारी और सहयोग से बड़े लक्ष्य हासिल होंगे। प्रेम और विवाह के शुभ योग हैं। कलात्मक प्रतिभा पहचानी जाएगी। शुभ माह: अप्रैल, अगस्त, दिसंबर।',
-                'वृश्चिक':year+'में छिपी हुई शक्तियाँ उभरकर सामने आएंगी। किसी पुराने रहस्य का खुलासा आपके पक्ष में होगा। धन और स्वास्थ्य दोनों में सुधार होगा। शुभ माह: जनवरी, मई, सितंबर।',
-                'धनु':year+'में नई यात्राएं, नई शिक्षा और नई संभावनाएं आपकी दुनिया बदल देंगी। विदेश-यात्रा के प्रबल योग हैं। शुभ माह: फरवरी, जून, अक्टूबर।',
-                'मकर':year+'में आपकी दीर्घकालिक मेहनत का मीठा फल मिलेगा। व्यावसायिक सफलता और सामाजिक प्रतिष्ठा दोनों बढ़ेंगी। शुभ माह: मार्च, जुलाई, नवंबर।',
-                'कुंभ':year+'में आपके अनोखे और अभिनव विचारों को वैश्विक मान्यता मिल सकती है। तकनीक और नवाचार के क्षेत्र में विशेष सफलता के योग हैं। शुभ माह: अप्रैल, अगस्त, दिसंबर।',
-                'मीन':year+'में आपकी आध्यात्मिक और कलात्मक प्रतिभा का पूर्ण विकास होगा। सृजनशीलता से नई आय के स्रोत खुलेंगे। शुभ माह: जनवरी, मई, सितंबर।'
-            };
-            var key = hindiToKey[r] || '';
-            var el = document.getElementById('yearlyRashiRes');
-            el.style.display = 'block';
-            el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📅 ' + r + ' — ' + year + '</h3><p style="color:#ddd;line-height:1.8;">⏳ लोड हो रहा है...</p>';
-            getFbPredictions('yearly').then(function(fb) {
-                var fbText = fb[key] && fb[key].text ? fb[key].text : '';
-                var pred = fbText || rashiYearly[r] || year+' में आपके जीवन में सकारात्मक बदलाव आएंगे।';
-                el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📅 ' + r + ' — ' + year + '</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
-            });
-        }
+    var isEn = window._isEn;
+    var year = new Date().getFullYear();
+    
+    var rashiEnMap = { 'मेष':'Aries', 'वृष':'Taurus', 'मिथुन':'Gemini', 'कर्क':'Cancer', 'सिंह':'Leo', 'कन्या':'Virgo', 'तुला':'Libra', 'वृश्चिक':'Scorpio', 'धनु':'Sagittarius', 'मकर':'Capricorn', 'कुंभ':'Aquarius', 'मीन':'Pisces' };
+    
+    var rashiYearlyHi = {
+        'मेष':year+' में आपके लिए नेतृत्व के नए अवसर आएंगे। करियर में एक बड़ा उछाल संभव है। प्रेम जीवन में गहराई आएगी। शुभ माह: फरवरी, जून, अक्टूबर।',
+        'वृष':year+' में आर्थिक स्थिति पहले से बेहतर होगी। संपत्ति में वृद्धि के योग हैं। परिवार में शुभ कार्य होंगे। शुभ माह: मार्च, जुलाई, नवंबर।',
+        'मिथुन':year+' में संचार और बुद्धि-कौशल से बड़ी उपलब्धियाँ मिलेंगी। नई शिक्षा या कोर्स आपके करियर को नई दिशा देगा। शुभ माह: अप्रैल, अगस्त, दिसंबर।',
+        'कर्क':year+' में पारिवारिक जीवन में बेहद खुशनुमा बदलाव आएंगे। घर से जुड़े सपने पूरे होंगे। माँ की ओर से विशेष आशीर्वाद मिलेगा। शुभ माह: जनवरी, मई, सितंबर।',
+        'सिंह':year+' में आपकी प्रतिष्ठा और सामाजिक दबदबा नई ऊँचाई पर होगा। सरकारी या प्रशासनिक क्षेत्र में सफलता के योग हैं। शुभ माह: फरवरी, जून, अक्टूबर।',
+        'कन्या':year+' में स्वास्थ्य और कार्यकुशलता पर विशेष ध्यान देने से बड़े लाभ होंगे। विश्लेषण-क्षमता से करियर में नई ऊँचाई मिलेगी। शुभ माह: मार्च, जुलाई, नवंबर।',
+        'तुला':year+' में साझेदारी और सहयोग से बड़े लक्ष्य हासिल होंगे। प्रेम और विवाह के शुभ योग हैं। कलात्मक प्रतिभा पहचानी जाएगी। शुभ माह: अप्रैल, अगस्त, दिसंबर।',
+        'वृश्चिक':year+' में छिपी हुई शक्तियाँ उभरकर सामने आएंगी। किसी पुराने रहस्य का खुलासा आपके पक्ष में होगा। धन और स्वास्थ्य दोनों में सुधार होगा। शुभ माह: जनवरी, मई, सितंबर।',
+        'धनु':year+' में नई यात्राएं, नई शिक्षा और नई संभावनाएं आपकी दुनिया बदल देंगी। विदेश-यात्रा के प्रबल योग हैं। शुभ माह: फरवरी, जून, अक्टूबर।',
+        'मकर':year+' में आपकी दीर्घकालिक मेहनत का मीठा फल मिलेगा। व्यावसायिक सफलता और सामाजिक प्रतिष्ठा दोनों बढ़ेंगी। शुभ माह: मार्च, जुलाई, नवंबर।',
+        'कुंभ':year+' में आपके अनोखे और अभिनव विचारों को वैश्विक मान्यता मिल सकती है। तकनीक और नवाचार के क्षेत्र में विशेष सफलता के योग हैं। शुभ माह: अप्रैल, अगस्त, दिसंबर।',
+        'मीन':year+' में आपकी आध्यात्मिक और कलात्मक प्रतिभा का पूर्ण विकास होगा। सृजनशीलता से नई आय के स्रोत खुलेंगे। शुभ माह: जनवरी, मई, सितंबर।'
+    };
+    
+    var rashiYearlyEn = {
+        'Aries':'In '+year+', new leadership opportunities will come for you. A major career leap is possible. Depth in love life. Auspicious months: February, June, October.',
+        'Taurus':'Financial situation will be better than before in '+year+'. Chances of property increase. Auspicious events in family. Auspicious months: March, July, November.',
+        'Gemini':'Major achievements through communication and intellectual skills in '+year+'. New education or course will give new direction to your career. Auspicious months: April, August, December.',
+        'Cancer':'Very happy changes in family life in '+year+'. Dreams related to home will come true. Special blessings from mother. Auspicious months: January, May, September.',
+        'Leo':'Your reputation and social influence will reach new heights in '+year+'. Success in government or administrative field. Auspicious months: February, June, October.',
+        'Virgo':'Special attention to health and efficiency will bring big gains in '+year+'. Analytical skills will give new heights in career. Auspicious months: March, July, November.',
+        'Libra':'Big goals achieved through partnership and cooperation in '+year+'. Auspicious signs for love and marriage. Artistic talent will be recognized. Auspicious months: April, August, December.',
+        'Scorpio':'Hidden powers will emerge in '+year+'. An old secret will be revealed in your favor. Improvement in both wealth and health. Auspicious months: January, May, September.',
+        'Sagittarius':'New travels, new education and new possibilities will change your world in '+year+'. Strong chances of foreign travel. Auspicious months: February, June, October.',
+        'Capricorn':'Sweet fruit of your long-term hard work in '+year+'. Both business success and social reputation will increase. Auspicious months: March, July, November.',
+        'Aquarius':'Your unique and innovative ideas may get global recognition in '+year+'. Special success in technology and innovation. Auspicious months: April, August, December.',
+        'Pisces':'Complete development of your spiritual and artistic talent in '+year+'. Creativity will open new sources of income. Auspicious months: January, May, September.'
+    };
+    
+    var key = hindiToKey[r] || '';
+    var el = document.getElementById('yearlyRashiRes');
+    el.style.display = 'block';
+    var displayRashi = isEn ? rashiEnMap[r] : r;
+    el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📅 ' + displayRashi + ' — ' + year + '</h3><p style="color:#ddd;line-height:1.8;">' + (isEn ? '⏳ Loading...' : '⏳ लोड हो रहा है...') + '</p>';
+    
+    getFbPredictions('yearly').then(function(fb) {
+        var fbText = fb[key] && fb[key].text ? fb[key].text : '';
+        var pred = fbText || (isEn ? (rashiYearlyEn[displayRashi] || 'Positive changes will come in your life in '+year+'.') : (rashiYearlyHi[r] || year+' में आपके जीवन में सकारात्मक बदलाव आएंगे।'));
+        el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📅 ' + displayRashi + ' — ' + year + '</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
+    });
+}
         function doKundliMatch() {
             var b = document.getElementById('mBride').value.trim();
             var g = document.getElementById('mGroom').value.trim();
@@ -1198,30 +1266,33 @@
         }
 
         function renderHistoryPage() {
-            var grid = document.getElementById('historyPageGrid');
-            var empty = document.getElementById('historyEmpty');
-            if (!kundliHistory || kundliHistory.length === 0) {
-                grid.innerHTML = '';
-                empty.style.display = 'block';
-                return;
-            }
-            empty.style.display = 'none';
-            grid.innerHTML = kundliHistory.map(function(entry) {
-                var typeLabel = entry.type === 'basic' ? '📄 ₹19 विस्तृत' : entry.type === 'premium' ? '👑 ₹49 प्रीमियम' : '🔮 मुफ्त भविष्य';
-                var typeBg = entry.type === 'basic' ? 'rgba(255,215,0,0.15)' : entry.type === 'premium' ? 'rgba(155,89,182,0.15)' : 'rgba(255,255,255,0.08)';
-                var pred = typeof entry.data === 'string' ? entry.data : (entry.data && entry.data.mainPred) || '';
-                return '<div style="background:' + typeBg + ';border:1px solid rgba(255,215,0,0.3);border-radius:20px;padding:20px;position:relative;">'
-                    + '<button onclick="deleteSingleHistory(' + entry.id + ')" title="इसे हटाएं" style="position:absolute;top:12px;right:12px;background:rgba(255,0,0,0.2);border:1px solid rgba(255,100,100,0.5);border-radius:50%;color:#ff6666;width:28px;height:28px;cursor:pointer;font-size:0.85em;display:flex;align-items:center;justify-content:center;z-index:2;" onclick="event.stopPropagation()">✕</button>'
-                    + '<div style="cursor:pointer;" onclick="viewHistoryReport(' + entry.id + ')">'
-                    + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;padding-right:35px;">'
-                    + '<h3 style="color:#ffd700;margin:0;">' + entry.name + '</h3>'
-                    + '<span style="background:rgba(255,215,0,0.2);color:#ffd700;padding:4px 10px;border-radius:15px;font-size:0.8em;">' + typeLabel + '</span>'
-                    + '</div>'
-                    + '<p style="color:#aaa;font-size:0.85em;margin-bottom:8px;">📅 ' + entry.date + '</p>'
-                    + '<p style="color:#ddd;font-size:0.9em;line-height:1.6;">' + pred.substring(0, 120) + (pred.length > 120 ? '...' : '') + '</p>'
-                    + '</div></div>';
-            }).join('');
-        }
+    var isEn = window._isEn;
+    var grid = document.getElementById('historyPageGrid');
+    var empty = document.getElementById('historyEmpty');
+    if (!kundliHistory || kundliHistory.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        empty.innerHTML = isEn ? '<div style="text-align:center;color:#ccc;padding:40px;">No reports viewed yet</div>' : '<div style="text-align:center;color:#ccc;padding:40px;">कोई रिपोर्ट नहीं देखी गई</div>';
+        return;
+    }
+    empty.style.display = 'none';
+    grid.innerHTML = kundliHistory.map(function(entry) {
+        var typeLabel = entry.type === 'basic' ? (isEn ? '📄 ₹19 Detailed' : '📄 ₹19 विस्तृत') : entry.type === 'premium' ? (isEn ? '👑 ₹49 Premium' : '👑 ₹49 प्रीमियम') : (isEn ? '🔮 Free Prediction' : '🔮 मुफ्त भविष्य');
+        var typeBg = entry.type === 'basic' ? 'rgba(255,215,0,0.15)' : entry.type === 'premium' ? 'rgba(155,89,182,0.15)' : 'rgba(255,255,255,0.08)';
+        var pred = typeof entry.data === 'string' ? entry.data : (entry.data && entry.data.mainPred) || '';
+        var deleteTitle = isEn ? 'Delete this' : 'इसे हटाएं';
+        return '<div style="background:' + typeBg + ';border:1px solid rgba(255,215,0,0.3);border-radius:20px;padding:20px;position:relative;">'
+            + '<button onclick="deleteSingleHistory(' + entry.id + ')" title="' + deleteTitle + '" style="position:absolute;top:12px;right:12px;background:rgba(255,0,0,0.2);border:1px solid rgba(255,100,100,0.5);border-radius:50%;color:#ff6666;width:28px;height:28px;cursor:pointer;font-size:0.85em;display:flex;align-items:center;justify-content:center;z-index:2;" onclick="event.stopPropagation()">✕</button>'
+            + '<div style="cursor:pointer;" onclick="viewHistoryReport(' + entry.id + ')">'
+            + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;padding-right:35px;">'
+            + '<h3 style="color:#ffd700;margin:0;">' + entry.name + '</h3>'
+            + '<span style="background:rgba(255,215,0,0.2);color:#ffd700;padding:4px 10px;border-radius:15px;font-size:0.8em;">' + typeLabel + '</span>'
+            + '</div>'
+            + '<p style="color:#aaa;font-size:0.85em;margin-bottom:8px;">📅 ' + entry.date + '</p>'
+            + '<p style="color:#ddd;font-size:0.9em;line-height:1.6;">' + pred.substring(0, 120) + (pred.length > 120 ? '...' : '') + '</p>'
+            + '</div></div>';
+    }).join('');
+}
 
         function showHistoryClearOptions() {
             var overlay = document.createElement('div');
@@ -1243,17 +1314,18 @@
         }
 
         function deleteSingleHistory(id) {
-            if (!confirm('क्या आप यह भविष्यफल हटाना चाहते हैं?')) return;
-            kundliHistory = kundliHistory.filter(function(e) { return e.id !== id; });
-            try { localStorage.setItem('bd_hist', JSON.stringify(kundliHistory)); } catch(e) {}
-            try { localStorage.setItem('kundliHistoryData', JSON.stringify(kundliHistory)); } catch(e) {}
-            try {
-                var userId = localStorage.getItem('userId');
-                if (userId) database.ref('users/' + userId + '/kundliHistory').set(kundliHistory);
-            } catch(e) {}
-            updateKundliHistoryDisplay();
-            renderHistoryPage();
-        }
+    var isEn = window._isEn;
+    if (!confirm(isEn ? 'Are you sure you want to delete this prediction?' : 'क्या आप यह भविष्यफल हटाना चाहते हैं?')) return;
+    kundliHistory = kundliHistory.filter(function(e) { return e.id !== id; });
+    try { localStorage.setItem('bd_hist', JSON.stringify(kundliHistory)); } catch(e) {}
+    try { localStorage.setItem('kundliHistoryData', JSON.stringify(kundliHistory)); } catch(e) {}
+    try {
+        var userId = localStorage.getItem('userId');
+        if (userId) database.ref('users/' + userId + '/kundliHistory').set(kundliHistory);
+    } catch(e) {}
+    updateKundliHistoryDisplay();
+    renderHistoryPage();
+}
 
 
         // === HELPERS (defined after rashiMapData) ===
@@ -1525,28 +1597,30 @@
         }
 
         function displayHoroscopeResult(result) {
-            document.getElementById('horoscopeText').innerText = result.prediction || result.text || '';
-            
-            document.getElementById('horoscopeLucky').innerHTML = `
-                <div class="lucky-card">
-                    <i class="fas fa-dice"></i>
-                    <h3>शुभ अंक</h3>
-                    <div class="value">${result.luckyNumber || result.number || ''}</div>
-                </div>
-                <div class="lucky-card">
-                    <i class="fas fa-palette"></i>
-                    <h3>शुभ रंग</h3>
-                    <div class="value">${result.luckyColor || result.color || ''}</div>
-                </div>
-                <div class="lucky-card">
-                    <i class="fas fa-clock"></i>
-                    <h3>शुभ समय</h3>
-                    <div class="value">${result.luckyTime || result.time || ''}</div>
-                </div>
-            `;
-            
-            document.getElementById('horoscopeResult').style.display = 'block';
-        }
+    var isEn = window._isEn;
+    
+    document.getElementById('horoscopeText').innerText = result.prediction || result.text || '';
+    
+    document.getElementById('horoscopeLucky').innerHTML = `
+        <div class="lucky-card">
+            <i class="fas fa-dice"></i>
+            <h3>${isEn ? 'Lucky Number' : 'शुभ अंक'}</h3>
+            <div class="value">${result.luckyNumber || result.number || ''}</div>
+        </div>
+        <div class="lucky-card">
+            <i class="fas fa-palette"></i>
+            <h3>${isEn ? 'Lucky Color' : 'शुभ रंग'}</h3>
+            <div class="value">${result.luckyColor || result.color || ''}</div>
+        </div>
+        <div class="lucky-card">
+            <i class="fas fa-clock"></i>
+            <h3>${isEn ? 'Lucky Time' : 'शुभ समय'}</h3>
+            <div class="value">${result.luckyTime || result.time || ''}</div>
+        </div>
+    `;
+    
+    document.getElementById('horoscopeResult').style.display = 'block';
+}
 
         function setDonationAmount(amount) {
             selectedDonationAmount = amount;
@@ -2647,16 +2721,20 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         }
 
         function buildTimelineCard(emoji, labelEn, labelHi, text, bg, color) {
-            return '<div style="background:' + bg + ';border:1px solid ' + color + '33;border-radius:18px;padding:20px;position:relative;overflow:hidden;">' +
-                '<div style="position:absolute;top:0;left:0;width:4px;height:100%;background:' + color + ';border-radius:4px 0 0 4px;"></div>' +
-                '<div style="margin-left:8px;">' +
-                '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">' +
-                '<span style="font-size:1.5em;">' + emoji + '</span>' +
-                '<div><div style="color:' + color + ';font-weight:700;font-size:1em;">' + labelEn + '</div>' +
-                '<div style="color:#888;font-size:0.8em;">' + labelHi + '</div></div></div>' +
-                '<p style="color:#ddd;line-height:1.7;font-size:0.95em;margin:0;">' + (text || 'जल्द आएगा...') + '</p>' +
-                '</div></div>';
-        }
+    var isEn = window._isEn;
+    var displayLabel = isEn ? labelEn : labelHi;
+    var displaySubLabel = isEn ? '' : labelHi;
+    
+    return '<div style="background:' + bg + ';border:1px solid ' + color + '33;border-radius:18px;padding:20px;position:relative;overflow:hidden;">' +
+        '<div style="position:absolute;top:0;left:0;width:4px;height:100%;background:' + color + ';border-radius:4px 0 0 4px;"></div>' +
+        '<div style="margin-left:8px;">' +
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">' +
+        '<span style="font-size:1.5em;">' + emoji + '</span>' +
+        '<div><div style="color:' + color + ';font-weight:700;font-size:1em;">' + labelEn + '</div>' +
+        '<div style="color:#888;font-size:0.8em;">' + (isEn ? labelHi.replace('अगले ', 'Next ') : labelHi) + '</div></div></div>' +
+        '<p style="color:#ddd;line-height:1.7;font-size:0.95em;margin:0;">' + (text || (isEn ? 'Coming soon...' : 'जल्द आएगा...')) + '</p>' +
+        '</div></div>';
+}
 
         function showFreePredPage(name, age, gender, zodiac, birthPlace, mainPred, cats) {
             // Legacy wrapper - calls new async version
@@ -2831,41 +2909,43 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
         // Free limit modal
         function showFreeLimitModal(feature) {
-            var feat = feature || 'pred';
-            var labels = { pred: 'भविष्यफल', love: 'लव कैलकुलेटर', horo: 'दैनिक राशिफल' };
-            var label = labels[feat] || 'सुविधा';
-            var used = parseInt(localStorage.getItem('daily_used_' + feat) || '0');
-            var max = getDailyLimit(feat);
+    var isEn = window._isEn;
+    var feat = feature || 'pred';
+    var labelsHi = { pred: 'भविष्यफल', love: 'लव कैलकुलेटर', horo: 'दैनिक राशिफल' };
+    var labelsEn = { pred: 'Predictions', love: 'Love Calculator', horo: 'Daily Horoscope' };
+    var label = isEn ? (labelsEn[feat] || 'Feature') : (labelsHi[feat] || 'सुविधा');
+    var used = parseInt(localStorage.getItem('daily_used_' + feat) || '0');
+    var max = getDailyLimit(feat);
 
-            // Calculate time till midnight reset
-            var now = new Date();
-            var midnight = new Date(now);
-            midnight.setHours(24, 0, 0, 0);
-            var msLeft = midnight - now;
-            var hoursLeft = Math.floor(msLeft / 3600000);
-            var minsLeft = Math.floor((msLeft % 3600000) / 60000);
+    var now = new Date();
+    var midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);
+    var msLeft = midnight - now;
+    var hoursLeft = Math.floor(msLeft / 3600000);
+    var minsLeft = Math.floor((msLeft % 3600000) / 60000);
 
-            var overlay = document.getElementById('freeLimitOverlay');
-            if (!overlay) {
-                overlay = document.createElement('div');
-                overlay.id = 'freeLimitOverlay';
-                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.93);z-index:30000;display:flex;align-items:center;justify-content:center;';
-                document.body.appendChild(overlay);
-            }
-            overlay.innerHTML = '<div style="background:linear-gradient(135deg,#0a0a1a,#1a1a3a);border:2px solid #ffd700;border-radius:22px;padding:25px;max-width:380px;width:92%;text-align:center;">'
-                + '<div style="font-size:2.5em;margin-bottom:10px;">🔒</div>'
-                + '<h3 style="color:#ffd700;margin-bottom:8px;">आज के ' + label + ' समाप्त!</h3>'
-                + '<p style="color:#ccc;font-size:0.9em;margin-bottom:6px;">आपने आज के ' + max + ' में से ' + used + ' बार उपयोग किया</p>'
-                + '<div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:10px;margin-bottom:14px;">'
-                + '<p style="color:#ffd700;font-size:0.9em;font-weight:600;">⏰ ' + hoursLeft + ' घंटे ' + minsLeft + ' मिनट बाद</p>'
-                + '<p style="color:#aaa;font-size:0.82em;">रात 12 बजे आपको 2 नए मुफ्त भविष्यफल मिलेंगे!</p>'
-                + '</div>'
-                + '<button onclick="doShareForBonus(\'' + feat + '\');document.getElementById(\'freeLimitOverlay\').style.display=\'none\';" style="width:100%;padding:12px;background:linear-gradient(135deg,#25D366,#128C7E);border:none;border-radius:18px;color:#fff;font-weight:700;cursor:pointer;margin-bottom:9px;">📲 Share करें — 1 और मुफ्त पाएं</button>'
-                + '<button onclick="document.getElementById(\'freeLimitOverlay\').style.display=\'none\';showPage(\'premium\');" style="width:100%;padding:12px;background:linear-gradient(135deg,#ffd700,#ff4500);border:none;border-radius:18px;color:#0a0a1a;font-weight:700;cursor:pointer;margin-bottom:9px;">👑 Premium लें — रोज़ 10+ भविष्यफल</button>'
-                + '<button onclick="document.getElementById(\'freeLimitOverlay\').style.display=\'none\';" style="width:100%;padding:9px;background:none;border:1px solid #555;border-radius:18px;color:#aaa;cursor:pointer;font-size:0.88em;">कल फिर आएंगे 🙏</button>'
-                + '</div>';
-            overlay.style.display = 'flex';
-        }
+    var overlay = document.getElementById('freeLimitOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'freeLimitOverlay';
+        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.93);z-index:30000;display:flex;align-items:center;justify-content:center;';
+        document.body.appendChild(overlay);
+    }
+    
+    overlay.innerHTML = '<div style="background:linear-gradient(135deg,#0a0a1a,#1a1a3a);border:2px solid #ffd700;border-radius:22px;padding:25px;max-width:380px;width:92%;text-align:center;">'
+        + '<div style="font-size:2.5em;margin-bottom:10px;">🔒</div>'
+        + '<h3 style="color:#ffd700;margin-bottom:8px;">' + (isEn ? 'Today\'s ' + label + ' Finished!' : 'आज के ' + label + ' समाप्त!') + '</h3>'
+        + '<p style="color:#ccc;font-size:0.9em;margin-bottom:6px;">' + (isEn ? 'You have used ' + used + ' out of ' + max + ' today' : 'आपने आज के ' + max + ' में से ' + used + ' बार उपयोग किया') + '</p>'
+        + '<div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:10px;margin-bottom:14px;">'
+        + '<p style="color:#ffd700;font-size:0.9em;font-weight:600;">⏰ ' + hoursLeft + ' ' + (isEn ? 'hours' : 'घंटे') + ' ' + minsLeft + ' ' + (isEn ? 'minutes left' : 'मिनट बाद') + '</p>'
+        + '<p style="color:#aaa;font-size:0.82em;">' + (isEn ? 'After midnight, you will get ' + max + ' new free predictions!' : 'रात 12 बजे आपको ' + max + ' नए मुफ्त भविष्यफल मिलेंगे!') + '</p>'
+        + '</div>'
+        + '<button onclick="doShareForBonus(\'' + feat + '\');document.getElementById(\'freeLimitOverlay\').style.display=\'none\';" style="width:100%;padding:12px;background:linear-gradient(135deg,#25D366,#128C7E);border:none;border-radius:18px;color:#fff;font-weight:700;cursor:pointer;margin-bottom:9px;">' + (isEn ? '📲 Share — Get 1 more free' : '📲 Share करें — 1 और मुफ्त पाएं') + '</button>'
+        + '<button onclick="document.getElementById(\'freeLimitOverlay\').style.display=\'none\';showPage(\'premium\');" style="width:100%;padding:12px;background:linear-gradient(135deg,#ffd700,#ff4500);border:none;border-radius:18px;color:#0a0a1a;font-weight:700;cursor:pointer;margin-bottom:9px;">' + (isEn ? '👑 Get Premium — 10+ predictions daily' : '👑 Premium लें — रोज़ 10+ भविष्यफल') + '</button>'
+        + '<button onclick="document.getElementById(\'freeLimitOverlay\').style.display=\'none\';" style="width:100%;padding:9px;background:none;border:1px solid #555;border-radius:18px;color:#aaa;cursor:pointer;font-size:0.88em;">' + (isEn ? 'Come back tomorrow 🙏' : 'कल फिर आएंगे 🙏') + '</button>'
+        + '</div>';
+    overlay.style.display = 'flex';
+}
 
         // Generate unique referral code for this user/device
         function getUserReferralCode() {
@@ -2945,30 +3025,30 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         })();
 
         function doShareForBonus(feat) {
-            feat = feat || 'pred';
-            var refCode = getUserReferralCode();
-            var baseUrl = 'https://bhavishyadekho.online';
-            var shareUrl = baseUrl + '/#ref=' + refCode;
-            // URL must be alone on its own line for WhatsApp to render it as clickable link
-            var txt = '🔮 *Bhavishya Dekho* — मुफ्त ज्योतिष!'
-                + '\n✨ भविष्यफल, लव कैलकुलेटर, राशिफल — सब मुफ्त!'
-                + '\n\n🌐 अभी देखें:\n' + baseUrl
-                + '\n\n🎁 मेरे link से join करने पर आपको 1 extra free मिलेगा!';
+    var isEn = window._isEn;
+    feat = feat || 'pred';
+    var refCode = getUserReferralCode();
+    var baseUrl = 'https://bhavishyadekho.online';
+    var shareUrl = baseUrl + '/#ref=' + refCode;
+    var txt = '🔮 *Bhavishya Dekho* — ' + (isEn ? 'Free Astrology!' : 'मुफ्त ज्योतिष!')
+        + '\n✨ ' + (isEn ? 'Predictions, Love Calculator, Horoscope — All Free!' : 'भविष्यफल, लव कैलकुलेटर, राशिफल — सब मुफ्त!')
+        + '\n\n🌐 ' + (isEn ? 'Visit now:' : 'अभी देखें:') + '\n' + baseUrl
+        + '\n\n🎁 ' + (isEn ? 'Join via my link to get 1 extra free!' : 'मेरे link से join करने पर आपको 1 extra free मिलेगा!');
 
-            localStorage.setItem('pendingShareFeat', feat);
+    localStorage.setItem('pendingShareFeat', feat);
 
-            if (navigator.share) {
-                navigator.share({ title: 'Bhavishya Dekho', text: txt, url: baseUrl })
-                    .then(function() { alert('✅ Share हो गया! जब कोई आपका link खोलेगा, तो आपको 1 मुफ्त मिलेगा।'); })
-                    .catch(function() {});
-            } else if (navigator.clipboard) {
-                navigator.clipboard.writeText(txt).then(function() {
-                    alert('✅ Copy हो गया! दोस्तों को भेजें।\nजब कोई link खोलेगा, आपको 1 मुफ्त मिलेगा।');
-                });
-            } else {
-                prompt('यह link copy करें:', baseUrl);
-            }
-        }
+    if (navigator.share) {
+        navigator.share({ title: 'Bhavishya Dekho', text: txt, url: baseUrl })
+            .then(function() { alert(isEn ? '✅ Shared! When someone opens your link, you\'ll get 1 free.' : '✅ Share हो गया! जब कोई आपका link खोलेगा, तो आपको 1 मुफ्त मिलेगा।'); })
+            .catch(function() {});
+    } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(txt).then(function() {
+            alert(isEn ? '✅ Copied! Send to friends.\nWhen someone opens the link, you\'ll get 1 free.' : '✅ Copy हो गया! दोस्तों को भेजें।\nजब कोई link खोलेगा, आपको 1 मुफ्त मिलेगा।');
+        });
+    } else {
+        prompt(isEn ? 'Copy this link:' : 'यह link copy करें:', baseUrl);
+    }
+}
 
         // share functions defined below (single source of truth)
 
@@ -2977,77 +3057,79 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         // WhatsApp share with proper formatted message (NO screenshot)
         // ===== CENTRAL SHARE FUNCTIONS =====
         function _getShareData() {
-            var name = window._predName || '';
-            var pred = (window._predText || '').substring(0, 120);
-            var refCode = getUserReferralCode();
-            // Clean base URL - no query params so WhatsApp/Facebook make it clickable
-            var baseUrl = 'https://bhavishyadekho.online';
-            // Ref URL with hash so it doesn't break link previews
-            var refUrl = baseUrl + '/#ref=' + refCode;
-            return { name: name, pred: pred, refUrl: refUrl, baseUrl: baseUrl, refCode: refCode };
-        }
+    var isEn = window._isEn;
+    var name = window._predName || '';
+    var pred = (window._predText || '').substring(0, 120);
+    var refCode = getUserReferralCode();
+    var baseUrl = 'https://bhavishyadekho.online';
+    var refUrl = baseUrl + '/#ref=' + refCode;
+    return { name: name, pred: pred, refUrl: refUrl, baseUrl: baseUrl, refCode: refCode };
+}
 
         function shareOnWhatsApp() {
-            var d = _getShareData();
-            var fullPred = (window._predText || '').substring(0, 250);
-            // URL must be on its OWN LINE with no other text on that line for WhatsApp to make it clickable
-            var msg = '🔮 *Bhavishya Dekho* — मुफ्त ज्योतिष'
-                + (d.name ? '\n👤 *' + d.name + '* का भविष्यफल' : '')
-                + (fullPred ? '\n\n✨ ' + fullPred + '...' : '')
-                + '\n\n━━━━━━━━━━━━━━━━'
-                + '\n🌐 अभी अपना मुफ्त भविष्य देखें:'
-                + '\nhttps://bhavishyadekho.online'
-                + '\n━━━━━━━━━━━━━━━━'
-                + '\n🎁 इस link से आएं — 1 extra free मिलेगा!';
-            trackShare('free');
-            window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
-        }
+    var d = _getShareData();
+    var isEn = window._isEn;
+    var fullPred = (window._predText || '').substring(0, 250);
+    var msg = '🔮 *Bhavishya Dekho* — ' + (isEn ? 'Free Astrology' : 'मुफ्त ज्योतिष')
+        + (d.name ? '\n' + (isEn ? '👤 Prediction for *' : '👤 *') + d.name + '*' : '')
+        + (fullPred ? '\n\n✨ ' + fullPred + '...' : '')
+        + '\n\n━━━━━━━━━━━━━━━━'
+        + '\n🌐 ' + (isEn ? 'See your free future now:' : 'अभी अपना मुफ्त भविष्य देखें:')
+        + '\nhttps://bhavishyadekho.online'
+        + '\n━━━━━━━━━━━━━━━━'
+        + '\n🎁 ' + (isEn ? 'Use this link — get 1 extra free!' : 'इस link से आएं — 1 extra free मिलेगा!');
+    trackShare('free');
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
 
         function shareOnFacebook() {
-            var d = _getShareData();
-            // Facebook sharer needs clean URL — query params can break og:image preview
-            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(d.baseUrl), '_blank');
-        }
+    var d = _getShareData();
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(d.baseUrl), '_blank');
+}
 
         function shareOnInstagram() {
-            var d = _getShareData();
-            var txt = '🔮 Bhavishya Dekho — मुफ्त ज्योतिष\n'
-                + (d.name ? d.name + ' का भविष्यफल\n' : '')
-                + '\n🌐 ' + d.baseUrl
-                + '\n🎁 अभी अपना मुफ्त भविष्य देखें!';
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(txt).then(function() {
-                    alert('📸 Copy हो गया!\nInstagram खोलें → Story/Bio → Paste करें');
-                });
-            } else {
-                prompt('Copy करें:', txt);
-            }
-        }
+    var d = _getShareData();
+    var isEn = window._isEn;
+    var txt = '🔮 Bhavishya Dekho — ' + (isEn ? 'Free Astrology' : 'मुफ्त ज्योतिष') + '\n'
+        + (d.name ? d.name + (isEn ? '\'s Prediction\n' : ' का भविष्यफल\n') : '')
+        + '\n🌐 ' + d.baseUrl
+        + '\n🎁 ' + (isEn ? 'See your free future now!' : 'अभी अपना मुफ्त भविष्य देखें!');
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(txt).then(function() {
+            alert(isEn ? '📸 Copied!\nOpen Instagram → Story/Bio → Paste' : '📸 Copy हो गया!\nInstagram खोलें → Story/Bio → Paste करें');
+        });
+    } else {
+        prompt(isEn ? 'Copy:' : 'Copy करें:', txt);
+    }
+}
 
         function shareOnSnapchat() {
-            var d = _getShareData();
-            window.open('https://www.snapchat.com/scan?attachmentUrl=' + encodeURIComponent(d.baseUrl), '_blank');
-        }
+    var d = _getShareData();
+    window.open('https://www.snapchat.com/scan?attachmentUrl=' + encodeURIComponent(d.baseUrl), '_blank');
+}
 
         function shareOnTelegram() {
-            var d = _getShareData();
-            var txt = '🔮 Bhavishya Dekho — मुफ्त भविष्यफल' + (d.name ? ' | ' + d.name : '');
-            window.open('https://t.me/share/url?url=' + encodeURIComponent(d.baseUrl) + '&text=' + encodeURIComponent(txt), '_blank');
-        }
+    var d = _getShareData();
+    var isEn = window._isEn;
+    var txt = '🔮 Bhavishya Dekho — ' + (isEn ? 'Free Predictions' : 'मुफ्त भविष्यफल') + (d.name ? ' | ' + d.name : '');
+    window.open('https://t.me/share/url?url=' + encodeURIComponent(d.baseUrl) + '&text=' + encodeURIComponent(txt), '_blank');
+}
 
         function shareOnTwitter() {
-            var d = _getShareData();
-            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('🔮 Bhavishya Dekho — मुफ्त ज्योतिष') + '&url=' + encodeURIComponent(d.baseUrl), '_blank');
-        }
+    var d = _getShareData();
+    var isEn = window._isEn;
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('🔮 Bhavishya Dekho — ' + (isEn ? 'Free Astrology' : 'मुफ्त ज्योतिष')) + '&url=' + encodeURIComponent(d.baseUrl), '_blank');
+}
 
         function copyLink() {
-            var d = _getShareData();
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(d.baseUrl).then(function() { alert('✅ Link copy हो गया!\n' + d.baseUrl); });
-            } else {
-                prompt('Link copy करें:', d.baseUrl);
-            }
-        }
+    var d = _getShareData();
+    var isEn = window._isEn;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(d.baseUrl).then(function() { alert((isEn ? '✅ Link copied!\n' : '✅ Link copy हो गया!\n') + d.baseUrl); });
+    } else {
+        prompt(isEn ? 'Copy link:' : 'Link copy करें:', d.baseUrl);
+    }
+}
 
         // ₹19/₹49 RESULT BUILDER — shows in kundliResultModal (existing V6 modal)
         function buildAndShowKundliResult(name, age, gText, rashi, nakshatra, place, time, day, month, year, seed, rng, sets, isPrem, reportLabel) {
@@ -3687,26 +3769,30 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         }
 
         function updateAllLimitBars() {
-            checkDailyReset();
-            var feats = [
-                { key: 'pred', barId: 'predLimitBar', label: 'भविष्य' },
-                { key: 'love', barId: 'loveLimitBar', label: 'लव' },
-                { key: 'horo', barId: 'horoLimitBar', label: 'राशिफल' }
-            ];
-            feats.forEach(function(f) {
-                var bar = document.getElementById(f.barId);
-                if (!bar) return;
-                var used  = parseInt(localStorage.getItem('daily_used_' + f.key) || '0');
-                var max   = getDailyLimit(f.key);
-                var left  = Math.max(0, max - used);
-                var color = left > 1 ? '#4CAF50' : left > 0 ? '#ffd700' : '#ff6666';
-                bar.innerHTML = '📅 आज के ' + f.label + ': <strong style="color:' + color + ';">' + left + ' बचे</strong> / ' + max + ' (रोज़ रीसेट)'
-                    + (left === 0 ? ' &nbsp;<button onclick="doShareForBonus(\'' + f.key + '\')" style="background:linear-gradient(135deg,#25D366,#128C7E);border:none;border-radius:14px;color:#fff;padding:3px 10px;cursor:pointer;font-size:0.8em;margin-left:6px;">Share = +1</button>' : '');
-                bar.style.display = 'block';
-                bar.style.background = left === 0 ? 'rgba(255,100,100,0.1)' : 'rgba(255,215,0,0.08)';
-                bar.style.borderColor = left === 0 ? 'rgba(255,100,100,0.4)' : 'rgba(255,215,0,0.25)';
-            });
-        }
+    checkDailyReset();
+    var isEn = window._isEn;
+    var feats = [
+        { key: 'pred', barId: 'predLimitBar', labelHi: 'भविष्य', labelEn: 'Predictions' },
+        { key: 'love', barId: 'loveLimitBar', labelHi: 'लव', labelEn: 'Love' },
+        { key: 'horo', barId: 'horoLimitBar', labelHi: 'राशिफल', labelEn: 'Horoscope' }
+    ];
+    feats.forEach(function(f) {
+        var bar = document.getElementById(f.barId);
+        if (!bar) return;
+        var used  = parseInt(localStorage.getItem('daily_used_' + f.key) || '0');
+        var max   = getDailyLimit(f.key);
+        var left  = Math.max(0, max - used);
+        var color = left > 1 ? '#4CAF50' : left > 0 ? '#ffd700' : '#ff6666';
+        var label = isEn ? f.labelEn : f.labelHi;
+        var leftText = isEn ? 'left' : 'बचे';
+        var resetText = isEn ? 'Daily Reset' : 'रोज़ रीसेट';
+        bar.innerHTML = '📅 ' + (isEn ? 'Today\'s ' : 'आज के ') + label + ': <strong style="color:' + color + ';">' + left + ' ' + leftText + '</strong> / ' + max + ' (' + resetText + ')'
+            + (left === 0 ? ' &nbsp;<button onclick="doShareForBonus(\'' + f.key + '\')" style="background:linear-gradient(135deg,#25D366,#128C7E);border:none;border-radius:14px;color:#fff;padding:3px 10px;cursor:pointer;font-size:0.8em;margin-left:6px;">' + (isEn ? 'Share = +1' : 'Share = +1') + '</button>' : '');
+        bar.style.display = 'block';
+        bar.style.background = left === 0 ? 'rgba(255,100,100,0.1)' : 'rgba(255,215,0,0.08)';
+        bar.style.borderColor = left === 0 ? 'rgba(255,100,100,0.4)' : 'rgba(255,215,0,0.25)';
+    });
+}
 
         // Apply premium bonus when premium is purchased/loaded
         function applyPremiumLimitBonus(plan) {
