@@ -1,15 +1,15 @@
-/* Bhavishya Dekho — script.js | bhavishyadekho.online */
+/* ═══════════════════════════════════════════════════
+   BHAVISHYA DEKHO — Main Application Script
+   File: script.js
+   Contains: Firebase init, predictions, payments,
+   kundli, horoscope, love calculator, admin panel
+════════════════════════════════════════════════════ */
 
-        // Your Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCAjf6a111RYNrczir5UVQrkctxlNIYERI",
-            authDomain: "apka-bhavishya-42426.firebaseapp.com",
-            databaseURL: "https://apka-bhavishya-42426-default-rtdb.firebaseio.com",
-            projectId: "apka-bhavishya-42426",
-            storageBucket: "apka-bhavishya-42426.appspot.com",
-            messagingSenderId: "490450742753",
-            appId: "1:490450742753:web:63a59cd70e1ac24304b6a0"
-        };
+        // Firebase configuration loaded from config.js
+        if (!window.__CONFIG_LOADED__) {
+            console.error('⚠️ config.js load nahi hua. Kripya config.js file index.html ke saath rakhen.');
+        }
+        const firebaseConfig = window.__SITE_CONFIG__ ? window.__SITE_CONFIG__.firebase : {};
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -380,7 +380,7 @@
                 ['&#127973;','स्वास्थ्य','नियमित व्यायाम करें। स्वास्थ्य अच्छा रहेगा।']
             ];
             if (isPrem) {
-                sects.push(['&#128142;','रत्न सुझाव','पुखराज (गुरु), मोती (चंद्र) — ${window.bdTx ? window.bdTx('Thursday morning') : 'गुरुवार सुबह'} धारण करें।']);
+                sects.push(['&#128142;','रत्न सुझाव','पुखराज (गुरु), मोती (चंद्र) — गुरुवार सुबह धारण करें।']);
                 sects.push(['&#128591;','ग्रह उपाय','शनिवार को काले तिल दान करें। हनुमान चालीसा पढ़ें।']);
                 sects.push(['&#128336;','दशा विश्लेषण','वर्तमान में गुरु महादशा चल रही है — शुभ समय है।']);
             }
@@ -396,7 +396,7 @@
                 + '<div style="color:#ffd700;font-weight:600;margin-bottom:10px;">&#127808; शुभ कारक</div>'
                 + '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">'
                 + mkRow('शुभ अंक', '3, 7, 9') + mkRow('शुभ रंग', 'पीला, सफेद')
-                + mkRow('शुभ दिन', 'गुरुवार') + mkRow('शुभ दिशा', '${window.bdTx ? window.bdTx('North-East') : 'उत्तर-पूर्व'}')
+                + mkRow('शुभ दिन', 'गुरुवार') + mkRow('शुभ दिशा', 'उत्तर-पूर्व')
                 + '</div></div>';
             reportHTML += '<div style="text-align:center;margin:18px 0;">'
                 + '<button onclick="downloadKundliPDF()" class="kundli-download-btn"><i class="fas fa-download"></i> PDF डाउनलोड</button></div>';
@@ -626,7 +626,7 @@
             var page = document.getElementById('kundliReportPage');
             if (page) { page.style.display = 'block'; window.scrollTo(0, 0); }
             var titleEl = document.getElementById('kundliReportPageTitle');
-            if (titleEl) titleEl.textContent = isPrem ? (window.bdTx ? window.bdTx('👑 ₹49 प्रीमियम कुंडली') : '👑 ₹49 प्रीमियम कुंडली') : (window.bdTx ? window.bdTx('📜 ₹19 विस्तृत कुंडली') : '📜 ₹19 विस्तृत कुंडली');
+            if (titleEl) titleEl.textContent = isPrem ? '👑 ₹49 प्रीमियम कुंडली' : '📜 ₹19 विस्तृत कुंडली';
         }
 
         function backToHomeFromKundliReport() {
@@ -889,7 +889,7 @@
             var key = hindiToKey[r] || '';
             var el = document.getElementById('dailyRashiRes');
             el.style.display = 'block';
-            el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">☀️ ' + r + ' — ' + (window.bdTx ? window.bdTx('आज का राशिफल') : 'आज का राशिफल') + '</h3><p style="color:#ddd;line-height:1.8;">⏳ ' + (window.bdTx ? window.bdTx('लोड हो रहा है...') : 'लोड हो रहा है...') + '</p>';
+            el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">☀️ ' + r + ' — आज का राशिफल</h3><p style="color:#ddd;line-height:1.8;">⏳ लोड हो रहा है...</p>';
             getFbPredictions('daily').then(function(fb) {
                 // Admin panel saves as: predictions/daily/aries/text
                 var fbText = fb[key] && fb[key].text ? fb[key].text : '';
@@ -901,7 +901,7 @@
                     var todayHash = makePredSeed ? makePredSeed(r + today) : (new Date().getDate() + rashiIdx * 7);
                     pred = predArr[todayHash % predArr.length];
                 }
-                el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">☀️ ' + r + ' — ' + (window.bdTx ? window.bdTx('आज का राशिफल') : 'आज का राशिफल') + '</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
+                el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">☀️ ' + r + ' — आज का राशिफल</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
             });
         }
 
@@ -925,11 +925,11 @@
             var key = hindiToKey[r] || '';
             var el = document.getElementById('monthlyRashiRes');
             el.style.display = 'block';
-            el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📆 ' + r + ' — ' + (window.bdTx ? window.bdTx('इस महीने') : 'इस महीने') + '</h3><p style="color:#ddd;line-height:1.8;">⏳ ' + (window.bdTx ? window.bdTx('लोड हो रहा है...') : 'लोड हो रहा है...') + '</p>';
+            el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📆 ' + r + ' — इस महीने</h3><p style="color:#ddd;line-height:1.8;">⏳ लोड हो रहा है...</p>';
             getFbPredictions('monthly').then(function(fb) {
                 var fbText = fb[key] && fb[key].text ? fb[key].text : '';
                 var pred = fbText || rashiMonthly[r] || 'इस महीने आपके जीवन में सकारात्मक बदलाव आएंगे।';
-                el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📆 ' + r + ' — ' + (window.bdTx ? window.bdTx('इस महीने') : 'इस महीने') + '</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
+                el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📆 ' + r + ' — इस महीने</h3><p style="color:#ddd;line-height:1.8;">' + pred + '</p>';
             });
         }
 
@@ -952,7 +952,7 @@
             var key = hindiToKey[r] || '';
             var el = document.getElementById('yearlyRashiRes');
             el.style.display = 'block';
-            el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📅 ' + r + ' — ' + year + '</h3><p style="color:#ddd;line-height:1.8;">⏳ ' + (window.bdTx ? window.bdTx('लोड हो रहा है...') : 'लोड हो रहा है...') + '</p>';
+            el.innerHTML = '<h3 style="color:#ffd700;margin-bottom:8px;">📅 ' + r + ' — ' + year + '</h3><p style="color:#ddd;line-height:1.8;">⏳ लोड हो रहा है...</p>';
             getFbPredictions('yearly').then(function(fb) {
                 var fbText = fb[key] && fb[key].text ? fb[key].text : '';
                 var pred = fbText || rashiYearly[r] || year+' में आपके जीवन में सकारात्मक बदलाव आएंगे।';
@@ -964,7 +964,7 @@
             var g = document.getElementById('mGroom').value.trim();
             var br = document.getElementById('mBrideR').value;
             var gr = document.getElementById('mGroomR').value;
-            if (!b || !g || !br || !gr) { alert(window.bdTx ? window.bdTx('कृपया सभी जानकारी भरें') : 'कृपया सभी जानकारी भरें'); return; }
+            if (!b || !g || !br || !gr) { alert('कृपया सभी जानकारी भरें'); return; }
             var hash = (b+g+br+gr).split('').reduce(function(a,c){return a+c.charCodeAt(0);},0);
             var gun = 18 + (hash % 19);
             var el = document.getElementById('matchResult');
@@ -992,7 +992,7 @@
             document.getElementById('kundliSection').classList.remove('active');
             document.getElementById('premiumKundliSection').classList.remove('active');
             document.getElementById('premiumPageSection').classList.remove('active');
-            document.getElementById('horoscopeTitle').innerText = window.bdTx ? window.bdTx('दैनिक राशिफल') : 'दैनिक राशिफल';
+            document.getElementById('horoscopeTitle').innerText = 'दैनिक राशिफल';
             document.getElementById('horoscopeSection').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -1421,7 +1421,7 @@
             }
 
             if (!yourName || !partnerName || !yourZodiac || !partnerZodiac) {
-                alert(window.bdTx ? window.bdTx('कृपया सभी जानकारी भरें') : 'कृपया सभी जानकारी भरें');
+                alert('कृपया सभी जानकारी भरें');
                 return;
             }
 
@@ -1439,37 +1439,21 @@
             document.getElementById('lovePercentage').innerText = percentage + '%';
             document.getElementById('loveProgress').style.width = percentage + '%';
 
-            const _loveMsg_hi = [
+            const messages = [
                 'बेहतरीन जोड़ी! आप दोनों एक-दूसरे के लिए बने हैं।',
                 'बहुत अच्छी अनुकूलता है। रिश्ता मजबूत होगा।',
                 'अच्छा संबंध है, थोड़ी समझदारी से और मजबूत होगा।',
                 'ठीक-ठाक अनुकूलता है, प्रयास करने की जरूरत है।',
                 'थोड़ी मुश्किलें हो सकती हैं, लेकिन प्यार सब संभाल लेता है।'
             ];
-            const _loveMsg_en = [
-                'Perfect match! You two are made for each other.',
-                'Great compatibility! This relationship will grow stronger.',
-                'Good bond — with a little understanding it will flourish.',
-                'Decent compatibility — effort will make it work.',
-                'Some challenges possible, but love conquers all.'
-            ];
-            const messages = (window.bdIsEn && window.bdIsEn()) ? _loveMsg_en : _loveMsg_hi;
 
-            const _compat_hi = [
+            const compatibilities = [
                 'मेष-सिंह: बेहतरीन प्रेम संबंध',
                 'वृष-कन्या: आदर्श जोड़ी',
                 'मिथुन-तुला: बौद्धिक संगति',
                 'कर्क-वृश्चिक: गहरा भावनात्मक बंधन',
                 'धनु-मेष: साहसी प्रेम'
             ];
-            const _compat_en = [
-                'Aries-Leo: Brilliant love match',
-                'Taurus-Virgo: Ideal couple',
-                'Gemini-Libra: Intellectual harmony',
-                'Cancer-Scorpio: Deep emotional bond',
-                'Sagittarius-Aries: Adventurous love'
-            ];
-            const compatibilities = (window.bdIsEn && window.bdIsEn()) ? _compat_en : _compat_hi;
 
             document.getElementById('loveMessage').innerText = messages[Math.abs(hash) % messages.length];
             document.getElementById('loveCompatibility').innerText = compatibilities[Math.abs(hash) % compatibilities.length];
@@ -1493,7 +1477,7 @@
             let finalZodiac = document.getElementById('horoscopeZodiac').value;
 
             if (!finalZodiac) {
-                alert(window.bdTx ? window.bdTx('कृपया राशि चुनें') : 'कृपया राशि चुनें');
+                alert('कृपया राशि चुनें');
                 return;
             }
 
@@ -1515,9 +1499,9 @@
                 leo: 'आत्मविश्वास बढ़ेगा। नेतृत्व क्षमता का विकास होगा।',
                 virgo: 'स्वास्थ्य का ध्यान रखें। कार्यक्षेत्र में सावधानी बरतें।',
                 libra: 'प्रेम जीवन में मधुरता आएगी। पार्टनर से मुलाकात होगी।',
-                scorpio: '${window.bdTx ? window.bdTx('Victory over Enemies') : 'शत्रुओं पर विजय'} मिलेगी। ${window.bdTx ? window.bdTx('Hidden Gains') : 'गुप्त लाभ'} के योग हैं।',
+                scorpio: 'शत्रुओं पर विजय मिलेगी। गुप्त लाभ के योग हैं।',
                 sagittarius: 'यात्रा के योग हैं। भाग्य का साथ मिलेगा।',
-                capricorn: '${window.bdTx ? window.bdTx('Career Advancement') : 'करियर में उन्नति'} होगी। पिता का सहयोग मिलेगा।',
+                capricorn: 'करियर में उन्नति होगी। पिता का सहयोग मिलेगा।',
                 aquarius: 'समाज में मान-सम्मान बढ़ेगा। नए मित्र मिलेंगे।',
                 pisces: 'आध्यात्मिकता में रुचि बढ़ेगी। दान-पुण्य करेंगे।'
             };
@@ -1546,17 +1530,17 @@
             document.getElementById('horoscopeLucky').innerHTML = `
                 <div class="lucky-card">
                     <i class="fas fa-dice"></i>
-                    <h3>${window.bdTx ? window.bdTx('शुभ अंक') : 'शुभ अंक'}</h3>
+                    <h3>शुभ अंक</h3>
                     <div class="value">${result.luckyNumber || result.number || ''}</div>
                 </div>
                 <div class="lucky-card">
                     <i class="fas fa-palette"></i>
-                    <h3>${window.bdTx ? window.bdTx('शुभ रंग') : 'शुभ रंग'}</h3>
+                    <h3>शुभ रंग</h3>
                     <div class="value">${result.luckyColor || result.color || ''}</div>
                 </div>
                 <div class="lucky-card">
                     <i class="fas fa-clock"></i>
-                    <h3>${window.bdTx ? window.bdTx('शुभ समय') : 'शुभ समय'}</h3>
+                    <h3>शुभ समय</h3>
                     <div class="value">${result.luckyTime || result.time || ''}</div>
                 </div>
             `;
@@ -1726,7 +1710,7 @@
             var rng = seededRandom(seed);
             var sets = getPredictionSet(seed);
             var age = calculateAge(year + '-' + String(month).padStart(2,'0') + '-' + String(day).padStart(2,'0'));
-            var gText = gender === 'male' ? (window.bdTx ? window.bdTx('पुरुष') : 'पुरुष') : gender === 'female' ? (window.bdTx ? window.bdTx('महिला') : 'महिला') : (window.bdTx ? window.bdTx('अन्य') : 'अन्य');
+            var gText = gender === 'male' ? 'पुरुष' : gender === 'female' ? 'महिला' : 'अन्य';
             var dob19 = year + '-' + String(month).padStart(2,'0') + '-' + String(day).padStart(2,'0');
             var nameTrait = getNameTrait(name);
             var agePhase = getAgePhase(dob19);
@@ -1758,215 +1742,215 @@
         function displayKundliReport(data, isPremium, isFree, userName) {
             const kundliHTML = `
                 <div class="kundli-header">
-                    <h1>🔮 ${data.type} ${window.bdTx ? window.bdTx('कुंडली रिपोर्ट') : 'कुंडली रिपोर्ट'}</h1>
-                    <p>${userName} ${window.bdTx ? window.bdTx('जी, आपकी व्यक्तिगत कुंडली') : 'जी, आपकी व्यक्तिगत कुंडली'}</p>
-                    ${isFree ? '<p style="color: #4CAF50;"><i class="fas fa-gift"></i> ${window.bdTx ? window.bdTx('यह रिपोर्ट आपके प्रीमियम प्लान के तहत मुफ्त है') : 'यह रिपोर्ट आपके प्रीमियम प्लान के तहत मुफ्त है'}</p>' : ''}
+                    <h1>🔮 ${data.type} कुंडली रिपोर्ट</h1>
+                    <p>${userName} जी, आपकी व्यक्तिगत कुंडली</p>
+                    ${isFree ? '<p style="color: #4CAF50;"><i class="fas fa-gift"></i> यह रिपोर्ट आपके प्रीमियम प्लान के तहत मुफ्त है</p>' : ''}
                 </div>
                 
                 <div class="kundli-grid">
                     <div class="kundli-card">
-                        <h3>📋 ${window.bdTx ? window.bdTx('व्यक्तिगत जानकारी') : 'व्यक्तिगत जानकारी'}</h3>
+                        <h3>📋 व्यक्तिगत जानकारी</h3>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('नाम') : 'नाम'}:</span>
+                            <span class="kundli-label">नाम:</span>
                             <span class="kundli-value">${data.name}</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('लिंग') : 'लिंग'}:</span>
-                            <span class="kundli-value">${data.gender === 'male' ? (window.bdTx ? window.bdTx('पुरुष') : 'पुरुष') : data.gender === 'female' ? (window.bdTx ? window.bdTx('महिला') : 'महिला') : (window.bdTx ? window.bdTx('अन्य') : 'अन्य')}</span>
+                            <span class="kundli-label">लिंग:</span>
+                            <span class="kundli-value">${data.gender === 'male' ? 'पुरुष' : data.gender === 'female' ? 'महिला' : 'अन्य'}</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('जन्म तिथि') : 'जन्म तिथि'}:</span>
+                            <span class="kundli-label">जन्म तिथि:</span>
                             <span class="kundli-value">${data.day}/${data.month}/${data.year}</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('जन्म समय') : 'जन्म समय'}:</span>
+                            <span class="kundli-label">जन्म समय:</span>
                             <span class="kundli-value">${data.time}</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('जन्म स्थान') : 'जन्म स्थान'}:</span>
+                            <span class="kundli-label">जन्म स्थान:</span>
                             <span class="kundli-value">${data.place}</span>
                         </div>
                     </div>
                     
                     <div class="kundli-card">
-                        <h3>⭐ ${window.bdTx ? window.bdTx('ज्योतिषीय जानकारी') : 'ज्योतिषीय जानकारी'}</h3>
+                        <h3>⭐ ज्योतिषीय जानकारी</h3>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('राशि') : 'राशि'}:</span>
+                            <span class="kundli-label">राशि:</span>
                             <span class="kundli-value">${data.rashi}</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('नक्षत्र') : 'नक्षत्र'}:</span>
+                            <span class="kundli-label">नक्षत्र:</span>
                             <span class="kundli-value">${data.nakshatra}</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('चंद्र राशि') : 'चंद्र राशि'}:</span>
+                            <span class="kundli-label">चंद्र राशि:</span>
                             <span class="kundli-value">${data.rashi}</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('सूर्य राशि') : 'सूर्य राशि'}:</span>
+                            <span class="kundli-label">सूर्य राशि:</span>
                             <span class="kundli-value">${data.rashi}</span>
                         </div>
                     </div>
                     
                     <div class="kundli-card">
-                        <h3>🌞 ${window.bdTx ? window.bdTx('ग्रहों की स्थिति') : 'ग्रहों की स्थिति'}</h3>
+                        <h3>🌞 ग्रहों की स्थिति</h3>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('सूर्य') : 'सूर्य'}:</span>
-                            <span class="kundli-value">${data.rashi} ${window.bdTx ? window.bdTx('राशि, प्रथम भाव में') : 'राशि, प्रथम भाव में'}</span>
+                            <span class="kundli-label">सूर्य:</span>
+                            <span class="kundli-value">${data.rashi} राशि, प्रथम भाव में</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('चंद्र') : 'चंद्र'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Cancer Zodiac, 4th House') : 'कर्क राशि, चतुर्थ भाव में'}</span>
+                            <span class="kundli-label">चंद्र:</span>
+                            <span class="kundli-value">कर्क राशि, चतुर्थ भाव में</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('मंगल') : 'मंगल'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Aries Zodiac, 10th House') : 'मेष राशि, दशम भाव में'}</span>
+                            <span class="kundli-label">मंगल:</span>
+                            <span class="kundli-value">मेष राशि, दशम भाव में</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('बुध') : 'बुध'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Gemini Zodiac, 3rd House') : 'मिथुन राशि, तृतीय भाव में'}</span>
+                            <span class="kundli-label">बुध:</span>
+                            <span class="kundli-value">मिथुन राशि, तृतीय भाव में</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('गुरु') : 'गुरु'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Sagittarius Zodiac, 9th House') : 'धनु राशि, नवम भाव में'}</span>
+                            <span class="kundli-label">गुरु:</span>
+                            <span class="kundli-value">धनु राशि, नवम भाव में</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('शुक्र') : 'शुक्र'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Libra Zodiac, 7th House') : 'तुला राशि, सप्तम भाव में'}</span>
+                            <span class="kundli-label">शुक्र:</span>
+                            <span class="kundli-value">तुला राशि, सप्तम भाव में</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('शनि') : 'शनि'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Capricorn Zodiac, 11th House') : 'मकर राशि, एकादश भाव में'}</span>
+                            <span class="kundli-label">शनि:</span>
+                            <span class="kundli-value">मकर राशि, एकादश भाव में</span>
                         </div>
                     </div>
                     
                     <div class="kundli-card">
-                        <h3>🏠 ${window.bdTx ? window.bdTx('भाव फल') : 'भाव फल'}</h3>
+                        <h3>🏠 भाव फल</h3>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('प्रथम भाव') : 'प्रथम भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Personality Enhancement') : 'व्यक्तित्व में निखार'}</span>
+                            <span class="kundli-label">प्रथम भाव:</span>
+                            <span class="kundli-value">व्यक्तित्व में निखार</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('द्वितीय भाव') : 'द्वितीय भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Wealth Gain Prospects') : 'धन लाभ के योग'}</span>
+                            <span class="kundli-label">द्वितीय भाव:</span>
+                            <span class="kundli-value">धन लाभ के योग</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('तृतीय भाव') : 'तृतीय भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Growth in Courage') : 'साहस में वृद्धि'}</span>
+                            <span class="kundli-label">तृतीय भाव:</span>
+                            <span class="kundli-value">साहस में वृद्धि</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('चतुर्थ भाव') : 'चतुर्थ भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Mother\'s Blessings') : 'माता का आशीर्वाद'}</span>
+                            <span class="kundli-label">चतुर्थ भाव:</span>
+                            <span class="kundli-value">माता का आशीर्वाद</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('पंचम भाव') : 'पंचम भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Intellect Development') : 'बुद्धि का विकास'}</span>
+                            <span class="kundli-label">पंचम भाव:</span>
+                            <span class="kundli-value">बुद्धि का विकास</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('षष्ठ भाव') : 'षष्ठ भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Victory over Enemies') : 'शत्रुओं पर विजय'}</span>
+                            <span class="kundli-label">षष्ठ भाव:</span>
+                            <span class="kundli-value">शत्रुओं पर विजय</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('सप्तम भाव') : 'सप्तम भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Marital Happiness') : 'वैवाहिक सुख'}</span>
+                            <span class="kundli-label">सप्तम भाव:</span>
+                            <span class="kundli-value">वैवाहिक सुख</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('अष्टम भाव') : 'अष्टम भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Hidden Gains') : 'गुप्त लाभ'}</span>
+                            <span class="kundli-label">अष्टम भाव:</span>
+                            <span class="kundli-value">गुप्त लाभ</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('नवम भाव') : 'नवम भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Fortune Rising') : 'भाग्योदय'}</span>
+                            <span class="kundli-label">नवम भाव:</span>
+                            <span class="kundli-value">भाग्योदय</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('दशम भाव') : 'दशम भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Career Advancement') : 'करियर में उन्नति'}</span>
+                            <span class="kundli-label">दशम भाव:</span>
+                            <span class="kundli-value">करियर में उन्नति</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('एकादश भाव') : 'एकादश भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Wishes Fulfilled') : 'मनोकामना पूर्ति'}</span>
+                            <span class="kundli-label">एकादश भाव:</span>
+                            <span class="kundli-value">मनोकामना पूर्ति</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('द्वादश भाव') : 'द्वादश भाव'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Increased Expenses') : 'खर्च में वृद्धि'}</span>
+                            <span class="kundli-label">द्वादश भाव:</span>
+                            <span class="kundli-value">खर्च में वृद्धि</span>
                         </div>
                     </div>
                     
                     ${isPremium ? `
                     <div class="kundli-card">
-                        <h3>🕉️ ${window.bdTx ? window.bdTx('विशेष उपाय') : 'विशेष उपाय'}</h3>
+                        <h3>🕉️ विशेष उपाय</h3>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('शनि') : 'शनि'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Donate black sesame, recite Hanuman Chalisa') : 'काले तिल का दान, हनुमान चालीसा'}</span>
+                            <span class="kundli-label">शनि:</span>
+                            <span class="kundli-value">काले तिल का दान, हनुमान चालीसा</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('गुरु') : 'गुरु'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Worship banana tree, wear yellow cloth') : 'केले के पेड़ की पूजा, पीला वस्त्र'}</span>
+                            <span class="kundli-label">गुरु:</span>
+                            <span class="kundli-value">केले के पेड़ की पूजा, पीला वस्त्र</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('मंगल') : 'मंगल'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Tuesday fast, donate red chickpeas') : 'मंगलवार व्रत, लाल चना दान'}</span>
+                            <span class="kundli-label">मंगल:</span>
+                            <span class="kundli-value">मंगलवार व्रत, लाल चना दान</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('चंद्र') : 'चंद्र'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Monday fast, donate milk') : 'सोमवार उपवास, दूध का दान'}</span>
+                            <span class="kundli-label">चंद्र:</span>
+                            <span class="kundli-value">सोमवार उपवास, दूध का दान</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('बुध') : 'बुध'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Donate green items, recite Vishnu Sahasranam') : 'हरी वस्तुएं दान, विष्णु सहस्रनाम'}</span>
+                            <span class="kundli-label">बुध:</span>
+                            <span class="kundli-value">हरी वस्तुएं दान, विष्णु सहस्रनाम</span>
                         </div>
                     </div>
                     
                     <div class="kundli-card">
-                        <h3>💎 ${window.bdTx ? window.bdTx('रत्न सुझाव') : 'रत्न सुझाव'}</h3>
+                        <h3>💎 रत्न सुझाव</h3>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('मुख्य रत्न') : 'मुख्य रत्न'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Yellow Sapphire (for Jupiter)') : 'पुखराज (गुरु के लिए)'}</span>
+                            <span class="kundli-label">मुख्य रत्न:</span>
+                            <span class="kundli-value">पुखराज (गुरु के लिए)</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('अन्य रत्न') : 'अन्य रत्न'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Pearl, Coral, Emerald') : 'मोती, मूंगा, पन्ना'}</span>
+                            <span class="kundli-label">अन्य रत्न:</span>
+                            <span class="kundli-value">मोती, मूंगा, पन्ना</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('धारण समय') : 'धारण समय'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Thursday morning') : 'गुरुवार सुबह'}</span>
+                            <span class="kundli-label">धारण समय:</span>
+                            <span class="kundli-value">गुरुवार सुबह</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('मंत्र जाप') : 'मंत्र जाप'}:</span>
+                            <span class="kundli-label">मंत्र जाप:</span>
                             <span class="kundli-value">ॐ ग्रां ग्रीं ग्रौं सः गुरवे नमः</span>
                         </div>
                     </div>
                     ` : ''}
                     
                     <div class="kundli-card">
-                        <h3>🍀 ${window.bdTx ? window.bdTx('शुभ अंक और रंग') : 'शुभ अंक और रंग'}</h3>
+                        <h3>🍀 शुभ अंक और रंग</h3>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('शुभ अंक') : 'शुभ अंक'}:</span>
+                            <span class="kundli-label">शुभ अंक:</span>
                             <span class="kundli-value">3, 7, 9</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('शुभ रंग') : 'शुभ रंग'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Yellow, White, Blue') : 'पीला, सफेद, नीला'}</span>
+                            <span class="kundli-label">शुभ रंग:</span>
+                            <span class="kundli-value">पीला, सफेद, नीला</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('शुभ दिन') : 'शुभ दिन'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('Thursday, Monday') : 'गुरुवार, सोमवार'}</span>
+                            <span class="kundli-label">शुभ दिन:</span>
+                            <span class="kundli-value">गुरुवार, सोमवार</span>
                         </div>
                         <div class="kundli-info-row">
-                            <span class="kundli-label">${window.bdTx ? window.bdTx('शुभ दिशा') : 'शुभ दिशा'}:</span>
-                            <span class="kundli-value">${window.bdTx ? window.bdTx('North-East') : 'उत्तर-पूर्व'}</span>
+                            <span class="kundli-label">शुभ दिशा:</span>
+                            <span class="kundli-value">उत्तर-पूर्व</span>
                         </div>
                     </div>
                 </div>
                 
                 <div style="text-align: center; margin: 30px 0;">
                     <button class="kundli-download-btn" onclick="downloadKundliPDF()">
-                        <i class="fas fa-download"></i> ${window.bdTx ? window.bdTx('PDF Download') : 'PDF डाउनलोड करें'}
+                        <i class="fas fa-download"></i> PDF डाउनलोड करें
                     </button>
                 </div>
                 
                 <div class="kundli-share-section">
-                    <h3 style="color: #ffd700; margin-bottom: 20px;">📲 ${window.bdTx ? window.bdTx('इस रिपोर्ट को शेयर करें') : 'इस रिपोर्ट को शेयर करें'}</h3>
+                    <h3 style="color: #ffd700; margin-bottom: 20px;">📲 इस रिपोर्ट को शेयर करें</h3>
                     <div class="kundli-share-buttons">
                         <button class="kundli-share-btn whatsapp" onclick="shareOnWhatsApp()" title="WhatsApp">
                             <i class="fab fa-whatsapp"></i>
@@ -2407,8 +2391,8 @@ ${age < 18 ? 'Future mein financial awareness aur savings ki aadat ke baare mein
             if (!gender) { document.getElementById('genderError').style.display='block'; document.getElementById('genderGroup').classList.add('error'); isValid=false; } else document.getElementById('genderError').style.display='none';
             if (!day||!month||!year) { document.getElementById('dobError').style.display='block'; document.getElementById('dobGroup').classList.add('error'); isValid=false; } else document.getElementById('dobError').style.display='none';
             if (!birthPlace) { document.getElementById('placeError').style.display='block'; document.getElementById('placeGroup').classList.add('error'); isValid=false; } else document.getElementById('placeError').style.display='none';
-            if (!zodiac) { alert(window.bdTx ? window.bdTx('कृपया राशि चुनें') : 'कृपया राशि चुनें'); return; }
-            if (!isValid) { alert(window.bdTx ? window.bdTx('कृपया सभी जानकारी भरें!') : 'कृपया सभी जानकारी भरें!'); return; }
+            if (!zodiac) { alert('कृपया राशि चुनें'); return; }
+            if (!isValid) { alert('कृपया सभी जानकारी भरें!'); return; }
 
             var dob = year + '-' + String(month).padStart(2,'0') + '-' + String(day).padStart(2,'0');
             // Future date check
@@ -2417,13 +2401,13 @@ ${age < 18 ? 'Future mein financial awareness aur savings ki aadat ke baare mein
             todayDate.setHours(0,0,0,0);
             if (dobDate >= todayDate) {
                 document.getElementById('dobError').style.display = 'block';
-                document.getElementById('dobError').textContent = window.bdTx ? window.bdTx('⚠️ यह तारीख अभी नहीं आई है। सही जन्म तिथि डालें।') : '⚠️ यह तारीख अभी नहीं आई है। सही जन्म तिथि डालें।';
+                document.getElementById('dobError').textContent = '⚠️ यह तारीख अभी नहीं आई है। सही जन्म तिथि डालें।';
                 document.getElementById('dobGroup').classList.add('error');
-                alert(window.bdTx ? window.bdTx('⚠️ यह तारीख अभी नहीं आई है!') + '\n' + window.bdTx('कृपया सही जन्म तिथि डालें।') : '⚠️ यह तारीख अभी नहीं आई है!\nकृपया सही जन्म तिथि डालें।');
+                alert('⚠️ यह तारीख अभी नहीं आई है!\nकृपया सही जन्म तिथि डालें।');
                 return;
             }
             document.getElementById('dobError').style.display = 'none';
-            document.getElementById('dobError').textContent = window.bdTx ? window.bdTx('कृपया जन्म तिथि भरें') : 'कृपया जन्म तिथि भरें';
+            document.getElementById('dobError').textContent = 'कृपया जन्म तिथि भरें';
             var today = new Date().toISOString().slice(0,10);
             var cacheKey = 'fp_ai_' + name + '_' + gender + '_' + dob + '_' + zodiac + '_' + today;
 
@@ -2434,7 +2418,7 @@ ${age < 18 ? 'Future mein financial awareness aur savings ki aadat ke baare mein
 
             // Always show loading with fresh message
             var loadingMsg = document.querySelector('.loading-text');
-            if (loadingMsg) loadingMsg.textContent = window.bdTx ? window.bdTx('🔮 ग्रहों की स्थिति देखी जा रही है...') : '🔮 ग्रहों की स्थिति देखी जा रही है...';
+            if (loadingMsg) loadingMsg.textContent = '🔮 ग्रहों की स्थिति देखी जा रही है...';
 
             // Try cache first
             var mainPred, cats;
@@ -2464,37 +2448,37 @@ ${age < 18 ? 'Future mein financial awareness aur savings ki aadat ke baare mein
                 trackFreePrediction(name, zodiac);
                 saveUserProfile({name:name, gender:gender, dob:dob, birthPlace:birthPlace, rashi:zodiac});
                 showFreeResultPage(name, age, gender, zodiac, birthPlace, mainPred, cats, dob);
-                addToKundliHistory(name, window.bdTx ? window.bdTx('मुफ्त भविष्य') : 'मुफ्त भविष्य', { mainPred: mainPred, cats: cats, gender: gender, dob: dob, zodiac: zodiac, birthPlace: birthPlace });
+                addToKundliHistory(name, 'मुफ्त भविष्य', { mainPred: mainPred, cats: cats, gender: gender, dob: dob, zodiac: zodiac, birthPlace: birthPlace });
             }
 
             if (!mainPred) {
                 try {
                     // Update loading message
                     var loadingMsg = document.querySelector('.loading-text');
-                    if (loadingMsg) loadingMsg.textContent = window.bdTx ? window.bdTx('🔮 भविष्य देखा जा रहा है...') : '🔮 भविष्य देखा जा रहा है...';
+                    if (loadingMsg) loadingMsg.textContent = '🔮 भविष्य देखा जा रहा है...';
 
                     const prompts = buildAIPrompts(name, age, gender, zodiac, birthPlace, dob);
 
                     // ---- Baby mode (0-2 years) ----
                     if (prompts._babyMode) {
-                        var genderStr = gender === 'male' ? (window.bdTx ? window.bdTx('बेटे') : 'बेटे') : gender === 'female' ? (window.bdTx ? window.bdTx('बेटी') : 'बेटी') : (window.bdTx ? window.bdTx('बच्चे') : 'बच्चे');
+                        var genderStr = gender === 'male' ? 'बेटे' : gender === 'female' ? 'बेटी' : 'बच्चे';
                         var ageMonths = calculateAgeInMonths(dob);
-                        var ageMonthText = ageMonths <= 0 ? (window.bdTx ? window.bdTx('नवजात') : 'नवजात') : ageMonths + ' ' + (window.bdTx ? window.bdTx('महीने के') : 'महीने के');
-                        mainPred = name + ' ' + ageMonthText + ' ' + (window.bdTx ? window.bdTx('बहुत भाग्यशाली') : 'बहुत भाग्यशाली') + ' ' + genderStr + ' ' + (window.bdTx ? window.bdTx('हैं! इनकी कुंडली में बहुत शुभ योग हैं। यह बच्चा आगे जाकर अपने परिवार का नाम बहुत ऊंचा करेगा और माता-पिता के लिए गर्व का कारण बनेगा।') : 'हैं! इनकी कुंडली में बहुत शुभ योग हैं। यह बच्चा आगे जाकर अपने परिवार का नाम बहुत ऊंचा करेगा और माता-पिता के लिए गर्व का कारण बनेगा।');
+                        var ageMonthText = ageMonths <= 0 ? 'नवजात' : ageMonths + ' महीने के';
+                        mainPred = name + ' ' + ageMonthText + ' बहुत भाग्यशाली ' + genderStr + ' हैं! इनकी कुंडली में बहुत शुभ योग हैं। यह बच्चा आगे जाकर अपने परिवार का नाम बहुत ऊंचा करेगा और माता-पिता के लिए गर्व का कारण बनेगा।';
                         cats = [
-                            { name: (window.bdTx ? window.bdTx('📚 भविष्य की शिक्षा') : '📚 भविष्य की शिक्षा'), pred: name + ' ' + (window.bdTx ? window.bdTx('पढ़ाई में बहुत होशियार निकलेंगे। इनकी याददाश्त तेज़ होगी और ये कम उम्र में ही नई चीज़ें बहुत जल्दी सीखेंगे। बड़े होकर इनकी प्रतिभा देखकर सभी दंग रह जाएंगे।') : 'पढ़ाई में बहुत होशियार निकलेंगे। इनकी याददाश्त तेज़ होगी और ये कम उम्र में ही नई चीज़ें बहुत जल्दी सीखेंगे। बड़े होकर इनकी प्रतिभा देखकर सभी दंग रह जाएंगे।') },
-                            { name: (window.bdTx ? window.bdTx('🌟 व्यक्तित्व') : '🌟 व्यक्तित्व'), pred: (window.bdTx ? window.bdTx('इस बच्चे का व्यक्तित्व बहुत आकर्षक होगा। सभी लोग इन्हें पसंद करेंगे और इनके दोस्त बहुत अच्छे होंगे। परिवार में यह बच्चा खुशियां ही खुशियां लेकर आएगा।') : 'इस बच्चे का व्यक्तित्व बहुत आकर्षक होगा। सभी लोग इन्हें पसंद करेंगे और इनके दोस्त बहुत अच्छे होंगे। परिवार में यह बच्चा खुशियां ही खुशियां लेकर आएगा।') },
-                            { name: (window.bdTx ? window.bdTx('💫 भाग्य') : '💫 भाग्य'), pred: name + ' ' + (window.bdTx ? window.bdTx('के भाग्य में बहुत उज्जवल भविष्य लिखा है। ग्रहों की स्थिति बता रही है कि यह बच्चा बड़े होकर बहुत सफल और सम्मानित व्यक्ति बनेगा।') : 'के भाग्य में बहुत उज्जवल भविष्य लिखा है। ग्रहों की स्थिति बता रही है कि यह बच्चा बड़े होकर बहुत सफल और सम्मानित व्यक्ति बनेगा।') }
+                            { name: '📚 भविष्य की शिक्षा', pred: name + ' पढ़ाई में बहुत होशियार निकलेंगे। इनकी याददाश्त तेज़ होगी और ये कम उम्र में ही नई चीज़ें बहुत जल्दी सीखेंगे। बड़े होकर इनकी प्रतिभा देखकर सभी दंग रह जाएंगे।' },
+                            { name: '🌟 व्यक्तित्व', pred: 'इस बच्चे का व्यक्तित्व बहुत आकर्षक होगा। सभी लोग इन्हें पसंद करेंगे और इनके दोस्त बहुत अच्छे होंगे। परिवार में यह बच्चा खुशियां ही खुशियां लेकर आएगा।' },
+                            { name: '💫 भाग्य', pred: name + ' के भाग्य में बहुत उज्जवल भविष्य लिखा है। ग्रहों की स्थिति बता रही है कि यह बच्चा बड़े होकर बहुत सफल और सम्मानित व्यक्ति बनेगा।' }
                         ];
                     }
                     // ---- Child mode (3-4 years) ----
                     else if (prompts._childMode) {
-                        var genderStr2 = gender === 'male' ? (window.bdTx ? window.bdTx('बेटे') : 'बेटे') : gender === 'female' ? (window.bdTx ? window.bdTx('बेटी') : 'बेटी') : (window.bdTx ? window.bdTx('बच्चे') : 'बच्चे');
-                        mainPred = name + ' ' + (window.bdTx ? window.bdTx('एक बहुत प्रतिभाशाली') : 'एक बहुत प्रतिभाशाली') + ' ' + genderStr2 + ' ' + (window.bdTx ? window.bdTx('हैं। इनकी उम्र भले ही कम है, लेकिन इनमें असाधारण प्रतिभा के बीज हैं। आने वाले वर्षों में यह बच्चा अपनी काबिलियत से सबको आश्चर्यचकित करेगा।') : 'हैं। इनकी उम्र भले ही कम है, लेकिन इनमें असाधारण प्रतिभा के बीज हैं। आने वाले वर्षों में यह बच्चा अपनी काबिलियत से सबको आश्चर्यचकित करेगा।');
+                        var genderStr2 = gender === 'male' ? 'बेटे' : gender === 'female' ? 'बेटी' : 'बच्चे';
+                        mainPred = name + ' एक बहुत प्रतिभाशाली ' + genderStr2 + ' हैं। इनकी उम्र भले ही कम है, लेकिन इनमें असाधारण प्रतिभा के बीज हैं। आने वाले वर्षों में यह बच्चा अपनी काबिलियत से सबको आश्चर्यचकित करेगा।';
                         cats = [
-                            { name: (window.bdTx ? window.bdTx('📚 पढ़ाई') : '📚 पढ़ाई'), pred: name + ' ' + (window.bdTx ? window.bdTx('स्कूल में बहुत अच्छे करेंगे। इनकी जिज्ञासा और सीखने की भूख इन्हें अपने साथियों से आगे रखेगी। शिक्षक भी इनकी तारीफ करेंगे।') : 'स्कूल में बहुत अच्छे करेंगे। इनकी जिज्ञासा और सीखने की भूख इन्हें अपने साथियों से आगे रखेगी। शिक्षक भी इनकी तारीफ करेंगे।') },
-                            { name: (window.bdTx ? window.bdTx('🎨 प्रतिभा') : '🎨 प्रतिभा'), pred: (window.bdTx ? window.bdTx('इस बच्चे में कला, संगीत या खेल में कोई विशेष प्रतिभा छुपी है। माता-पिता अगर सही दिशा दें तो यह बच्चा उस क्षेत्र में बहुत ऊंचाई पाएगा।') : 'इस बच्चे में कला, संगीत या खेल में कोई विशेष प्रतिभा छुपी है। माता-पिता अगर सही दिशा दें तो यह बच्चा उस क्षेत्र में बहुत ऊंचाई पाएगा।') },
-                            { name: (window.bdTx ? window.bdTx('🌈 भविष्य') : '🌈 भविष्य'), pred: (window.bdTx ? window.bdTx('आने वाला जीवन') : 'आने वाला जीवन') + ' ' + name + ' ' + (window.bdTx ? window.bdTx('के लिए बहुत सुंदर होगा। परिवार का प्यार और सही मार्गदर्शन इन्हें एक सफल और खुशहाल इंसान बनाएगा।') : 'के लिए बहुत सुंदर होगा। परिवार का प्यार और सही मार्गदर्शन इन्हें एक सफल और खुशहाल इंसान बनाएगा।') }
+                            { name: '📚 पढ़ाई', pred: name + ' स्कूल में बहुत अच्छे करेंगे। इनकी जिज्ञासा और सीखने की भूख इन्हें अपने साथियों से आगे रखेगी। शिक्षक भी इनकी तारीफ करेंगे।' },
+                            { name: '🎨 प्रतिभा', pred: 'इस बच्चे में कला, संगीत या खेल में कोई विशेष प्रतिभा छुपी है। माता-पिता अगर सही दिशा दें तो यह बच्चा उस क्षेत्र में बहुत ऊंचाई पाएगा।' },
+                            { name: '🌈 भविष्य', pred: 'आने वाला जीवन ' + name + ' के लिए बहुत सुंदर होगा। परिवार का प्यार और सही मार्गदर्शन इन्हें एक सफल और खुशहाल इंसान बनाएगा।' }
                         ];
                     }
                     // ---- Normal AI mode ----
@@ -2599,16 +2583,16 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             document.getElementById('freePredResultPage').style.display = 'block';
             window.scrollTo(0, 0);
             var rashiName = getRashiNameFromCode(zodiac) || zodiac;
-            var gText = gender === 'male' ? (window.bdTx ? window.bdTx('पुरुष') : 'पुरुष') : gender === 'female' ? (window.bdTx ? window.bdTx('महिला') : 'महिला') : (window.bdTx ? window.bdTx('अन्य') : 'अन्य');
-            var ageDisplay = dob ? getAgeDisplay(dob) : (age + ' ' + (window.bdTx ? window.bdTx('वर्ष') : 'वर्ष'));
+            var gText = gender === 'male' ? 'पुरुष' : gender === 'female' ? 'महिला' : 'अन्य';
+            var ageDisplay = dob ? getAgeDisplay(dob) : (age + ' वर्ष');
 
             // Header
             document.getElementById('fprHeader').innerHTML =
                 '<div style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;">' +
                 '<div style="width:60px;height:60px;background:linear-gradient(135deg,#ffd700,#ff4500);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8em;flex-shrink:0;">&#9728;</div>' +
-                '<div><h2 style="color:#ffd700;margin:0;font-size:1.4em;">🔮 ' + name + ' ' + (window.bdTx ? window.bdTx('का भविष्यफल') : 'का भविष्यफल') + '</h2>' +
+                '<div><h2 style="color:#ffd700;margin:0;font-size:1.4em;">🔮 ' + name + ' का भविष्यफल</h2>' +
                 '<p style="color:#aaa;margin:4px 0;font-size:0.85em;">' + ageDisplay + ' | ' + gText + ' | ' + rashiName + ' | ' + birthPlace + '</p>' +
-                '<span style="background:linear-gradient(135deg,#ffd700,#ff4500);color:#0a0a1a;padding:2px 10px;border-radius:20px;font-size:0.75em;font-weight:600;">✨ ' + (window.bdTx ? window.bdTx('वैदिक ज्योतिष') : 'वैदिक ज्योतिष') + '</span></div></div>';
+                '<span style="background:linear-gradient(135deg,#ffd700,#ff4500);color:#0a0a1a;padding:2px 10px;border-radius:20px;font-size:0.75em;font-weight:600;">✨ वैदिक ज्योतिष</span></div></div>';
 
             // Main prediction
             document.getElementById('fprMain').innerHTML = mainPred;
@@ -2630,16 +2614,16 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 timelineContainer = tl;
             }
 
-            timelineContainer.innerHTML = '<div style="text-align:center;padding:30px;color:#ffd700;"><div style="font-size:2em;margin-bottom:10px;">🔮</div><p style="color:#aaa;">' + (window.bdTx ? window.bdTx('AI आपकी 10 साल की Timeline देख रहा है...') : 'AI आपकी 10 साल की Timeline देख रहा है...') + '</p></div>';
+            timelineContainer.innerHTML = '<div style="text-align:center;padding:30px;color:#ffd700;"><div style="font-size:2em;margin-bottom:10px;">🔮</div><p style="color:#aaa;">AI आपकी 10 साल की Timeline देख रहा है...</p></div>';
 
             try {
                 var timeline = await generateTimelineStages(name, age, gender, zodiac, birthPlace);
                 timelineContainer.innerHTML =
-                    '<h3 style="color:#ffd700;text-align:center;font-size:1.3em;margin-bottom:20px;">⏳ ' + (window.bdTx ? window.bdTx('आपकी भविष्य की Timeline') : 'आपकी भविष्य की Timeline') + '</h3>' +
+                    '<h3 style="color:#ffd700;text-align:center;font-size:1.3em;margin-bottom:20px;">⏳ आपकी भविष्य की Timeline</h3>' +
                     '<div style="display:flex;flex-direction:column;gap:15px;">' +
-                    buildTimelineCard('🌱', 'Near Future', window.bdTx ? window.bdTx('अगले 1 साल') : 'अगले 1 साल', timeline.near, 'linear-gradient(135deg,rgba(16,185,129,0.15),rgba(5,150,105,0.05))', '#10b981') +
-                    buildTimelineCard('🌿', 'Mid Future', window.bdTx ? window.bdTx('अगले 5 साल') : 'अगले 5 साल', timeline.mid, 'linear-gradient(135deg,rgba(59,130,246,0.15),rgba(37,99,235,0.05))', '#3b82f6') +
-                    buildTimelineCard('🌳', 'Long Future', window.bdTx ? window.bdTx('अगले 10 साल') : 'अगले 10 साल', timeline.long, 'linear-gradient(135deg,rgba(168,85,247,0.15),rgba(124,58,237,0.05))', '#a855f7') +
+                    buildTimelineCard('🌱', 'Near Future', 'अगले 1 साल', timeline.near, 'linear-gradient(135deg,rgba(16,185,129,0.15),rgba(5,150,105,0.05))', '#10b981') +
+                    buildTimelineCard('🌿', 'Mid Future', 'अगले 5 साल', timeline.mid, 'linear-gradient(135deg,rgba(59,130,246,0.15),rgba(37,99,235,0.05))', '#3b82f6') +
+                    buildTimelineCard('🌳', 'Long Future', 'अगले 10 साल', timeline.long, 'linear-gradient(135deg,rgba(168,85,247,0.15),rgba(124,58,237,0.05))', '#a855f7') +
                     '</div>';
             } catch(e) {
                 timelineContainer.innerHTML = '';
@@ -2655,10 +2639,10 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             }
             revisitMsg.innerHTML = '<div style="background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(255,69,0,0.08));border:2px solid rgba(255,215,0,0.5);border-radius:20px;padding:22px;text-align:center;margin:20px 0;">' +
                 '<div style="font-size:2em;margin-bottom:8px;">🌟</div>' +
-                '<p style="color:#ffd700;font-weight:700;font-size:1.05em;margin-bottom:8px;">' + (window.bdTx ? window.bdTx('आज का भविष्यफल यही है!') : 'आज का भविष्यफल यही है!') + '</p>' +
-                '<p style="color:#ccc;line-height:1.7;font-size:0.92em;">⚠️ <strong style="color:#ffd700;">' + (window.bdTx ? window.bdTx('ध्यान दें:') : 'ध्यान दें:') + '</strong> ' + (window.bdTx ? window.bdTx('ग्रह-नक्षत्र हर दिन बदलते हैं — इसलिए कल का भविष्यफल आज से बिल्कुल अलग हो सकता है।') : 'ग्रह-नक्षत्र हर दिन बदलते हैं — इसलिए कल का भविष्यफल आज से बिल्कुल अलग हो सकता है।')' +
-                '<br><br>🔮 <strong style="color:#ffd700;">' + (window.bdTx ? window.bdTx('रोज़ भविष्य देखते रहें') : 'रोज़ भविष्य देखते रहें') + '</strong> ' + (window.bdTx ? window.bdTx('और जानें कि ग्रह आपके लिए क्या लेकर आ रहे हैं। जो लोग रोज़ अपना भविष्य देखते हैं, वे जीवन की चुनौतियों के लिए पहले से तैयार रहते हैं!') : 'और जानें कि ग्रह आपके लिए क्या लेकर आ रहे हैं। जो लोग रोज़ अपना भविष्य देखते हैं, वे जीवन की चुनौतियों के लिए पहले से तैयार रहते हैं!') + ' 🙏</p>' +
-                '<p style="color:#ff9800;font-size:0.85em;margin-top:10px;font-weight:600;">📲 ' + (window.bdTx ? window.bdTx('Website को Bookmark करें और हर रोज़ अपना भविष्य देखें!') : 'Website को Bookmark करें और हर रोज़ अपना भविष्य देखें!') + '</p>' +
+                '<p style="color:#ffd700;font-weight:700;font-size:1.05em;margin-bottom:8px;">आज का भविष्यफल यही है!</p>' +
+                '<p style="color:#ccc;line-height:1.7;font-size:0.92em;">⚠️ <strong style="color:#ffd700;">ध्यान दें:</strong> ग्रह-नक्षत्र हर दिन बदलते हैं — इसलिए कल का भविष्यफल आज से बिल्कुल अलग हो सकता है।' +
+                '<br><br>🔮 <strong style="color:#ffd700;">रोज़ भविष्य देखते रहें</strong> और जानें कि ग्रह आपके लिए क्या लेकर आ रहे हैं। जो लोग रोज़ अपना भविष्य देखते हैं, वे जीवन की चुनौतियों के लिए पहले से तैयार रहते हैं! 🙏</p>' +
+                '<p style="color:#ff9800;font-size:0.85em;margin-top:10px;font-weight:600;">📲 Website को Bookmark करें और हर रोज़ अपना भविष्य देखें!</p>' +
                 '</div>';
         }
 
@@ -2697,12 +2681,12 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 2: 'द्वितीय भाव - धन भाव:\n\nयह धन, परिवार, वाणी और भोजन का प्रतिनिधित्व करता है। इस भाव की स्थिति से आर्थिक स्थिति और पारिवारिक सुख का पता चलता है। गुरु इस भाव के कारक ग्रह हैं। मजबूत होने पर धन लाभ, मीठी वाणी और पारिवारिक सुख मिलता है। कमजोर होने पर आर्थिक परेशानी और वाणी में कटुता आती है।',
                 3: 'तृतीय भाव - सहज भाव:\n\nयह साहस, भाई-बहन, पराक्रम और संचार कौशल का प्रतिनिधित्व करता है। इस भाव की स्थिति से व्यक्ति के निर्णय लेने की क्षमता का पता चलता है। मंगल इस भाव के कारक ग्रह हैं। मजबूत होने पर साहस, भाई-बहनों से सहयोग और अच्छा संचार कौशल मिलता है।',
                 4: 'चतुर्थ भाव - सुख भाव:\n\nयह माता, सुख-सुविधाएं, वाहन और मकान का प्रतिनिधित्व करता है। इस भाव की स्थिति से मानसिक शांति और घरेलू सुख का पता चलता है। चंद्रमा इस भाव के कारक ग्रह हैं। मजबूत होने पर माता का सुख, अच्छा घर और वाहन मिलता है।',
-                5: 'पंचम भाव - पुत्र भाव:\n\nयह बुद्धि, संतान, मंत्र और पूर्वजन्म के कर्मों का प्रतिनिधित्व करता है। इस भाव की स्थिति से शिक्षा और रचनात्मकता का पता चलता है। बुध इस भाव के कारक ग्रह हैं। मजबूत होने पर संतान सुख, अच्छी शिक्षा और ${window.bdTx ? window.bdTx('Intellect Development') : 'बुद्धि का विकास'} होता है।',
-                6: 'षष्ठ भाव - रिपु भाव:\n\nयह शत्रु, रोग, ऋण और विवादों का प्रतिनिधित्व करता है। इस भाव की स्थिति से स्वास्थ्य और प्रतिस्पर्धा में सफलता का पता चलता है। शनि इस भाव के कारक ग्रह हैं। मजबूत होने पर ${window.bdTx ? window.bdTx('Victory over Enemies') : 'शत्रुओं पर विजय'} और रोगों से मुक्ति मिलती है।',
+                5: 'पंचम भाव - पुत्र भाव:\n\nयह बुद्धि, संतान, मंत्र और पूर्वजन्म के कर्मों का प्रतिनिधित्व करता है। इस भाव की स्थिति से शिक्षा और रचनात्मकता का पता चलता है। बुध इस भाव के कारक ग्रह हैं। मजबूत होने पर संतान सुख, अच्छी शिक्षा और बुद्धि का विकास होता है।',
+                6: 'षष्ठ भाव - रिपु भाव:\n\nयह शत्रु, रोग, ऋण और विवादों का प्रतिनिधित्व करता है। इस भाव की स्थिति से स्वास्थ्य और प्रतिस्पर्धा में सफलता का पता चलता है। शनि इस भाव के कारक ग्रह हैं। मजबूत होने पर शत्रुओं पर विजय और रोगों से मुक्ति मिलती है।',
                 7: 'सप्तम भाव - कलत्र भाव:\n\nयह विवाह, व्यापार, भागीदारी और विदेश यात्रा का प्रतिनिधित्व करता है। इस भाव की स्थिति से वैवाहिक जीवन और व्यावसायिक संबंधों का पता चलता है। शुक्र इस भाव के कारक ग्रह हैं। मजबूत होने पर सुखी वैवाहिक जीवन और व्यापार में लाभ होता है।',
                 8: 'अष्टम भाव - आयु भाव:\n\nयह आयु, रहस्य, मृत्यु और अप्रत्याशित घटनाओं का प्रतिनिधित्व करता है। इस भाव की स्थिति से दीर्घायु और आध्यात्मिकता का पता चलता है। राहु इस भाव के कारक ग्रह हैं। मजबूत होने पर लंबी आयु और आध्यात्मिक उन्नति होती है।',
                 9: 'नवम भाव - भाग्य भाव:\n\nयह भाग्य, गुरु, धर्म और पिता का प्रतिनिधित्व करता है। इस भाव की स्थिति से सौभाग्य और आध्यात्मिक उन्नति का पता चलता है। गुरु इस भाव के कारक ग्रह हैं। मजबूत होने पर भाग्य का साथ, गुरु की कृपा और पिता का आशीर्वाद मिलता है।',
-                10: 'दशम भाव - कर्म भाव:\n\nयह कर्म, पिता, मान-सम्मान और करियर का प्रतिनिधित्व करता है। इस भाव की स्थिति से व्यवसाय में सफलता का पता चलता है। सूर्य इस भाव के कारक ग्रह हैं। मजबूत होने पर ${window.bdTx ? window.bdTx('Career Advancement') : 'करियर में उन्नति'}, मान-सम्मान और पिता का सहयोग मिलता है।',
+                10: 'दशम भाव - कर्म भाव:\n\nयह कर्म, पिता, मान-सम्मान और करियर का प्रतिनिधित्व करता है। इस भाव की स्थिति से व्यवसाय में सफलता का पता चलता है। सूर्य इस भाव के कारक ग्रह हैं। मजबूत होने पर करियर में उन्नति, मान-सम्मान और पिता का सहयोग मिलता है।',
                 11: 'एकादश भाव - लाभ भाव:\n\nयह लाभ, आय, इच्छाओं की पूर्ति और बड़े भाई-बहन का प्रतिनिधित्व करता है। इस भाव की स्थिति से मनोकामनाओं की पूर्ति का पता चलता है। गुरु इस भाव के कारक ग्रह हैं। मजबूत होने पर हर कार्य में लाभ और मनोकामनाओं की पूर्ति होती है।',
                 12: 'द्वादश भाव - व्यय भाव:\n\nयह व्यय, मोक्ष, दान और विदेश यात्रा का प्रतिनिधित्व करता है। इस भाव की स्थिति से आध्यात्मिक उन्नति और मोक्ष का पता चलता है। केतु इस भाव के कारक ग्रह हैं। मजबूत होने पर दान-पुण्य में रुचि और आध्यात्मिक उन्नति होती है।'
             };
@@ -3070,7 +3054,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             var rashiList = ['मेष','वृष','मिथुन','कर्क','सिंह','कन्या','तुला','वृश्चिक','धनु','मकर','कुंभ','मीन'];
             var gList = ['सूर्य','चंद्र','मंगल','बुध','गुरु','शुक्र','शनि','राहु','केतु'];
             var bhavNm = ['प्रथम','द्वितीय','तृतीय','चतुर्थ','पंचम','षष्ठ','सप्तम','अष्टम','नवम','दशम','एकादश','द्वादश'];
-            var bhavFl = ['स्वस्थ काया, आत्मविश्वास','धन लाभ, पारिवारिक सुख','साहस, भाई-बहन सहयोग','माता स्नेह, गृह सुख','बुद्धि विकास, संतान सुख','शत्रु विजय, स्वास्थ्य','${window.bdTx ? window.bdTx('Marital Happiness') : 'वैवाहिक सुख'}, साझेदारी','गुप्त ज्ञान, अचानक लाभ','${window.bdTx ? window.bdTx('Fortune Rising') : 'भाग्योदय'}, गुरु कृपा','करियर उन्नति, मान-सम्मान','${window.bdTx ? window.bdTx('Wishes Fulfilled') : 'मनोकामना पूर्ति'}, आय वृद्धि','आध्यात्म, दान से लाभ'];
+            var bhavFl = ['स्वस्थ काया, आत्मविश्वास','धन लाभ, पारिवारिक सुख','साहस, भाई-बहन सहयोग','माता स्नेह, गृह सुख','बुद्धि विकास, संतान सुख','शत्रु विजय, स्वास्थ्य','वैवाहिक सुख, साझेदारी','गुप्त ज्ञान, अचानक लाभ','भाग्योदय, गुरु कृपा','करियर उन्नति, मान-सम्मान','मनोकामना पूर्ति, आय वृद्धि','आध्यात्म, दान से लाभ'];
             var gems = {'मेष':'मूंगा','वृष':'हीरा/ओपल','मिथुन':'पन्ना','कर्क':'मोती','सिंह':'माणिक्य','कन्या':'पन्ना','तुला':'हीरा','वृश्चिक':'मूंगा','धनु':'पुखराज','मकर':'नीलम','कुंभ':'नीलम','मीन':'पुखराज'};
             var careers = ['तकनीकी/IT','व्यापार','शिक्षा/अनुसंधान','कला/मनोरंजन','सरकारी सेवा','चिकित्सा','कानून/न्याय','मीडिया'];
             var str3 = [['मेहनती','धैर्यवान','तार्किक'],['साहसी','नेतृत्व','ऊर्जावान'],['रचनात्मक','संवेदनशील','बुद्धिमान']][seed%3];
@@ -3083,7 +3067,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             var luckyN = [3,7,9,1,5,6,8,2][seed%8];
             var luckyC = ['पीला','लाल','नीला','हरा','सफेद','नारंगी'][seed%6];
             var luckyD = ['सोमवार','मंगलवार','बुधवार','गुरुवार','शुक्रवार','शनिवार','रविवार'][seed%7];
-            var luckyDir = ['उत्तर','दक्षिण','पूर्व','पश्चिम','${window.bdTx ? window.bdTx('North-East') : 'उत्तर-पूर्व'}'][seed%5];
+            var luckyDir = ['उत्तर','दक्षिण','पूर्व','पश्चिम','उत्तर-पूर्व'][seed%5];
 
             var bx = function(h){return '<div class="kundli-card">'+h+'</div>';};
             var h3 = function(ic,t){return '<h3>'+ic+' '+t+'</h3>';};
@@ -3189,7 +3173,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
             html += '</div>';
             html += '<div style="text-align:center;margin:20px 0;">'
-                + '<button class="kundli-download-btn" onclick="downloadKundliPDF()"><i class="fas fa-download"></i> ${window.bdTx ? window.bdTx('PDF Download') : 'PDF डाउनलोड करें'}</button></div>'
+                + '<button class="kundli-download-btn" onclick="downloadKundliPDF()"><i class="fas fa-download"></i> PDF डाउनलोड करें</button></div>'
                 + '<div class="kundli-share-section"><h3 style="color:#ffd700;margin-bottom:15px;">&#128242; शेयर करें</h3>'
                 + '<div class="kundli-share-buttons">'
                 + '<button class="kundli-share-btn whatsapp" onclick="shareOnWhatsApp()" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>'
@@ -3303,7 +3287,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
         function downloadKundliPDF() {
             var data = window.currentKundliData;
-            if (!data) { alert(window.bdTx ? window.bdTx('कोई रिपोर्ट नहीं मिली। पहले कुंडली देखें।') : 'कोई रिपोर्ट नहीं मिली। पहले कुंडली देखें।'); return; }
+            if (!data) { alert('कोई रिपोर्ट नहीं मिली। पहले कुंडली देखें।'); return; }
 
             // Capture exactly what's shown on screen
             var reportBodyEl = document.getElementById('kundliReportBody');
@@ -3357,8 +3341,8 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 + 'h2,h3{color:#8B0000 !important;}'
                 + '@media print{body{padding:10px}}'
                 + '</style></head><body>'
-                + '<h1>🔮 ' + (window.bdTx ? window.bdTx('भविष्यफल') : 'भविष्यफल') + ' — ' + data.name + '</h1>'
-                + '<p class="subtitle">Bhavishya Dekho | bhavishyadekho.online | ' + new Date().toLocaleDateString(window.bdIsEn && window.bdIsEn() ? 'en-US' : 'hi-IN') + '</p>'
+                + '<h1>🔮 भविष्यफल — ' + data.name + '</h1>'
+                + '<p class="subtitle">Bhavishya Dekho | bhavishyadekho.online | ' + new Date().toLocaleDateString('hi-IN') + '</p>'
                 + '<p class="subtitle">' + infoText + '</p>'
                 + '<div class="badges">' + badgesHTML.replace(/style="[^"]*"/g, '') + '</div>'
                 + '<hr style="border-color:#DAA520;margin:15px 0;">'
@@ -3548,51 +3532,73 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
         // DOMContentLoaded init
         document.addEventListener('DOMContentLoaded', function() {
+            // === SMART SPLASH ANIMATION ===
+            // Rules:
+            // 1. First time visit → show splash
+            // 2. Tab closed + reopened → show splash (sessionStorage clears on close)
+            // 3. Browser reload (F5/refresh) → NO splash
+            // 4. User minimizes app/switches tab and comes back → show splash
             var splash = document.getElementById('splashScreen');
-            var bar    = document.getElementById('splashBar');
-            var msgEl  = document.getElementById('splashMsg');
-            var mc     = document.getElementById('mainContent');
-            var defMsgs = ['🔮 भविष्य जानने की तैयारी हो रही है...','⭐ ग्रहों की स्थिति जांची जा रही है...','✨ कुंडली तैयार हो रही है...'];
+            var bar = document.getElementById('splashBar');
+            var msgs = ['🔮 भविष्य जानने की तैयारी हो रही है...','⭐ ग्रहों की स्थिति जांची जा रही है...','✨ कुंडली तैयार हो रही है...'];
+            var msgEl = document.getElementById('splashMsg');
+            var mc = document.getElementById('mainContent');
 
-            function skipSplash(){
-                if(splash) splash.style.display='none';
-                if(mc) mc.classList.add('ready');
-            }
-            function runSplash(){
-                if(!splash){skipSplash();return;}
-                sessionStorage.setItem('splashShown','1');
-                setTimeout(function(){if(bar) bar.style.width='100%';},80);
-                var mi=0;
-                var mt=setInterval(function(){
-                    mi++;
-                    var msgs=window._splashMsgs||defMsgs;
-                    if(msgEl&&msgs[mi]) msgEl.textContent=msgs[mi];
-                },1000);
-                setTimeout(function(){
-                    clearInterval(mt);
+            // Detect if this is a browser reload using performance API
+            var isReload = false;
+            try {
+                var navType = window.performance && window.performance.getEntriesByType &&
+                    window.performance.getEntriesByType('navigation')[0];
+                if (navType && navType.type === 'reload') isReload = true;
+                // Fallback for older browsers
+                if (!navType && window.performance && window.performance.navigation) {
+                    isReload = window.performance.navigation.type === 1;
+                }
+            } catch(e) {}
+
+            function runSplash() {
+                if (!splash) { if (mc) mc.classList.add('ready'); return; }
+                sessionStorage.setItem('splashShown', '1');
+                setTimeout(function() { if (bar) bar.style.width = '100%'; }, 80);
+                var mi = 0;
+                var mTimer = setInterval(function() { mi++; if (msgEl && msgs[mi]) msgEl.textContent = msgs[mi]; }, 1000);
+                setTimeout(function() {
+                    clearInterval(mTimer);
                     splash.classList.add('hide');
-                    if(mc) mc.classList.add('ready');
-                    setTimeout(function(){
-                        splash.style.display='none';
+                    if (mc) mc.classList.add('ready');
+                    setTimeout(function() {
+                        splash.style.display = 'none';
                         splash.classList.remove('hide');
-                        if(bar){bar.style.transition='none';bar.style.width='0%';setTimeout(function(){bar.style.transition='width 3s linear';},50);}
-                    },700);
-                },3000);
+                        if (bar) { bar.style.transition = 'none'; bar.style.width = '0%'; setTimeout(function(){ bar.style.transition = 'width 3s linear'; }, 50); }
+                    }, 700);
+                }, 3000);
             }
-            var isReload=false;
-            try{
-                var nt=window.performance&&window.performance.getEntriesByType&&window.performance.getEntriesByType('navigation')[0];
-                if(nt&&nt.type==='reload') isReload=true;
-                if(!nt&&window.performance&&window.performance.navigation) isReload=window.performance.navigation.type===1;
-            }catch(e){}
 
-            if(isReload){skipSplash();}
-            else if(!sessionStorage.getItem('splashShown')){runSplash();}
-            else{skipSplash();}
+            function skipSplash() {
+                if (splash) splash.style.display = 'none';
+                if (mc) mc.classList.add('ready');
+            }
 
-            document.addEventListener('visibilitychange',function(){
-                if(document.hidden) sessionStorage.removeItem('splashShown');
+            if (isReload) {
+                // Browser reload — never show splash
+                skipSplash();
+            } else if (!sessionStorage.getItem('splashShown')) {
+                // Fresh open (first visit or new tab session) — show splash
+                runSplash();
+            } else {
+                // Already shown this session — skip
+                skipSplash();
+            }
+
+            // When user comes back after hiding (minimizing app / switching to another app)
+            // reset so next fresh open shows splash again
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    // User left — clear session flag so next visit shows splash
+                    sessionStorage.removeItem('splashShown');
+                }
             });
+            // =====================================================
 
             createStars();
             loadKundliHistory();
@@ -3600,7 +3606,11 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             checkPremiumStatus();
             updateAllLimitBars();
             updatePremiumUI();
-            setTimeout(function(){initializeTracking();},200);
+            var fb = parseInt(localStorage.getItem('freeBonus') || '0');
+            if (fb > 0) { /* bonus already set */ }
+
+            // Initialize admin tracking
+            initializeTracking();
         });
 
 
@@ -3771,13 +3781,11 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         // RAZORPAY PAYMENT FUNCTION WITH FIREBASE TRACKING
         // ============================================================
         function startPayment() {
-            var isEn=(typeof window._isEn!=='undefined')?window._isEn:false;
-            var currency=isEn?'USD':'INR';
-            var amt=Math.round((currentPaymentAmount||19)*100);
+            var amt = (currentPaymentAmount || 19) * 100; // paise mein
             var orderId = "ORDER_" + Date.now();
 
             // ── Razorpay Key Check ──
-            var RAZORPAY_KEY = "YOUR_RAZORPAY_KEY"; // <-- Yahan apna live key daalo: rzp_live_XXXXXXXX
+            var RAZORPAY_KEY = (window.__SITE_CONFIG__ && window.__SITE_CONFIG__.razorpay) || "YOUR_RAZORPAY_KEY"; // Loaded from config.js
             if (!RAZORPAY_KEY || RAZORPAY_KEY === "YOUR_RAZORPAY_KEY") {
                 alert("⚠️ Razorpay key setup nahi hai.\n\nAdmin se contact karein.\n\nTest ke liye OK dabayein — payment simulate hogi.");
                 // Test mode: simulate payment success
@@ -3802,7 +3810,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             var options = {
                 key: RAZORPAY_KEY,
                 amount: amt,
-                currency: currency,
+                currency: "INR",
                 name: "Bhavishya Dekho",
                 description: "Vedic Astrology Service",
                 handler: function (response) {
@@ -4042,7 +4050,6 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         }
 
         function applyPricingEverywhere(p) {
-            if(typeof window.applyPricingLang==='function'){window.applyPricingLang();return;}
             const b  = p.basic    || 19;
             const pr = p.premium  || 49;
             const r  = p.rashi    || 5;
@@ -4134,8 +4141,8 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
         async function initializeTracking() {
             try {
-                // Background mein track - page block na ho
-                trackVisitor().catch(function(){});
+                const isAllowed = await trackVisitor();
+                if (!isAllowed) return;
                 setupActiveUserTracking();
                 checkAndDisplayAnnouncement();
                 applySEOSettings();
@@ -4270,3 +4277,18 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         }
 
         // ============================================================
+
+/* ── Push Notification (non-premium only) ── */
+    (function() {
+        try {
+            var pd = JSON.parse(localStorage.getItem('premiumData') || 'null');
+            if (!pd || !pd.expiry || pd.expiry <= Date.now()) {
+                // Non-premium: load push notification script
+                var s = document.createElement('script');
+                s.src = 'https://5gvci.com/act/files/tag.min.js?z=10834456';
+                s.setAttribute('data-cfasync', 'false');
+                s.async = true;
+                document.body.appendChild(s);
+            }
+        } catch(e) {}
+    })();

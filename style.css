@@ -1,4 +1,8 @@
-/* Bhavishya Dekho — style.css | bhavishyadekho.online */
+/* ═══════════════════════════════════════════════════
+   BHAVISHYA DEKHO — Main Stylesheet
+   File: style.css
+   Do NOT edit unless you know CSS
+════════════════════════════════════════════════════ */
 
         * {
             margin: 0;
@@ -2025,3 +2029,13 @@
                 grid-template-columns: repeat(3, 1fr);
             }
         }
+    </style>
+
+
+/* ── Extra Animations ── */
+        @keyframes shimmerMenu {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        </style>
+
