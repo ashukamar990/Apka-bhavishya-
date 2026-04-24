@@ -26,7 +26,7 @@ var FIREBASE_CONFIG = {
 //  Apni Razorpay Dashboard se Live Key copy karo
 //  aur neeche "rzp_live_..." ki jagah paste karo
 //
-var RAZORPAY_KEY = "rzp_live_XXXXXXXXXXXXXXXX";
+var RAZORPAY_KEY = "rzp_live_SblFMVrk0vpfPc";
 //
 //  Example:
 //  var RAZORPAY_KEY = "rzp_live_AbCdEf1234567890";
