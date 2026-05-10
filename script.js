@@ -3641,7 +3641,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             function runSplash() {
                 if (!splash) { if (mc) mc.classList.add('ready'); return; }
                 sessionStorage.setItem('splashShown', '1');
-                // Bar width inline script se already set ho chuki hai — yahan sirf messages aur hide logic
+                setTimeout(function() { if (bar) bar.style.width = '100%'; }, 80);
                 var mi = 0;
                 var mTimer = setInterval(function() { mi++; if (msgEl && msgs[mi]) msgEl.textContent = msgs[mi]; }, 1000);
                 setTimeout(function() {
@@ -3899,8 +3899,6 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 currency: "INR",
                 name: "Bhavishya Dekho",
                 description: "Vedic Astrology Service",
-                // ── MOBILE FIX: redirect:false = popup mode on mobile bhi ──
-                // Bina is line ke mobile par page navigate ho jaata hai (blank page)
                 redirect: false,
                 handler: function (response) {
                     if (rzpClosed) return;
@@ -3923,9 +3921,6 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 prefill: { name: "", email: "", contact: "" },
                 theme: { color: "#ffd700" },
                 modal: {
-                    // ── Popup ko body se bahar jaane se rokta hai ──
-                    escape: false,
-                    backdropclose: false,
                     ondismiss: function() {
                         if (rzpClosed) return;
                         // User ne cancel kiya — modal band karo, loading nahi
