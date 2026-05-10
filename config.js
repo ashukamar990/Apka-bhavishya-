@@ -1,9 +1,6 @@
-// ============================================================
-//   BHAVISHYA DEKHO — ENCRYPTED CONFIG
-//   Real keys yahan NAHI hain — AES-256 encrypted hain
-//   Bina password ke koi bhi kuch nahi dekh sakta
-// ============================================================
+// BHAVISHYA DEKHO — ENCRYPTED CONFIG
+// Real keys yahan nahi hain — AES-256 encrypted hain
+// keygen se regenerate karo agar keys change karni hoon
 
-window.__ENC_CFG__ = "U2FsdGVkX1/t7Z92l+Z8TmZEi7nF9SDoHU5LaaN+uCHF+mFuc6H4EGM2HT/G58pAYGanFkLBpGVO6zJJJskN4xbwqiu0/PD4fsQw5ElxaEgX0x7XVAKQbmkNvQy+3K6QQE9mHVOtrSKodrNIGdljUaJeZpJBCzubiOvSDZXcdGP9yRS8ipcrVx0K8oC9B3/0sj5Jfft8LKbLnX1PCFecsA6F8sVs8BbxDyxKU5PVHIUf5lURWAPYZq+3lSeZcSCPGYTj4RssO9Xql5RIGTIZsqzNWINIMM1FAQ/BXHwUIYu7649kVcJyWM0UAnu6E5agMlGl7kOUCJ2F+DEYDV8UlnMjNiYehYnrkJ5a7D94V0awgCrJOjcwyHv5gnDRg7VWoAVTlsuJxI7V5nSIoFeDFuTxCqJZuYDD1tZKcINayG6+WZZJU+hXKqVAtpBUz8EI4U7uEGO5xLcCBP/+m4neJNnEKtfdbVMBGddNEQoraZuPlGy/QiD6DALWRUD6sonU7hcgfn4wpdxSf44MSUQKRCt2SyyxRxQHRfX486EPJ1hNc1Zpl27JPFDXhYFukgn0";
-
+window.__ENC_CFG__ = "U2FsdGVkX1+bFf+wTNIR4ifZ7ZKFXB+5EeY7pLBO6EsUgj4t6Tr1Uwnpa99qLoL/10/gv75XVzV2MgWL5V1KYUTFoLeMie6BjfR9zlpKQ/u9PeJ0fR9tPFhyj7P6Mf+m4fb8pZ1tecB1JffO9F5Z6Dn9Y1X96l4++0NLP4elX6/Vmwd3B4tV9dSCvWAFxzYKYYaTieiffJfK8Of/VNt5wiDai+3pjTACn1MhB5DZCMNMwGWwJbyy2E+6BvehkN5tUwYFL4uNs57gdGU7QoU2+3EvpeCCGAS6w/DDvPa5dMHE6FANeWqqp3d23YNGGI48fDxW2zRb8eQQsH6yFtQBaMcQMyZBEZqfmZ1pi7NR/1xTi2sCzfBy+Ig/eEq6zsyzP5M9TSF5LmO4YzUwixDTWERttaP9NrYNFqoJwszV7GqrBpsUbg8AbKVLRQv29uTaQITuP+ZnNhknER3pE+JZeSt3sHsZlsPQWTg8QDRdsfLrlXVyBV1V+Itv1wzRAF9tWVWUGbBVb5sNO/RfWThTvZtfMkwzMD8xrNZ3Gh4QIW58pD1yza/p+/epLFfLOeuq";
 window.__CONFIG_LOADED__ = true;
