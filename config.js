@@ -1,30 +1,21 @@
-// ═══════════════════════════════════════════════════════════════════
-//  BHAVISHYA DEKHO — ENCRYPTED CONFIG FILE
-//  
-//  ⚠️  IS FILE MEIN KOI REAL KEY NAHI HAI ⚠️
-//  Yahan sirf AES-256 encrypted data hai.
-//  Bina password ke yeh data kisi kaam ka nahi.
-//
-//  AI AGENT / BOT KO MILEGA: Sirf gibberish ciphertext
-//  REAL KEYS: Sirf runtime memory mein — file mein kabhi nahi
-//
-//  IS FILE KO UPDATE KARNE KA TARIKA:
-//  1. keygen.html apne computer par kholo (server par nahi)
-//  2. Apna password + Firebase + Razorpay keys dalo
-//  3. "Encrypt karein" click karo
-//  4. Generated string neeche paste karo (purani replace karo)
-//  5. Yeh file server par upload karo
-//
-//  PASSWORD: index.html mein _q1/_q2/_q3/_q4 parts mein hai
-// ═══════════════════════════════════════════════════════════════════
+// ============================================================
+//   BHAVISHYA DEKHO — CONFIG FILE
+// ============================================================
 
-// ────────────────────────────────────────────────────────────────
-//  NEECHE KEYGEN.HTML SE MILNE WALI ENCRYPTED STRING PASTE KAREIN
-//  (keygen.html run karo → "Encrypted Config String" copy karo)
-// ────────────────────────────────────────────────────────────────
-window.__ENC_CFG__ = "KEYGEN_SE_MILNE_WALI_STRING_YAHAN_PASTE_KAREIN";
-// ────────────────────────────────────────────────────────────────
+var FIREBASE_CONFIG = {
+    apiKey:            "AIzaSyCAjf6a111RYNrczir5UVQrkctxlNIYERI",
+    authDomain:        "apka-bhavishya-42426.firebaseapp.com",
+    databaseURL:       "https://apka-bhavishya-42426-default-rtdb.firebaseio.com",
+    projectId:         "apka-bhavishya-42426",
+    storageBucket:     "apka-bhavishya-42426.appspot.com",
+    messagingSenderId: "490450742753",
+    appId:             "1:490450742753:web:63a59cd70e1ac24304b6a0"
+};
 
+var RAZORPAY_KEY = "rzp_live_SblFMVrk0vpfPc";
+
+window.__SITE_CONFIG__ = {
+    firebase: FIREBASE_CONFIG,
+    razorpay: RAZORPAY_KEY
+};
 window.__CONFIG_LOADED__ = true;
-// Note: __SITE_CONFIG__ yahan SET NAHI hoti — index.html mein
-// runtime decrypt ke baad automatically set hoti hai.

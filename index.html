@@ -1418,77 +1418,22 @@
     
         // Free form naam type hone par rashi auto-detect (only if ₹5 package active)
     </script>
-    <!-- ═══════════════════════════════════════════════════════════
-         SECURE CONFIG SYSTEM — AES-256 Encrypted Keys
-         HOW IT WORKS:
-           1. config.js = sirf encrypted data (koi real key nahi)
-           2. Password 4 alag parts mein split (AI scraper nahi padh sakta)
-           3. Runtime par parts jodke decrypt hota hai — sirf memory mein
-         TO UPDATE KEYS: keygen.html (local) kholo → password+keys dalo
-                         → config.js update karo → server par upload
-         ═══════════════════════════════════════════════════════════ -->
-
-    <!-- Step 1: CryptoJS AES library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-
-    <!-- Step 2: Password parts — split & obfuscated -->
-    <!-- ════ keygen.html run karne ke baad yahan paste karein ════ -->
-    <script>
-    var _q1 = "Bhav";   /* Part 1 — keygen.html se milega */
-    var _q2 = "ishya";  /* Part 2 — keygen.html se milega */
-    var _q3 = "@D3";    /* Part 3 — keygen.html se milega */
-    var _q4 = "kho!";   /* Part 4 — keygen.html se milega */
-    </script>
-
-    <!-- Step 3: Encrypted config (only gibberish — no real keys) -->
+    <!-- Config — Real keys (simple working version) -->
     <script src="config.js"></script>
 
-    <!-- Step 4: Runtime AES decryption — keys kabhi file mein nahi aate -->
+    <!-- Splash Failsafe: 6 second mein force hide — koi bhi error ho -->
     <script>
-    (function() {
-        'use strict';
-        try {
-            var _pass = _q1 + _q2 + _q3 + _q4;
-            _q1 = _q2 = _q3 = _q4 = null; // parts turant clear
-
-            // Domain check — sirf apni site par kaam kare
-            var _h = window.location.hostname;
-            if (_h && _h !== 'bhavishyadekho.online' &&
-                _h !== 'www.bhavishyadekho.online' &&
-                _h !== 'localhost' && _h !== '127.0.0.1') {
-                console.warn('Unauthorized domain — config blocked');
-                window.__SITE_CONFIG__ = { firebase: {}, razorpay: '' };
-                window.__CONFIG_LOADED__ = false;
-                return;
-            }
-
-            if (!window.__ENC_CFG__) {
-                console.error('config.js mein __ENC_CFG__ nahi mili. keygen.html se banayein.');
-                window.__SITE_CONFIG__ = { firebase: {}, razorpay: '' };
-                return;
-            }
-
-            // AES-256 Decrypt
-            var _raw  = CryptoJS.AES.decrypt(window.__ENC_CFG__, _pass);
-            var _json = _raw.toString(CryptoJS.enc.Utf8);
-            if (!_json) throw new Error('decrypt_empty — wrong password?');
-            var _cfg  = JSON.parse(_json);
-
-            window.__SITE_CONFIG__ = { firebase: _cfg.firebase, razorpay: _cfg.razorpay };
-            window.__CONFIG_LOADED__ = true;
-
-            // Memory clear
-            _pass = _json = _raw = _cfg = null;
-
-        } catch(e) {
-            console.error('Config decrypt failed:', e.message,
-                '\nFix: keygen.html mein sahi password daalein → naya config.js banayein');
-            window.__SITE_CONFIG__ = { firebase: {}, razorpay: '' };
-            window.__CONFIG_LOADED__ = false;
+    setTimeout(function() {
+        var s = document.getElementById('splashScreen');
+        var m = document.getElementById('mainContent');
+        if (s && s.style.display !== 'none') {
+            s.style.transition = 'opacity 0.5s';
+            s.style.opacity = '0';
+            setTimeout(function() { s.style.display = 'none'; }, 500);
         }
-    })();
+        if (m) m.classList.add('ready');
+    }, 6000);
     </script>
-    <!-- ═══════════════════════════════════════════════════════════ -->
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
