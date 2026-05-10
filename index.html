@@ -333,6 +333,17 @@
             <div style="width: 260px; height: 5px; background: rgba(255,215,0,0.2); border-radius:10px; margin: 22px auto; overflow: hidden;">
                 <div id="splashBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ffd700, #ff4500); border-radius:10px; transition: width 3s linear;"></div>
             </div>
+            <!-- ── INSTANT SPLASH FIX: DOMContentLoaded ka wait nahi, turant start ── -->
+            <script>
+            (function() {
+                var bar = document.getElementById('splashBar');
+                if (bar) {
+                    requestAnimationFrame(function() {
+                        requestAnimationFrame(function() { bar.style.width = '100%'; });
+                    });
+                }
+            })();
+            </script>
             <p style="color: rgba(255,215,0,0.6); font-size:0.8em; margin-top:5px;" id="splashMsg" data-i18n="splash1">🔮 भविष्य जानने की तैयारी हो रही है...</p>
         </div>
     </div>
@@ -1407,15 +1418,77 @@
     
         // Free form naam type hone par rashi auto-detect (only if ₹5 package active)
     </script>
-    <!-- Config File (API Keys) -->
+    <!-- ═══════════════════════════════════════════════════════════
+         SECURE CONFIG SYSTEM — AES-256 Encrypted Keys
+         HOW IT WORKS:
+           1. config.js = sirf encrypted data (koi real key nahi)
+           2. Password 4 alag parts mein split (AI scraper nahi padh sakta)
+           3. Runtime par parts jodke decrypt hota hai — sirf memory mein
+         TO UPDATE KEYS: keygen.html (local) kholo → password+keys dalo
+                         → config.js update karo → server par upload
+         ═══════════════════════════════════════════════════════════ -->
+
+    <!-- Step 1: CryptoJS AES library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+
+    <!-- Step 2: Password parts — split & obfuscated -->
+    <!-- ════ keygen.html run karne ke baad yahan paste karein ════ -->
+    <script>
+    var _q1 = "Bhav";   /* Part 1 — keygen.html se milega */
+    var _q2 = "ishya";  /* Part 2 — keygen.html se milega */
+    var _q3 = "@D3";    /* Part 3 — keygen.html se milega */
+    var _q4 = "kho!";   /* Part 4 — keygen.html se milega */
+    </script>
+
+    <!-- Step 3: Encrypted config (only gibberish — no real keys) -->
     <script src="config.js"></script>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- Step 4: Runtime AES decryption — keys kabhi file mein nahi aate -->
+    <script>
+    (function() {
+        'use strict';
+        try {
+            var _pass = _q1 + _q2 + _q3 + _q4;
+            _q1 = _q2 = _q3 = _q4 = null; // parts turant clear
 
-    <!-- Config (API Keys) -->
-    <script src="config.js"></script>
+            // Domain check — sirf apni site par kaam kare
+            var _h = window.location.hostname;
+            if (_h && _h !== 'bhavishyadekho.online' &&
+                _h !== 'www.bhavishyadekho.online' &&
+                _h !== 'localhost' && _h !== '127.0.0.1') {
+                console.warn('Unauthorized domain — config blocked');
+                window.__SITE_CONFIG__ = { firebase: {}, razorpay: '' };
+                window.__CONFIG_LOADED__ = false;
+                return;
+            }
+
+            if (!window.__ENC_CFG__) {
+                console.error('config.js mein __ENC_CFG__ nahi mili. keygen.html se banayein.');
+                window.__SITE_CONFIG__ = { firebase: {}, razorpay: '' };
+                return;
+            }
+
+            // AES-256 Decrypt
+            var _raw  = CryptoJS.AES.decrypt(window.__ENC_CFG__, _pass);
+            var _json = _raw.toString(CryptoJS.enc.Utf8);
+            if (!_json) throw new Error('decrypt_empty — wrong password?');
+            var _cfg  = JSON.parse(_json);
+
+            window.__SITE_CONFIG__ = { firebase: _cfg.firebase, razorpay: _cfg.razorpay };
+            window.__CONFIG_LOADED__ = true;
+
+            // Memory clear
+            _pass = _json = _raw = _cfg = null;
+
+        } catch(e) {
+            console.error('Config decrypt failed:', e.message,
+                '\nFix: keygen.html mein sahi password daalein → naya config.js banayein');
+            window.__SITE_CONFIG__ = { firebase: {}, razorpay: '' };
+            window.__CONFIG_LOADED__ = false;
+        }
+    })();
+    </script>
+    <!-- ═══════════════════════════════════════════════════════════ -->
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
