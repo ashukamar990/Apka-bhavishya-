@@ -333,7 +333,7 @@
             <div style="width: 260px; height: 5px; background: rgba(255,215,0,0.2); border-radius:10px; margin: 22px auto; overflow: hidden;">
                 <div id="splashBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ffd700, #ff4500); border-radius:10px; transition: width 3s linear;"></div>
             </div>
-            <script>(function(){var b=document.getElementById('splashBar');if(b){requestAnimationFrame(function(){requestAnimationFrame(function(){b.style.width='100%';});})}})();</script>
+            <script>(function(){var b=document.getElementById('splashBar');if(b){requestAnimationFrame(function(){requestAnimationFrame(function(){b.style.width='100%';});});}})();</script>
             <p style="color: rgba(255,215,0,0.6); font-size:0.8em; margin-top:5px;" id="splashMsg" data-i18n="splash1">🔮 भविष्य जानने की तैयारी हो रही है...</p>
         </div>
     </div>
@@ -1408,36 +1408,30 @@
     
         // Free form naam type hone par rashi auto-detect (only if ₹5 package active)
     </script>
-    <!-- ═══ SECURITY SYSTEM — AES-256 Encrypted Config ═══ -->
-    <!-- config.js mein sirf encrypted data hai, real keys nahi -->
-    <!-- Keygen tool (Claude chat mein) se encrypted config banao -->
+    <!-- Security: AES Encrypted Config -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-    <!-- Password 4 parts mein split — keygen tool se milega -->
     <script>
-    var _q1="Bhav",_q2="ishya",_q3="@D3",_q4="kho!"; /* keygen se update karo */
+    var _q1="karan",_q2="divya",_q3="nshu7",_q4="61890"; /* password parts */
     </script>
     <script src="config.js"></script>
     <script>
     (function(){
         try{
             if(window.__SITE_CONFIG__&&window.__SITE_CONFIG__.firebase&&window.__SITE_CONFIG__.firebase.apiKey){
-                _q1=_q2=_q3=_q4=null; return; // Old format config — direct use
+                _q1=_q2=_q3=_q4=null;return;
             }
-            var p=_q1+_q2+_q3+_q4; _q1=_q2=_q3=_q4=null;
-            if(!window.__ENC_CFG__) return;
+            var p=_q1+_q2+_q3+_q4;_q1=_q2=_q3=_q4=null;
+            if(!window.__ENC_CFG__)return;
             var r=CryptoJS.AES.decrypt(window.__ENC_CFG__,p);
             var j=r.toString(CryptoJS.enc.Utf8);
-            if(!j) throw new Error('bad_decrypt');
+            if(!j)throw new Error('bad');
             var c=JSON.parse(j);
             window.__SITE_CONFIG__={firebase:c.firebase,razorpay:c.razorpay};
             window.__CONFIG_LOADED__=true;
             p=j=r=c=null;
-        }catch(e){
-            console.warn('Config decrypt issue:',e.message);
-        }
+        }catch(e){console.warn('Config decrypt:',e.message);}
     })();
     </script>
-    <!-- ═══════════════════════════════════════════════════ -->
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -1463,11 +1457,9 @@
     <script src="security.js"></script>
 
     <script>
-    /* Failsafe: 6 sec mein splash force hide */
-    setTimeout(function(){
-        var s=document.getElementById('splashScreen'),m=document.getElementById('mainContent');
-        if(s&&s.style.display!=='none'){s.style.opacity='0';s.style.transition='opacity 0.5s';setTimeout(function(){s.style.display='none';},500);}
-        if(m)m.classList.add('ready');
+    setTimeout(function(){var s=document.getElementById('splashScreen'),m=document.getElementById('mainContent');
+    if(s&&s.style.display!=='none'){s.style.opacity='0';s.style.transition='opacity 0.5s';
+    setTimeout(function(){s.style.display='none';},500);}if(m)m.classList.add('ready');
     },6000);
     </script>
 </body>
