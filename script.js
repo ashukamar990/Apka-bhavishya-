@@ -38,32 +38,25 @@
         let rashiPurchase = { active: false, name: "", rashi: "", expiry: 0 };
 
         // ── Currency Helper ──
-        // Language detect karo — English = USD, Hindi = INR
         function getCurrentLang() {
             var el = document.getElementById('langSelectDropdown');
-            if (el) return el.value; // 'en' ya 'hi'
+            if (el) return el.value;
             return localStorage.getItem('bdLang') || 'hi';
         }
-
-        // USD amount ko INR mein convert karo (1 USD = 84 INR fixed rate)
         var USD_TO_INR = 84;
         function getINRAmount(amount) {
             if (getCurrentLang() === 'en') return Math.round(amount * USD_TO_INR);
             return amount;
         }
-
-        // Payment modal mein sahi currency dikhao
         function showPaymentAmount(amount) {
             var el = document.getElementById('paymentAmount');
             if (!el) return;
             if (getCurrentLang() === 'en') {
-                var inr = Math.round(amount * USD_TO_INR);
-                el.innerText = '$' + amount + ' (₹' + inr + ')';
+                el.innerText = '$' + amount + ' (₹' + Math.round(amount * USD_TO_INR) + ')';
             } else {
                 el.innerText = '₹' + amount;
             }
         }
-
         // Payment tracking variable
         let paymentCompleted = false;
         let currentPaymentType = '';
@@ -1147,7 +1140,7 @@
             window._currentPaymentAmount = amount;
             window._currentPaymentType = 'premium_' + plan;
             currentPaymentType = 'premium_' + plan;
-            showPaymentAmount(amount);
+            document.getElementById('paymentAmount').innerText = '₹' + amount;
             document.getElementById('paymentModal').classList.add('show');
             document.body.style.overflow = 'hidden';
         }
@@ -1722,7 +1715,7 @@
             window._currentPaymentAmount = amount;
             window._currentPaymentType = type;
             currentPaymentType = type;
-            showPaymentAmount(amount);
+            document.getElementById('paymentAmount').innerText = '₹' + amount;
             document.getElementById('paymentModal').classList.add('show');
             document.body.style.overflow = 'hidden';
         }
@@ -3720,387 +3713,6 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
 
             // Initialize admin tracking
             initializeTracking();
-
-        // ════════════════════════════════════════════════════════
-        //   PROFESSIONAL ANIMATIONS & INTERACTIONS
-        // ════════════════════════════════════════════════════════
-
-        // ── 1. SCROLL PROGRESS BAR ──
-        (function() {
-            var bar = document.getElementById('scrollProgress');
-            if (!bar) return;
-            window.addEventListener('scroll', function() {
-                var scrollTop = window.scrollY || document.documentElement.scrollTop;
-                var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-                bar.style.width = Math.min(pct, 100) + '%';
-            }, { passive: true });
-        })();
-
-        // ── 2. CURSOR GLOW (desktop only) ──
-        (function() {
-            var glow = document.getElementById('cursorGlow');
-            if (!glow || window.innerWidth < 768) return;
-            document.addEventListener('mousemove', function(e) {
-                glow.style.left = e.clientX + 'px';
-                glow.style.top = e.clientY + 'px';
-            }, { passive: true });
-        })();
-
-        // ── 3. RIPPLE EFFECT on all buttons ──
-        (function() {
-            function addRipple(btn) {
-                btn.addEventListener('click', function(e) {
-                    var rect = btn.getBoundingClientRect();
-                    var x = e.clientX - rect.left;
-                    var y = e.clientY - rect.top;
-                    var ripple = document.createElement('span');
-                    ripple.className = 'ripple';
-                    var size = Math.max(rect.width, rect.height) * 2;
-                    ripple.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (x - size/2) + 'px;top:' + (y - size/2) + 'px;';
-                    btn.style.position = btn.style.position || 'relative';
-                    btn.style.overflow = 'hidden';
-                    btn.appendChild(ripple);
-                    setTimeout(function() { ripple.remove(); }, 700);
-                });
-            }
-            document.querySelectorAll('button, .pro-btn, .predict-btn, .predict-btn-top, .premium-btn, .donation-btn, .donation-option').forEach(addRipple);
-        })();
-
-        // ── 4. PARTICLE SYSTEM ──
-        (function() {
-            var canvas = document.getElementById('particleCanvas');
-            if (!canvas) return;
-            var ctx = canvas.getContext('2d');
-            var particles = [];
-            var W, H;
-
-            function resize() {
-                W = canvas.width = window.innerWidth;
-                H = canvas.height = window.innerHeight;
-            }
-            resize();
-            window.addEventListener('resize', resize, { passive: true });
-
-            // Create particles
-            for (var i = 0; i < 60; i++) {
-                particles.push({
-                    x: Math.random() * window.innerWidth,
-                    y: Math.random() * window.innerHeight,
-                    r: Math.random() * 1.5 + 0.5,
-                    dx: (Math.random() - 0.5) * 0.4,
-                    dy: (Math.random() - 0.5) * 0.4,
-                    opacity: Math.random() * 0.6 + 0.2,
-                    pulse: Math.random() * Math.PI * 2,
-                    color: Math.random() > 0.7 ? '#ffd700' : Math.random() > 0.5 ? '#ff8c00' : '#ffffff'
-                });
-            }
-
-            var animId;
-            function animate() {
-                ctx.clearRect(0, 0, W, H);
-                particles.forEach(function(p) {
-                    p.pulse += 0.02;
-                    p.opacity = 0.2 + Math.sin(p.pulse) * 0.3;
-                    p.x += p.dx;
-                    p.y += p.dy;
-                    if (p.x < 0) p.x = W;
-                    if (p.x > W) p.x = 0;
-                    if (p.y < 0) p.y = H;
-                    if (p.y > H) p.y = 0;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fillStyle = p.color;
-                    ctx.globalAlpha = p.opacity;
-                    ctx.fill();
-                });
-                ctx.globalAlpha = 1;
-
-                // Connect nearby particles
-                for (var i = 0; i < particles.length; i++) {
-                    for (var j = i + 1; j < particles.length; j++) {
-                        var dx = particles[i].x - particles[j].x;
-                        var dy = particles[i].y - particles[j].y;
-                        var dist = Math.sqrt(dx*dx + dy*dy);
-                        if (dist < 100) {
-                            ctx.beginPath();
-                            ctx.strokeStyle = 'rgba(255,215,0,' + (0.08 * (1 - dist/100)) + ')';
-                            ctx.lineWidth = 0.5;
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.stroke();
-                        }
-                    }
-                }
-                animId = requestAnimationFrame(animate);
-            }
-            animate();
-
-            // Pause when tab hidden (performance)
-            document.addEventListener('visibilitychange', function() {
-                if (document.hidden) { cancelAnimationFrame(animId); }
-                else { animate(); }
-            });
-        })();
-
-        // ── 5. CARD TILT EFFECT (desktop only) ──
-        (function() {
-            if (window.innerWidth < 768) return;
-            var cards = document.querySelectorAll('.feature-card, .premium-card, .bhav-card');
-            cards.forEach(function(card) {
-                card.addEventListener('mousemove', function(e) {
-                    var rect = card.getBoundingClientRect();
-                    var x = (e.clientX - rect.left) / rect.width - 0.5;
-                    var y = (e.clientY - rect.top) / rect.height - 0.5;
-                    card.style.transform = 'perspective(600px) rotateY(' + (x * 10) + 'deg) rotateX(' + (-y * 10) + 'deg) translateZ(10px)';
-                });
-                card.addEventListener('mouseleave', function() {
-                    card.style.transform = '';
-                    card.style.transition = 'transform 0.5s ease';
-                });
-                card.addEventListener('mouseenter', function() {
-                    card.style.transition = 'transform 0.1s ease';
-                });
-            });
-        })();
-
-        // ── 6. MAGNETIC BUTTON EFFECT (desktop) ──
-        (function() {
-            if (window.innerWidth < 768) return;
-            var magBtns = document.querySelectorAll('.predict-btn-top, .predict-btn.small');
-            magBtns.forEach(function(btn) {
-                btn.addEventListener('mousemove', function(e) {
-                    var rect = btn.getBoundingClientRect();
-                    var x = (e.clientX - rect.left - rect.width/2) * 0.25;
-                    var y = (e.clientY - rect.top - rect.height/2) * 0.25;
-                    btn.style.transform = 'translate(' + x + 'px, ' + y + 'px) scale(1.03)';
-                });
-                btn.addEventListener('mouseleave', function() {
-                    btn.style.transform = '';
-                    btn.style.transition = 'transform 0.5s ease';
-                });
-            });
-        })();
-
-        // ── 7. PROFESSIONAL TOAST NOTIFICATION ──
-        window.showProToast = function(msg, duration) {
-            var existing = document.querySelector('.pro-toast');
-            if (existing) existing.remove();
-            var toast = document.createElement('div');
-            toast.className = 'pro-toast';
-            toast.innerHTML = '✨ ' + msg;
-            document.body.appendChild(toast);
-            setTimeout(function() { toast.classList.add('show'); }, 10);
-            setTimeout(function() {
-                toast.classList.remove('show');
-                setTimeout(function() { toast.remove(); }, 500);
-            }, duration || 3000);
-        };
-
-        // ── 8. INTERSECTION OBSERVER — Scroll entrance animations ──
-        (function() {
-            if (!window.IntersectionObserver) return;
-            var observer = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animation = 'slideInBottom 0.6s cubic-bezier(0.175,0.885,0.32,1.275) both';
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-            document.querySelectorAll('.feature-card, .premium-card, .bhav-card, .category-card, .history-card, .benefit-item').forEach(function(el) {
-                el.style.opacity = '0';
-                observer.observe(el);
-            });
-        })();
-
-
-
-
-        // ═══════════════════════════════════════════════════
-        // PROFESSIONAL ANIMATIONS — Ripple + Magnetic + Pro
-        // ═══════════════════════════════════════════════════
-
-        (function initProAnimations() {
-
-            // ── RIPPLE EFFECT on all buttons ──
-            function addRipple(e) {
-                var btn = e.currentTarget;
-                var ripple = document.createElement('span');
-                var rect = btn.getBoundingClientRect();
-                var size = Math.max(rect.width, rect.height);
-                var x = e.clientX - rect.left - size / 2;
-                var y = e.clientY - rect.top - size / 2;
-                ripple.className = 'ripple';
-                ripple.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+x+'px;top:'+y+'px;';
-                btn.appendChild(ripple);
-                setTimeout(function() { ripple.remove(); }, 700);
-            }
-
-            function attachRipple() {
-                var btns = document.querySelectorAll(
-                    '.predict-btn,.predict-btn-top,.premium-btn,.donation-btn,' +
-                    '.kundli-download-btn,.upsell-btn,.payment-option,.menu-btn,' +
-                    '.bhav-card,.feature-card,.donation-option'
-                );
-                btns.forEach(function(btn) {
-                    if (!btn._ripple) {
-                        btn._ripple = true;
-                        btn.style.position = btn.style.position || 'relative';
-                        btn.style.overflow = 'hidden';
-                        btn.addEventListener('click', addRipple);
-                    }
-                });
-            }
-
-            // ── MAGNETIC HOVER EFFECT on feature cards ──
-            function initMagnetic() {
-                var cards = document.querySelectorAll('.feature-card,.bhav-card,.premium-card');
-                cards.forEach(function(card) {
-                    card.addEventListener('mousemove', function(e) {
-                        var rect = card.getBoundingClientRect();
-                        var x = e.clientX - rect.left;
-                        var y = e.clientY - rect.top;
-                        var cx = rect.width / 2;
-                        var cy = rect.height / 2;
-                        var dx = (x - cx) / cx;
-                        var dy = (y - cy) / cy;
-                        card.style.transform = 'translateY(-8px) scale(1.03) rotateX('+ (-dy*6) +'deg) rotateY('+ (dx*6) +'deg)';
-                        card.style.setProperty('--mx', (x/rect.width*100)+'%');
-                        card.style.setProperty('--my', (y/rect.height*100)+'%');
-                    });
-                    card.addEventListener('mouseleave', function() {
-                        card.style.transform = '';
-                    });
-                });
-            }
-
-            // ── SCROLL REVEAL ANIMATION ──
-            function initScrollReveal() {
-                if (!window.IntersectionObserver) return;
-                var observer = new IntersectionObserver(function(entries) {
-                    entries.forEach(function(entry) {
-                        if (entry.isIntersecting) {
-                            entry.target.style.animation = 'slideInUp 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards';
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.12 });
-
-                document.querySelectorAll(
-                    '.feature-card,.bhav-card,.premium-card,.history-card,.category-card'
-                ).forEach(function(el) {
-                    el.style.opacity = '0';
-                    observer.observe(el);
-                });
-            }
-
-            // ── PARTICLE STARS BACKGROUND ──
-            function initStars() {
-                var bg = document.getElementById('cosmicBg');
-                if (!bg) return;
-                var frag = document.createDocumentFragment();
-                for (var i = 0; i < 60; i++) {
-                    var star = document.createElement('div');
-                    var size = Math.random() * 2.5 + 0.5;
-                    var x = Math.random() * 100;
-                    var y = Math.random() * 100;
-                    var dur = Math.random() * 4 + 3;
-                    var delay = Math.random() * 5;
-                    star.style.cssText =
-                        'position:absolute;border-radius:50%;pointer-events:none;' +
-                        'width:'+size+'px;height:'+size+'px;' +
-                        'left:'+x+'%;top:'+y+'%;' +
-                        'background:rgba(255,215,0,'+(Math.random()*0.5+0.3)+');' +
-                        'box-shadow:0 0 '+(size*3)+'px rgba(255,215,0,0.6);' +
-                        'animation:particleStar '+dur+'s '+delay+'s ease-in-out infinite;';
-                    frag.appendChild(star);
-                }
-                bg.appendChild(frag);
-
-                // Star animation keyframe inject
-                if (!document.getElementById('starKeyframe')) {
-                    var style = document.createElement('style');
-                    style.id = 'starKeyframe';
-                    style.textContent =
-                        '@keyframes particleStar{' +
-                        '0%,100%{opacity:0.2;transform:scale(1)}' +
-                        '50%{opacity:1;transform:scale(1.8)}' +
-                        '}';
-                    document.head.appendChild(style);
-                }
-            }
-
-            // ── BUTTON PRESS HAPTIC FEEL ──
-            function initButtonFeel() {
-                document.querySelectorAll(
-                    '.predict-btn,.predict-btn-top,.premium-btn,.donation-btn,.kundli-download-btn'
-                ).forEach(function(btn) {
-                    btn.addEventListener('mousedown', function() {
-                        this.style.transform = 'scale(0.96)';
-                    });
-                    btn.addEventListener('mouseup', function() {
-                        this.style.transform = '';
-                    });
-                    btn.addEventListener('mouseleave', function() {
-                        this.style.transform = '';
-                    });
-                });
-            }
-
-            // ── GLOW TRAIL on premium cards ──
-            function initGlowTrail() {
-                document.querySelectorAll('.premium-card').forEach(function(card) {
-                    card.addEventListener('mousemove', function(e) {
-                        var r = card.getBoundingClientRect();
-                        var x = e.clientX - r.left;
-                        var y = e.clientY - r.top;
-                        card.style.background =
-                            'radial-gradient(circle at '+x+'px '+y+'px, rgba(255,215,0,0.12) 0%, rgba(13,13,37,1) 60%)';
-                    });
-                    card.addEventListener('mouseleave', function() {
-                        card.style.background = '';
-                    });
-                });
-            }
-
-            // ── COUNTER ANIMATION for stats/numbers ──
-            function animateCounters() {
-                document.querySelectorAll('[data-count]').forEach(function(el) {
-                    var target = parseInt(el.getAttribute('data-count'));
-                    var duration = 1500;
-                    var step = target / (duration / 16);
-                    var current = 0;
-                    var timer = setInterval(function() {
-                        current += step;
-                        if (current >= target) { current = target; clearInterval(timer); }
-                        el.textContent = Math.floor(current).toLocaleString();
-                    }, 16);
-                });
-            }
-
-            // Run all on DOM ready
-            attachRipple();
-            initMagnetic();
-            initStars();
-            initButtonFeel();
-            initGlowTrail();
-            initScrollReveal();
-            animateCounters();
-
-            // Re-attach ripple when new elements added (for dynamic content)
-            var mutObs = new MutationObserver(function() {
-                attachRipple();
-                initMagnetic();
-                initGlowTrail();
-            });
-            mutObs.observe(document.body, { childList: true, subtree: true });
-
-        })();
-
-        // ═══════════════════════════════════════════════════
-
         });
 
 
@@ -4275,7 +3887,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         // RAZORPAY PAYMENT FUNCTION WITH FIREBASE TRACKING
         // ============================================================
         function startPayment() {
-            var amt = getINRAmount(currentPaymentAmount || 19) * 100; // paise mein (USD→INR auto convert)
+            var amt = getINRAmount(currentPaymentAmount || 19) * 100; // USD→INR auto convert
             var orderId = "ORDER_" + Date.now();
 
             // ── Razorpay Key Check ──
@@ -4787,3 +4399,77 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             }
         } catch(e) {}
     })();
+
+
+// ═══════════════════════════════════════════════
+// PROFESSIONAL ANIMATIONS — Ripple + Stars
+// ═══════════════════════════════════════════════
+(function() {
+    function ready(fn) {
+        if (document.readyState !== 'loading') fn();
+        else document.addEventListener('DOMContentLoaded', fn);
+    }
+
+    // RIPPLE
+    function addRipple(e) {
+        var btn = e.currentTarget;
+        var r = document.createElement('span');
+        var rect = btn.getBoundingClientRect();
+        var size = Math.max(rect.width, rect.height);
+        r.className = 'ripple';
+        r.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(e.clientX-rect.left-size/2)+'px;top:'+(e.clientY-rect.top-size/2)+'px;';
+        btn.appendChild(r);
+        setTimeout(function(){ if(r.parentNode) r.parentNode.removeChild(r); }, 700);
+    }
+
+    function attachRipple() {
+        var sel = '.predict-btn,.predict-btn-top,.payment-option,.bhav-card,.feature-card,.premium-card,.donation-option,.menu-btn';
+        document.querySelectorAll(sel).forEach(function(b) {
+            if (!b._rp) {
+                b._rp = true;
+                b.addEventListener('click', addRipple);
+            }
+        });
+    }
+
+    // STARS
+    function initStars() {
+        var bg = document.getElementById('cosmicBg');
+        if (!bg || bg._stars) return;
+        bg._stars = true;
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < 55; i++) {
+            var s = document.createElement('div');
+            var sz = Math.random() * 2.2 + 0.5;
+            s.style.cssText =
+                'position:absolute;border-radius:50%;pointer-events:none;' +
+                'width:'+sz+'px;height:'+sz+'px;' +
+                'left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;' +
+                'background:rgba(255,215,0,'+(Math.random()*.5+.25)+');' +
+                'box-shadow:0 0 '+(sz*3)+'px rgba(255,215,0,.6);' +
+                'animation:particleStar '+(Math.random()*4+3)+'s '+(Math.random()*5)+'s ease-in-out infinite;';
+            frag.appendChild(s);
+        }
+        bg.appendChild(frag);
+    }
+
+    // BUTTON PRESS FEEL
+    function initPress() {
+        var sel = '.predict-btn,.predict-btn-top';
+        document.querySelectorAll(sel).forEach(function(b) {
+            b.addEventListener('mousedown', function(){ this.style.transform='scale(.96)'; });
+            b.addEventListener('mouseup',   function(){ this.style.transform=''; });
+            b.addEventListener('mouseleave',function(){ this.style.transform=''; });
+        });
+    }
+
+    ready(function() {
+        attachRipple();
+        initStars();
+        initPress();
+        // Re-attach on dynamic content
+        new MutationObserver(function(){ attachRipple(); initStars(); })
+            .observe(document.body, { childList: true, subtree: true });
+    });
+})();
+// ═══════════════════════════════════════════════
