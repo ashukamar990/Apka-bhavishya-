@@ -1140,7 +1140,7 @@
             window._currentPaymentAmount = amount;
             window._currentPaymentType = 'premium_' + plan;
             currentPaymentType = 'premium_' + plan;
-            document.getElementById('paymentAmount').innerText = '₹' + amount;
+            showPaymentAmount(amount);
             document.getElementById('paymentModal').classList.add('show');
             document.body.style.overflow = 'hidden';
         }
@@ -1715,7 +1715,7 @@
             window._currentPaymentAmount = amount;
             window._currentPaymentType = type;
             currentPaymentType = type;
-            document.getElementById('paymentAmount').innerText = '₹' + amount;
+            showPaymentAmount(amount);
             document.getElementById('paymentModal').classList.add('show');
             document.body.style.overflow = 'hidden';
         }
@@ -3887,7 +3887,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         // RAZORPAY PAYMENT FUNCTION WITH FIREBASE TRACKING
         // ============================================================
         function startPayment() {
-            var amt = getINRAmount(currentPaymentAmount || 19) * 100; // USD→INR auto convert
+            var amt = getINRAmount(currentPaymentAmount || 19) * 100; // USD→INR auto
             var orderId = "ORDER_" + Date.now();
 
             // ── Razorpay Key Check ──
@@ -4399,77 +4399,3 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             }
         } catch(e) {}
     })();
-
-
-// ═══════════════════════════════════════════════
-// PROFESSIONAL ANIMATIONS — Ripple + Stars
-// ═══════════════════════════════════════════════
-(function() {
-    function ready(fn) {
-        if (document.readyState !== 'loading') fn();
-        else document.addEventListener('DOMContentLoaded', fn);
-    }
-
-    // RIPPLE
-    function addRipple(e) {
-        var btn = e.currentTarget;
-        var r = document.createElement('span');
-        var rect = btn.getBoundingClientRect();
-        var size = Math.max(rect.width, rect.height);
-        r.className = 'ripple';
-        r.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(e.clientX-rect.left-size/2)+'px;top:'+(e.clientY-rect.top-size/2)+'px;';
-        btn.appendChild(r);
-        setTimeout(function(){ if(r.parentNode) r.parentNode.removeChild(r); }, 700);
-    }
-
-    function attachRipple() {
-        var sel = '.predict-btn,.predict-btn-top,.payment-option,.bhav-card,.feature-card,.premium-card,.donation-option,.menu-btn';
-        document.querySelectorAll(sel).forEach(function(b) {
-            if (!b._rp) {
-                b._rp = true;
-                b.addEventListener('click', addRipple);
-            }
-        });
-    }
-
-    // STARS
-    function initStars() {
-        var bg = document.getElementById('cosmicBg');
-        if (!bg || bg._stars) return;
-        bg._stars = true;
-        var frag = document.createDocumentFragment();
-        for (var i = 0; i < 55; i++) {
-            var s = document.createElement('div');
-            var sz = Math.random() * 2.2 + 0.5;
-            s.style.cssText =
-                'position:absolute;border-radius:50%;pointer-events:none;' +
-                'width:'+sz+'px;height:'+sz+'px;' +
-                'left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;' +
-                'background:rgba(255,215,0,'+(Math.random()*.5+.25)+');' +
-                'box-shadow:0 0 '+(sz*3)+'px rgba(255,215,0,.6);' +
-                'animation:particleStar '+(Math.random()*4+3)+'s '+(Math.random()*5)+'s ease-in-out infinite;';
-            frag.appendChild(s);
-        }
-        bg.appendChild(frag);
-    }
-
-    // BUTTON PRESS FEEL
-    function initPress() {
-        var sel = '.predict-btn,.predict-btn-top';
-        document.querySelectorAll(sel).forEach(function(b) {
-            b.addEventListener('mousedown', function(){ this.style.transform='scale(.96)'; });
-            b.addEventListener('mouseup',   function(){ this.style.transform=''; });
-            b.addEventListener('mouseleave',function(){ this.style.transform=''; });
-        });
-    }
-
-    ready(function() {
-        attachRipple();
-        initStars();
-        initPress();
-        // Re-attach on dynamic content
-        new MutationObserver(function(){ attachRipple(); initStars(); })
-            .observe(document.body, { childList: true, subtree: true });
-    });
-})();
-// ═══════════════════════════════════════════════
