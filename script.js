@@ -2179,7 +2179,7 @@
                 'चंद्रमा की कृपा से मन में स्थिरता और स्पष्टता आएगी। परिवार के किसी शुभ कार्य की तैयारी हो सकती है। आपकी वाणी में जो मिठास आएगी उससे पुराने विवाद सुलझेंगे और नए रिश्ते जुड़ेंगे।',
                 'मंगल के बल से आपकी कार्य-क्षमता चरम पर होगी। प्रतिस्पर्धियों पर स्पष्ट बढ़त मिलेगी और जमीन-जायदाद के मामलों में सफलता प्राप्त होगी। किसी नए उद्यम की शुरुआत के लिए यह समय अनुकूल है।',
                 'बुध की अनुकूलता से आपकी तर्क-शक्ति और संचार कौशल में अभूतपूर्व वृद्धि होगी। व्यापार में नए अनुबंध मिलेंगे। लंबे समय से लंबित कोई महत्वपूर्ण बात आखिरकार पूरी होगी।',
-                'गुरु की दृष्टि से आपके भाग्य का सितारा चमक रहा है। संतान की ओर से सुखद समाचार, धार्मिक कार्यों में सफलता और किसी योग्य मार्गदर्शक का मिलना — ये सब आपके जीवन को नई दिशा देंगे।',
+                'गुरु की दृष्टि से आपके भाग्य का सितारा चमक रहा है। धार्मिक कार्यों में सफलता, परिवार से सुखद समाचार और किसी योग्य मार्गदर्शक का मिलना — ये सब आपके जीवन को नई दिशा देंगे।',
                 'शुक्र की महादशा में प्रेम, सौंदर्य और सुख का विशेष संयोग बन रहा है। वैवाहिक जीवन में मिठास बढ़ेगी। आपका आकर्षण ऐसा होगा कि लोग स्वाभाविक रूप से आपकी ओर खिंचे चले आएंगे।',
                 'शनि की मेहनत अब रंग लाने वाली है। पुरानी थकान और कर्ज से मुक्ति मिलेगी। स्वास्थ्य में सुधार होगा और समाज में आपकी एक ऐसी छवि बनेगी जिस पर आप स्वयं गर्व करेंगे।',
                 'राहु के प्रभाव से जीवन में एक नाटकीय सकारात्मक बदलाव आने वाला है। अचानक धन-लाभ, विदेश-यात्रा के योग और करियर में एक ऐसी छलांग जिसकी आपने कल्पना भी नहीं की होगी।',
@@ -2372,11 +2372,19 @@
             selected.push(...[31, 38]);          // health
             selected.push(46, 47, 55);           // fate + synthesizer
 
-            // Age-based additional agents
-            if (age <= 25) {
-                selected.push(13, 20, 23); // skills, education, friendship
-            } else if (age <= 35) {
-                selected.push(15, 21, 39, 41); // leadership, love, wealth, property
+            // Age-based additional agents — STRICT thresholds
+            if (age < 18) {
+                selected.push(13, 20, 23, 58); // skills, education, friendship, hidden talents
+                // Kabhi bhi marriage/children agents nahi
+            } else if (age < 25) {
+                selected.push(13, 20, 23, 15); // skills, education, friendship, leadership
+                // Marriage/children agents NAHI for under-25
+            } else if (age < 32) {
+                selected.push(15, 21, 39, 41); // leadership, love/romance, wealth, property
+                // Sirf romance — marriage/children abhi nahi
+            } else if (age < 40) {
+                selected.push(24, 39, 41, 43); // marriage (if 32+), wealth, property, business
+                // Children agent (25) sirf 35+ ke liye
             } else {
                 selected.push(24, 25, 40, 43, 49); // marriage, children, investment, business, spiritual
             }
@@ -2398,11 +2406,12 @@
                 return a ? (a.role + ': ' + a.focus) : '';
             }).filter(Boolean).join('; ');
 
-            var ageRule = age <= 4 ? 'Sirf bachpan, family, growth — romance/career nahi'
-                : age < 18 ? 'Sirf education, talent, personality — romance/marriage bilkul nahi'
-                : age < 24 ? 'Career, studies, dosti — marriage bilkul nahi'
-                : age < 30 ? 'Career, relationships (marriage optional agar relevant ho)'
-                : 'Career, family, health, wealth, relationships — sab include karo';
+            var ageRule = age <= 4 ? 'Sirf bachpan, family, khel, growth — romance/career/marriage/children ka zikr NAHI'
+                : age < 18 ? 'Sirf padhai, talent, school, dosti, family — romance/marriage/shadi/bacche ka zikr STRICTLY FORBIDDEN'
+                : age < 22 ? 'Career, padhai, personal growth, dosti — marriage/vivah/bacche/santan ka koi zikr NAHI. Sirf self-growth.'
+                : age < 28 ? 'Career, romance/rishte (sirf dating/friendship level), personal goals — "shadi", "vivah", "bacche", "santan" ka zikr NAHI'
+                : age < 35 ? 'Career, relationships, vivah ke yog (optional), financial growth — "bacche" ya "santan" ka zikr NAHI'
+                : 'Career, family, health, wealth, relationships, vivah, santan — sab include kar sakte ho';
 
             return `Tu ek premium Vedic astrology platform hai jisme 55 specialized AI agents hain.
 Active agents: ${agentList}
@@ -2443,18 +2452,23 @@ Gender: ${gText}
 Rashi: ${rashiName}
 Janm Sthan: ${birthPlace}
 
-Inke liye ek powerful, personalized bhavishyafal likho (3-4 sentences). Personality ki strengths, aane wale samay ki opportunities, aur jeewan mein kya khaas hone wala hai — yeh sab Vedic drishti se batao.`;
+Inke liye ek powerful, personalized bhavishyafal likho (3-4 sentences). Personality ki strengths, aane wale samay ki opportunities, aur jeewan mein kya khaas hone wala hai — yeh sab Vedic drishti se batao.
+
+STRICT AGE RULES:
+${age < 22 ? '- Is vyakti ki umar sirf ' + age + ' saal hai. "Shadi", "vivah", "bacche", "santan", "marriage", "children", "pati", "patni" jaise words FORBIDDEN hain. Sirf career, padhai, aur self-growth.' : age < 28 ? '- Umar ' + age + ' saal. "Bacche" ya "santan" ka zikr NAHI karna.' : age < 35 ? '- Umar ' + age + ' saal. "Bacche" ya "santan" abhi relevant nahi, isliye avoid karo.' : '- Umar ' + age + ' saal. Sab topics appropriate hain.'}`;
 
             const careerPrompt = `Naam: ${name}, Umar: ${age}, Rashi: ${rashiName}
 ${age < 18 ? 'Padhai, talent, school ke baare mein' : age < 24 ? 'Career building, skills, education ke baare mein' : age >= 35 ? 'Professional achievements, business growth, leadership ke baare mein' : 'Career development, opportunities ke baare mein'} ek Vedic-based paragraph likho (2-3 sentences).`;
 
             const lovePrompt = age < 18
-                ? `Naam: ${name}, Umar: ${age}. Dosti, family bonds, social skills ke baare mein 2 positive sentences likho. Romance/love/relationship ka koi zikr nahi.`
-                : age < 24
-                ? `Naam: ${name}, Umar: ${age}. Personal connections, dosti, family ke baare mein 2 warm sentences likho. Marriage ka zikr bilkul nahi.`
-                : age >= 35
-                ? `Naam: ${name}, Umar: ${age}, Rashi: ${rashiName}. Vivah jeevan, parivarik sukh aur rishton ki gehraai ke baare mein 2-3 meaningful sentences likho.`
-                : `Naam: ${name}, Umar: ${age}, Rashi: ${rashiName}. Rishton aur personal connections ke baare mein 2 warm sentences likho.`;
+                ? `Naam: ${name}, Umar: ${age}. Sirf dosti, family bonds, school ke dost ke baare mein 2 positive sentences likho. Romance/love/relationship/shadi/bacche ka zikr STRICTLY FORBIDDEN.`
+                : age < 22
+                ? `Naam: ${name}, Umar: ${age}. Dosti, college ke naye dost, family ke saath rishte ke baare mein 2 warm sentences likho. "Shadi", "vivah", "partner", "marriage", "bacche", "santan" — yeh words FORBIDDEN hain.`
+                : age < 28
+                ? `Naam: ${name}, Umar: ${age}, Rashi: ${rashiName}. Rishton mein growth, naye dost, personal connections ke baare mein 2 sentences likho. "Shadi", "vivah", "bacche", "santan" words ka use NAHI karna.`
+                : age < 35
+                ? `Naam: ${name}, Umar: ${age}, Rashi: ${rashiName}. Rishton aur personal connections ke baare mein 2 warm sentences likho. Vivah ke yog agar ho toh mention kar sakte ho. "Bacche" ya "santan" ka zikr NAHI.`
+                : `Naam: ${name}, Umar: ${age}, Rashi: ${rashiName}. Vivah jeevan, parivarik sukh aur rishton ki gehraai ke baare mein 2-3 meaningful sentences likho.`;
 
             const moneyPrompt = `Naam: ${name}, Umar: ${age}, Rashi: ${rashiName}.
 ${age < 18 ? 'Future mein financial awareness aur savings ki aadat ke baare mein' : age >= 35 ? 'Dhan, sampatti, investments aur financial security ke baare mein' : 'Aarthik growth aur financial planning ke baare mein'} 2 sentences likho. Vedic drishti se, positive rakho.`;
@@ -2629,10 +2643,14 @@ ${age < 18 ? 'Future mein financial awareness aur savings ki aadat ke baare mein
 
             const rashiName = getRashiNameFromCode(zodiac) || zodiac;
             const ageRule = age < 18
-                ? 'Sirf education, talent, growth ke baare mein — romance/marriage bilkul nahi'
-                : age < 24
-                ? 'Career, studies, personal growth — marriage ka koi zikr nahi'
-                : 'Career, relationships, life milestones sab include karo';
+                ? 'Sirf education, talent, growth, family — romance/marriage/bacche/santan STRICTLY FORBIDDEN'
+                : age < 22
+                ? 'Career, padhai, personal growth, dosti — "shadi", "vivah", "bacche", "santan", "marriage", "children" FORBIDDEN'
+                : age < 28
+                ? 'Career, personal growth, rishte (dosti level) — "bacche", "santan", "children" ka zikr NAHI'
+                : age < 35
+                ? 'Career, relationships, financial growth — "bacche", "santan" ka zikr NAHI'
+                : 'Career, relationships, vivah, santan, life milestones sab include karo';
 
             // Unique seed per user to force different AI responses
             var userSeed = name.length + birthPlace.length + age + (zodiac ? zodiac.charCodeAt(0) : 0);
