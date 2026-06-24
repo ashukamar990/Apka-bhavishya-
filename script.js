@@ -15,6 +15,15 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // BUGFIX (#4 currency): sensible defaults available IMMEDIATELY,
+        // not just after the async settings/pricing + settings/usdPricing
+        // fetch resolves a moment later — closes the tiny race window where
+        // a click right after page load could otherwise fall through to an
+        // undefined pricing object.
+        window._adminPricing = window._adminPricing || { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
+        window._adminPricingUSD = window._adminPricingUSD || { basic: 0.25, premium: 0.60, rashi: 0.07, monthly: 1.20, sixMonth: 6.00, yearly: 12.00 };
+        window._adminExchangeRate = window._adminExchangeRate || 84;
+
         // Optimize AOS initialization
         AOS.init({
             duration: 500,
@@ -38,30 +47,75 @@
         let rashiPurchase = { active: false, name: "", rashi: "", expiry: 0 };
 
         // ── Currency Helper ──
+        // BUGFIX (currency): a single, explicit source of truth for currency.
+        // Previously, "amount" was passed around as a bare number and its
+        // currency was *guessed* later from getCurrentLang() at payment time.
+        // Admin INR price (e.g. 999) was being treated as if it were USD,
+        // then multiplied by 84 again => "$999 (₹83916)". That double
+        // conversion is now impossible because every amount is always
+        // carried together with its currency tag from the moment a
+        // plan/price is selected, all the way through to Razorpay.
         function getCurrentLang() {
             var el = document.getElementById('langSelectDropdown');
-            if (el) return el.value;
+            if (el && el.value) return el.value;
+            if (typeof window._isEn !== 'undefined') return window._isEn ? 'en' : 'hi';
             return localStorage.getItem('bdLang') || 'hi';
         }
-        var USD_TO_INR = 84;
-        function getINRAmount(amount) {
-            if (getCurrentLang() === 'en') return Math.round(amount * USD_TO_INR);
-            return amount;
+        // currency = 'INR' | 'USD'. Persisted separately from language so a
+        // manual language switch always carries the right currency with it,
+        // and so country auto-detection (see detectCountryAndCurrency) has a
+        // single flag to set without needing to know how language text
+        // switching itself is implemented elsewhere on the site.
+        function getCurrentCurrency() {
+            var stored = localStorage.getItem('bdCurrency');
+            if (stored === 'INR' || stored === 'USD') return stored;
+            return getCurrentLang() === 'en' ? 'USD' : 'INR';
         }
-        function showPaymentAmount(amount) {
-            var el = document.getElementById('paymentAmount');
-            if (!el) return;
-            if (getCurrentLang() === 'en') {
-                el.innerText = '$' + amount + ' (₹' + Math.round(amount * USD_TO_INR) + ')';
-            } else {
-                el.innerText = '₹' + amount;
+        function setCurrentCurrency(cur) {
+            if (cur !== 'INR' && cur !== 'USD') return;
+            localStorage.setItem('bdCurrency', cur);
+        }
+        // Admin-configurable USD->INR rate used ONLY to compute the actual
+        // amount Razorpay charges (Razorpay account here settles in INR).
+        // Falls back to a sane static default if admin hasn't set one.
+        function getExchangeRate() {
+            return (window._adminExchangeRate && window._adminExchangeRate > 0) ? window._adminExchangeRate : 84;
+        }
+        // Old name kept for backward compatibility with any other code path
+        // that might still call it — now correctly currency-aware instead of
+        // guessing off the language dropdown.
+        function getINRAmount(amount, currency) {
+            currency = currency || getCurrentCurrency();
+            if (currency === 'USD') return Math.round(amount * getExchangeRate());
+            return Math.round(amount);
+        }
+        function formatMoney(amount, currency) {
+            currency = currency || getCurrentCurrency();
+            if (currency === 'USD') {
+                var n = Math.round(amount * 100) / 100;
+                return '$' + (n % 1 === 0 ? n : n.toFixed(2));
             }
+            return '₹' + Math.round(amount);
+        }
+        // Shows EXACTLY the amount the user selected — no second currency
+        // shown in brackets, no recomputation. What you saw on the plan
+        // card is what you see in the payment modal.
+        function showPaymentAmount(amount, currency) {
+            var el = document.getElementById('paymentAmount');
+            currency = currency || window._currentPaymentCurrency || getCurrentCurrency();
+            window._currentPaymentCurrency = currency;
+            currentPaymentCurrency = currency;
+            if (!el) return;
+            el.innerText = formatMoney(amount, currency);
         }
         // Payment tracking variable
         let paymentCompleted = false;
         let currentPaymentType = '';
         let currentPaymentAmount = 0;
-        
+        let currentPaymentCurrency = 'INR'; // BUGFIX: explicit currency travels with every payment now
+        let currentPaymentPlan = ''; // plan name (monthly/6months/yearly/basic/premium/rashi)
+        let _lastActivatedPaymentId = null; // idempotency guard: never activate the same Razorpay payment twice
+
         // Usage timer for donation
         let usageTime = 0;
         let donationTimer = null;
@@ -100,12 +154,17 @@
         }
 
         function triggerRashiPurchase() {
-            const rashiAmt = (window._adminPricing && window._adminPricing.rashi) ? window._adminPricing.rashi : 5;
+            var cur = getCurrentCurrency();
+            var rashiAmt = (cur === 'USD')
+                ? ((window._adminPricingUSD && window._adminPricingUSD.rashi) ? window._adminPricingUSD.rashi : 0.07)
+                : ((window._adminPricing && window._adminPricing.rashi) ? window._adminPricing.rashi : 5);
             currentPaymentAmount = rashiAmt;
+            currentPaymentCurrency = cur;
+            currentPaymentPlan = 'rashi';
             window._currentPaymentAmount = rashiAmt;
             window._currentPaymentType = 'rashi';
             currentPaymentType = 'rashi';
-            showPaymentAmount(rashiAmt);
+            showPaymentAmount(rashiAmt, cur);
             document.getElementById('paymentModal').classList.add('show');
             document.body.style.overflow = 'hidden';
         }
@@ -554,6 +613,60 @@
             }
         }
 
+        // BUGFIX (#7): Premium activation used to live ONLY in localStorage.
+        // If a user cleared their browser, switched devices, or just had
+        // localStorage fail to persist, their paid plan would vanish even
+        // though Firebase (written by trackPremiumPurchase) still had
+        // isPremium/premiumPlan/premiumExpiry recorded. This restores from
+        // Firebase on every load and re-hydrates localStorage as a cache.
+        async function restorePremiumFromFirebase() {
+            try {
+                var userId = getUserId();
+                var snap = await database.ref('users/' + userId).once('value');
+                var data = snap.val();
+                if (!data) return;
+                var now = Date.now();
+
+                if (data.isPremium && data.premiumExpiry && data.premiumExpiry > now) {
+                    var local = null;
+                    try { local = JSON.parse(localStorage.getItem('premiumData') || 'null'); } catch (e) {}
+                    var needsRefresh = !local || !local.expiry || local.expiry < data.premiumExpiry || local.plan !== data.premiumPlan;
+                    if (needsRefresh) {
+                        var plan = data.premiumPlan;
+                        var maxB = plan === 'monthly' ? 2 : plan === '6months' ? 5 : 10;
+                        var maxP = plan === 'monthly' ? 0 : plan === '6months' ? 2 : 5;
+                        var merged = {
+                            plan: plan,
+                            expiry: data.premiumExpiry,
+                            freeBasicKundliCount: (local && local.plan === plan) ? (local.freeBasicKundliCount || 0) : 0,
+                            freePremiumKundliCount: (local && local.plan === plan) ? (local.freePremiumKundliCount || 0) : 0,
+                            maxFreeBasicKundli: maxB,
+                            maxFreePremiumKundli: maxP
+                        };
+                        localStorage.setItem('premiumData', JSON.stringify(merged));
+                        console.log('☁️ Premium status restored from Firebase — plan:', plan, ', valid till', new Date(data.premiumExpiry).toLocaleDateString());
+                        checkPremiumStatus();
+                    }
+                } else if (data.isPremium && data.premiumExpiry && data.premiumExpiry <= now) {
+                    localStorage.removeItem('premiumData');
+                }
+
+                if (data.rashiPurchase && data.rashiPurchase.active && data.rashiPurchase.expiry > now) {
+                    var localRashi = null;
+                    try { localRashi = JSON.parse(localStorage.getItem('rashiPurchase') || 'null'); } catch (e) {}
+                    if (!localRashi || !localRashi.active || (localRashi.expiry || 0) < data.rashiPurchase.expiry) {
+                        localStorage.setItem('rashiPurchase', JSON.stringify(data.rashiPurchase));
+                        try { loadRashiPurchase(); } catch (e) {}
+                        try { startRashiCountdown(); } catch (e) {}
+                        try { updateRashiUIMessages(); } catch (e) {}
+                        console.log('☁️ Rashi package restored from Firebase');
+                    }
+                }
+            } catch (e) {
+                console.error('[BD] restorePremiumFromFirebase failed (will fall back to localStorage only):', e);
+            }
+        }
+
         function startDonationTimer() {
             donationIntervalActive = true;
             donationTimer = setInterval(() => {
@@ -573,6 +686,7 @@
         }
 
         function updatePremiumUI() {
+            try {
             if (isPremium) {
                 // Hide non-premium link, show active badge
                 var headerLink = document.getElementById('premiumHeaderLink');
@@ -624,6 +738,7 @@
                 if (headerLink2) headerLink2.style.display = 'inline-block';
                 if (headerBadge2) headerBadge2.style.display = 'none';
             }
+            } catch(e) { console.error('[BD] updatePremiumUI failed (UI may be partially stale, but Firebase/localStorage premium data is unaffected):', e); }
         }
 
         // Premium benefits panel toggle
@@ -1148,19 +1263,26 @@
             }, 100);
         }
 
-        function showPremiumPayment(amount, plan) {
-            // Use admin pricing if available
-            const pricing = window._adminPricing;
+        function showPremiumPayment(amount, plan, currency) {
+            // Use admin pricing if available — pick the price from the
+            // SAME currency the user is viewing. Previously this always
+            // read window._adminPricing (INR-only) no matter what currency
+            // the card displayed, which then got misinterpreted as a USD
+            // amount later and multiplied by 84 again.
+            currency = currency || getCurrentCurrency();
+            var pricing = (currency === 'USD') ? window._adminPricingUSD : window._adminPricing;
             if (pricing) {
-                if (plan === 'monthly') amount = pricing.monthly || amount;
-                else if (plan === '6months') amount = pricing.sixMonth || amount;
-                else if (plan === 'yearly') amount = pricing.yearly || amount;
+                if (plan === 'monthly') amount = (pricing.monthly !== undefined ? pricing.monthly : amount);
+                else if (plan === '6months') amount = (pricing.sixMonth !== undefined ? pricing.sixMonth : amount);
+                else if (plan === 'yearly') amount = (pricing.yearly !== undefined ? pricing.yearly : amount);
             }
             currentPaymentAmount = amount;
+            currentPaymentCurrency = currency;
+            currentPaymentPlan = plan;
             window._currentPaymentAmount = amount;
             window._currentPaymentType = 'premium_' + plan;
             currentPaymentType = 'premium_' + plan;
-            showPaymentAmount(amount);
+            showPaymentAmount(amount, currency);
             document.getElementById('paymentModal').classList.add('show');
             document.body.style.overflow = 'hidden';
         }
@@ -1686,11 +1808,16 @@
             document.getElementById('donationSection').classList.remove('show');
         }
 
-        function processKundliPayment(amount, type) {
-            // Always use latest admin pricing
-            const pricing = window._adminPricing || { basic: 19, premium: 49, rashi: 5 };
-            if (type === 'basic') amount = pricing.basic || amount;
-            if (type === 'premium') amount = pricing.premium || amount;
+        function processKundliPayment(amount, type, currency) {
+            // Always use latest admin pricing for the CURRENT currency —
+            // previously this always read the INR pricing object even for
+            // English/USD users.
+            currency = currency || getCurrentCurrency();
+            var pricing = (currency === 'USD')
+                ? (window._adminPricingUSD || { basic: 0.25, premium: 0.60, rashi: 0.07 })
+                : (window._adminPricing || { basic: 19, premium: 49, rashi: 5 });
+            if (type === 'basic' && pricing.basic !== undefined) amount = pricing.basic;
+            if (type === 'premium' && pricing.premium !== undefined) amount = pricing.premium;
 
             if (isPremium) {
                 if (type === 'basic' && freeBasicKundliCount < maxFreeBasicKundli) {
@@ -1732,62 +1859,159 @@
             }
 
             currentPaymentAmount = amount;
+            currentPaymentCurrency = currency;
+            currentPaymentPlan = type;
             window._currentPaymentAmount = amount;
             window._currentPaymentType = type;
             currentPaymentType = type;
-            showPaymentAmount(amount);
+            showPaymentAmount(amount, currency);
             document.getElementById('paymentModal').classList.add('show');
             document.body.style.overflow = 'hidden';
         }
 
+        // BUGFIX (#6): processPayment() used to be a FAKE payment simulator —
+        // any button wired to call it (UPI/GPay/PhonePe/Card icons etc.)
+        // would activate the purchase after a setTimeout with no real money
+        // changing hands. It is kept only so existing onclick="processPayment(...)"
+        // attributes in the page markup keep working, but it now always
+        // routes to the real Razorpay checkout. Real activation happens only
+        // from startPayment()'s Razorpay success handler, via activatePurchase().
         function processPayment(method) {
-            var statusEl = document.getElementById('paymentStatus');
-            if (statusEl) { statusEl.classList.add('show'); statusEl.style.display = 'block'; }
-
-            setTimeout(function() {
-                paymentCompleted = true;
-                if (statusEl) statusEl.innerHTML = '<i class="fas fa-check-circle"></i> भुगतान सफल!';
-
-                setTimeout(function() {
-                    document.getElementById('paymentModal').classList.remove('show');
-                    if (statusEl) { statusEl.classList.remove('show'); statusEl.style.display = 'none'; statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> भुगतान प्रक्रिया जारी...'; }
-                    // NOTE: paymentCompleted must stay true until generateKundliReport reads it
-                    if (currentPaymentType === 'rashi') {
-                        // Activate ₹5 rashi for 24 hours - no modal, just activate
-                        rashiPurchase = { active: true, name: 'any', rashi: '', expiry: Date.now() + (24 * 60 * 60 * 1000) };
-                        localStorage.setItem('rashiPurchase', JSON.stringify(rashiPurchase));
-                        startRashiCountdown();
-                        // Hide the ₹5 buy option everywhere
-                        updateRashiUIMessages();
-                        // Try to detect rashi from current name in free form
-                        var nameEl = document.getElementById('name');
-                        if (nameEl && nameEl.value.trim()) {
-                            onFreeNameInput(nameEl.value);
-                        }
-                        alert('✅ ₹5 राशि पैकेज सक्रिय!\n\nअब किसी भी नाम field में नाम लिखें — राशि अपने आप आ जाएगी।\n⏰ 24 घंटे तक वैध');
-                        paymentCompleted = false;
-                    } else if (currentPaymentType === 'basic' || currentPaymentType === 'premium') {
-                        generateKundliReport(currentPaymentType, false);
-                        paymentCompleted = false; // reset after use
-                    } else if (currentPaymentType && currentPaymentType.startsWith('premium_')) {
-                        var plan = currentPaymentType.replace('premium_', '');
-                        var expiry = Date.now() + (plan === 'monthly' ? 30 : plan === '6months' ? 180 : 365) * 86400000;
-                        var pb = plan === 'monthly' ? 7 : plan === '6months' ? 12 : 24;
-                        var maxB = plan === 'monthly' ? 2 : plan === '6months' ? 5 : 10;
-                        var maxP = plan === 'monthly' ? 0 : plan === '6months' ? 2 : 5;
-                        localStorage.setItem('premiumData', JSON.stringify({ plan:plan, expiry:expiry, freeBasicKundliCount:0, freePremiumKundliCount:0, maxFreeBasicKundli:maxB, maxFreePremiumKundli:maxP }));
-                        var curB = parseInt(localStorage.getItem('freeBonus')||'0');
-                        localStorage.setItem('freeBonus', Math.max(curB, pb));
-                        var pAmt = plan==='monthly' ? (window._adminPricing?.monthly||99) : plan==='6months' ? (window._adminPricing?.sixMonth||499) : (window._adminPricing?.yearly||999);
-                        trackPremiumPurchase(window._predName || '', plan, pAmt);
-                        applyPremiumLimitBonus(plan);
-                        checkPremiumStatus();
-                        alert('✅ Premium ' + plan + ' सक्रिय! ' + pb + ' मुफ्त भविष्य जुड़े।');
-                    }
-                }, 1200);
-            }, 1500);
+            startPayment();
         }
 
+        // ── Non-blocking success/warning banner (no alert(), never blocks
+        // the activation logic or the JS event loop behind a modal dialog) ──
+        function showSuccessToast(msg, isWarning) {
+            try {
+                var t = document.createElement('div');
+                t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);'
+                    + 'background:' + (isWarning ? 'linear-gradient(135deg,#ff6b35,#ff4757)' : 'linear-gradient(135deg,#ffd700,#ff9500)') + ';'
+                    + 'color:#1a1a2e;padding:14px 22px;border-radius:14px;font-weight:600;font-size:0.92em;'
+                    + 'box-shadow:0 8px 30px rgba(0,0,0,0.35);z-index:999999;max-width:90vw;text-align:center;'
+                    + 'opacity:0;transition:opacity .3s, transform .3s;';
+                t.textContent = msg;
+                document.body.appendChild(t);
+                requestAnimationFrame(function () { t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)'; });
+                var dur = isWarning ? 7000 : 4000;
+                setTimeout(function () {
+                    t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)';
+                    setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 350);
+                }, dur);
+            } catch (e) { alert(msg); }
+        }
+
+        // ── Failed-activation logging (#8): every silent catch(e){} that used
+        // to swallow Firebase errors now lands here, so admin can see exactly
+        // what failed and why, instead of money being received with no trace
+        // of why activation didn't happen. ──
+        function logFailedPayment(meta, err) {
+            try {
+                var userId = getUserId();
+                console.error('[BD] Payment/activation failed:', meta, err);
+                database.ref('failedPayments').push({
+                    userId: userId,
+                    type: (meta && meta.type) || 'unknown',
+                    plan: (meta && meta.plan) || '',
+                    amount: (meta && meta.amount) || 0,
+                    currency: (meta && meta.currency) || '',
+                    paymentId: (meta && meta.paymentId) || '',
+                    orderId: (meta && meta.orderId) || '',
+                    error: (err && err.message) ? err.message : String(err || 'unknown error'),
+                    timestamp: Date.now()
+                }).catch(function (e2) { console.error('[BD] Could not even write failedPayments log:', e2); });
+            } catch (e3) { console.error('[BD] logFailedPayment crashed:', e3); }
+        }
+
+        // ── Unified purchase record (#2 purchase tracking) ──
+        // Writes ONE clean record per transaction (keyed by orderId when we
+        // have one, so the pending->success update from startPayment() and
+        // this enrichment land on the SAME row instead of creating a
+        // duplicate entry in the admin Payments table) with every field the
+        // admin dashboard needs: user, package, amount, currency, country,
+        // date/time, payment ID, status.
+        function recordPurchase(meta) {
+            try {
+                var userId = getUserId();
+                var country = (window._userLocation && window._userLocation.country) || 'Unknown';
+                var entry = {
+                    userId: userId,
+                    userName: window._predName || '',
+                    type: meta.type || '',
+                    plan: meta.plan || meta.type || '',
+                    amount: meta.amount || 0,
+                    currency: meta.currency || 'INR',
+                    country: country,
+                    status: 'success',
+                    paymentId: meta.paymentId || '',
+                    orderId: meta.orderId || '',
+                    timestamp: Date.now()
+                };
+                var ref = meta.orderId ? database.ref('payments/' + meta.orderId) : database.ref('payments').push();
+                ref.update(entry).catch(function (e) { logFailedPayment(meta, e); });
+                database.ref('users/' + userId + '/purchases').push(entry).catch(function (e) { logFailedPayment(meta, e); });
+            } catch (e) { logFailedPayment(meta, e); }
+        }
+
+        // ── THE single, authoritative activation function (#3 payment
+        // success bug). Runs IMMEDIATELY and SYNCHRONOUSLY once Razorpay (or
+        // the explicit test-mode fallback) confirms a payment — no more
+        // multi-second setTimeout chain, and no blocking alert() sitting in
+        // front of the activation code. Idempotent: the same paymentId/
+        // orderId can never activate twice (e.g. if Razorpay's handler ever
+        // fires more than once). ──
+        function activatePurchase(meta) {
+            var pid = meta.paymentId || meta.orderId || ('noid_' + Date.now());
+            if (_lastActivatedPaymentId === pid) return;
+            _lastActivatedPaymentId = pid;
+
+            try {
+                if (meta.type === 'rashi') {
+                    rashiPurchase = { active: true, name: 'any', rashi: '', expiry: Date.now() + (24 * 60 * 60 * 1000) };
+                    localStorage.setItem('rashiPurchase', JSON.stringify(rashiPurchase));
+                    try { database.ref('users/' + getUserId() + '/rashiPurchase').set(rashiPurchase); } catch (e) { logFailedPayment(meta, e); }
+                    startRashiCountdown();
+                    updateRashiUIMessages();
+                    var nameEl = document.getElementById('name');
+                    if (nameEl && nameEl.value.trim()) onFreeNameInput(nameEl.value);
+                    recordPurchase(meta);
+                    showSuccessToast('✅ राशि पैकेज सक्रिय! अब नाम लिखें — राशि अपने आप आ जाएगी। (24 घंटे तक वैध)');
+                } else if (meta.type === 'basic' || meta.type === 'premium') {
+                    paymentCompleted = true;
+                    generateKundliReport(meta.type, false);
+                    recordPurchase(meta);
+                } else if (meta.type && meta.type.indexOf('premium_') === 0) {
+                    var plan = meta.plan || meta.type.replace('premium_', '');
+                    var expiry = Date.now() + (plan === 'monthly' ? 30 : plan === '6months' ? 180 : 365) * 86400000;
+                    var pb = plan === 'monthly' ? 7 : plan === '6months' ? 12 : 24;
+                    var maxB = plan === 'monthly' ? 2 : plan === '6months' ? 5 : 10;
+                    var maxP = plan === 'monthly' ? 0 : plan === '6months' ? 2 : 5;
+                    localStorage.setItem('premiumData', JSON.stringify({ plan: plan, expiry: expiry, freeBasicKundliCount: 0, freePremiumKundliCount: 0, maxFreeBasicKundli: maxB, maxFreePremiumKundli: maxP }));
+                    var curB = parseInt(localStorage.getItem('freeBonus') || '0');
+                    localStorage.setItem('freeBonus', Math.max(curB, pb));
+                    trackPremiumPurchase(window._predName || '', plan, meta.amount, meta.currency, meta.paymentId, meta.orderId);
+                    applyPremiumLimitBonus(plan);
+                    checkPremiumStatus();
+                    recordPurchase(meta);
+                    showSuccessToast('✅ Premium ' + plan + ' सक्रिय हो गया! ' + pb + ' मुफ्त भविष्य जुड़े।');
+                } else {
+                    console.error('[BD] activatePurchase: unknown purchase type', meta);
+                    logFailedPayment(meta, new Error('Unknown purchase type: ' + meta.type));
+                }
+            } catch (e) {
+                // BUGFIX (#3, #8): this is exactly the situation the user
+                // described — "payment successful, money received, but
+                // package not activated". Previously such an error would be
+                // silently swallowed (or never caught at all, since the old
+                // code ran inside an un-guarded setTimeout). Now it is always
+                // caught, logged to console AND to a dedicated Firebase node
+                // so the admin can see + manually fix it, and the user is
+                // told clearly instead of the page just doing nothing.
+                console.error('[BD] Activation failed for confirmed payment:', meta, e);
+                logFailedPayment(meta, e);
+                showSuccessToast('⚠️ भुगतान सफल हुआ है (Payment ID: ' + (meta.paymentId || meta.orderId || '—') + ') लेकिन activation में समस्या आई। कृपया सपोर्ट से संपर्क करें — आपका payment ID सुरक्षित है।', true);
+            }
+        }
 
         function generateKundliReport(type, isFree) {
             if (!isFree && !paymentCompleted) return;
@@ -1847,8 +2071,15 @@
                 document.getElementById('loadingOverlay').style.display = 'none';
                 paymentCompleted = false;
                 addToKundliHistory(name, type, { name:name, gender:gender, gText:gText, day:day, month:month, year:year, time:time, place:place, rashi:rashi, nakshatra:nakshatra, mainPred:mainPred, type:reportLabel, isPremium:isPrem, seed:seed });
-                if (isPrem) trackPremiumKundli(name, rashi, 49);
-                else trackBasicKundli(name, rashi, 19);
+                if (!isFree) {
+                    // BUGFIX: use the amount/currency actually charged for this
+                    // purchase, not a hardcoded ₹19/₹49 (those were wrong for
+                    // both admin-edited INR prices and for USD customers).
+                    var realAmt = currentPaymentAmount || (isPrem ? 49 : 19);
+                    var realCur = currentPaymentCurrency || 'INR';
+                    if (isPrem) trackPremiumKundli(name, rashi, realAmt, realCur);
+                    else trackBasicKundli(name, rashi, realAmt, realCur);
+                }
                 buildAndShowKundliResult(name, age, gText, rashi, nakshatra, place, time, day, month, year, seed, rng, sets, isPrem, reportLabel);
             }, 1500);
         }
@@ -3907,29 +4138,68 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         // RAZORPAY PAYMENT FUNCTION WITH FIREBASE TRACKING
         // ============================================================
         function startPayment() {
-            var amt = getINRAmount(currentPaymentAmount || 19) * 100; // USD→INR auto
-            var orderId = "ORDER_" + Date.now();
+            // BUGFIX (#4 currency): the charge amount is derived ONLY from
+            // the currency that was explicitly attached to this purchase
+            // (set in showPremiumPayment/processKundliPayment/triggerRashiPurchase),
+            // never re-guessed from the language dropdown at charge time.
+            // This is what previously caused a $12 plan to charge ₹83,916 —
+            // the INR admin price (999) was being treated as a USD amount
+            // and multiplied by the exchange rate a second time.
+            var displayAmount = currentPaymentAmount || 0;
+            var displayCurrency = currentPaymentCurrency || getCurrentCurrency();
+            if (!displayAmount || displayAmount <= 0) {
+                showSuccessToast('⚠️ Price load nahi ho payi. Page refresh karke dobara try karein.', true);
+                return;
+            }
+            // Razorpay (as configured here) settles in INR, so a USD
+            // purchase is converted to INR exactly once, using the admin's
+            // exchange rate, and the resulting INR amount is what gets
+            // charged. The user is shown the INR equivalent before paying.
+            var chargeAmountINR = (displayCurrency === 'USD') ? getINRAmount(displayAmount, 'USD') : Math.round(displayAmount);
+            var amt = chargeAmountINR * 100; // paise
+            var orderId = "ORDER_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6);
+            var country = (window._userLocation && window._userLocation.country) || 'Unknown';
+
+            var meta = {
+                type: currentPaymentType || '',
+                plan: currentPaymentPlan || (currentPaymentType || '').replace('premium_', ''),
+                amount: displayAmount,
+                currency: displayCurrency,
+                chargeAmountINR: chargeAmountINR,
+                orderId: orderId
+            };
 
             // ── Razorpay Key Check ──
             var RAZORPAY_KEY = (window.__SITE_CONFIG__ && window.__SITE_CONFIG__.razorpay) || "YOUR_RAZORPAY_KEY"; // Loaded from config.js
             if (!RAZORPAY_KEY || RAZORPAY_KEY === "YOUR_RAZORPAY_KEY") {
-                alert("⚠️ Razorpay key setup nahi hai.\n\nAdmin se contact karein.\n\nTest ke liye OK dabayein — payment simulate hogi.");
-                // Test mode: simulate payment success
+                console.error('[BD] Razorpay key missing/placeholder — running in TEST/SIMULATE mode. Real payments are NOT being charged.');
+                alert("⚠️ Razorpay key setup nahi hai.\n\nAdmin se contact karein.\n\nTest ke liye OK dabayein — payment simulate hogi (koi paisa nahi katega).");
                 closePaymentModal();
                 document.body.style.overflow = '';
-                processPayment('done');
+                meta.paymentId = 'TEST_' + Date.now();
+                meta.simulated = true;
+                database.ref('payments/' + orderId).set({
+                    status: 'success', simulated: true, amount: displayAmount, currency: displayCurrency,
+                    chargeAmountINR: chargeAmountINR, country: country, type: meta.type, plan: meta.plan,
+                    userId: getUserId(), paymentId: meta.paymentId, timestamp: Date.now()
+                }).catch(function (e) { logFailedPayment(meta, e); });
+                activatePurchase(meta);
                 return;
             }
 
-            // Firebase mein pending save karo
-            try {
-                database.ref("payments/" + orderId).set({
-                    status: "pending",
-                    amount: amt / 100,
-                    type: currentPaymentType || '',
-                    timestamp: Date.now()
-                });
-            } catch(e) {}
+            // Firebase mein pending save karo — BUGFIX (#8): errors here are
+            // now logged instead of silently disappearing into catch(e){}.
+            database.ref("payments/" + orderId).set({
+                status: "pending",
+                amount: displayAmount,
+                currency: displayCurrency,
+                chargeAmountINR: chargeAmountINR,
+                country: country,
+                type: currentPaymentType || '',
+                plan: meta.plan,
+                userId: getUserId(),
+                timestamp: Date.now()
+            }).catch(function (e) { logFailedPayment(meta, e); });
 
             var rzpClosed = false; // prevent double call
 
@@ -3938,25 +4208,32 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 amount: amt,
                 currency: "INR",
                 name: "Bhavishya Dekho",
-                description: "Vedic Astrology Service",
+                description: "Vedic Astrology Service" + (displayCurrency === 'USD' ? (' — ' + formatMoney(displayAmount, 'USD')) : ''),
                 redirect: false,
                 handler: function (response) {
                     if (rzpClosed) return;
                     rzpClosed = true;
-                    // Firebase success update
-                    try {
-                        database.ref("payments/" + orderId).update({
-                            status: "success",
-                            paymentId: response.razorpay_payment_id,
-                            successAt: Date.now()
-                        });
-                    } catch(e) {}
+                    meta.paymentId = response.razorpay_payment_id;
+                    meta.razorpayOrderId = response.razorpay_order_id || '';
+                    // Firebase success update — BUGFIX (#8): error-checked.
+                    database.ref("payments/" + orderId).update({
+                        status: "success",
+                        paymentId: response.razorpay_payment_id,
+                        successAt: Date.now()
+                    }).catch(function (e) { logFailedPayment(meta, e); });
                     document.body.style.overflow = '';
                     document.body.style.position = '';
                     document.documentElement.style.overflow = '';
                     closePaymentModal();
-                    processPayment('done');
-                    alert("✅ भुगतान सफल!\nPayment ID: " + response.razorpay_payment_id);
+                    // BUGFIX (#3): activation now happens immediately and
+                    // synchronously right here — no more multi-second
+                    // setTimeout chain, and no blocking alert() placed BEFORE
+                    // activation runs. If activation throws for any reason,
+                    // activatePurchase()'s own try/catch logs it and tells
+                    // the user their payment ID is safe — instead of money
+                    // being received with the package silently never unlocking.
+                    activatePurchase(meta);
+                    showSuccessToast('✅ भुगतान सफल! Payment ID: ' + response.razorpay_payment_id);
                 },
                 prefill: { name: "", email: "", contact: "" },
                 theme: { color: "#ffd700" },
@@ -3964,9 +4241,7 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                     ondismiss: function() {
                         if (rzpClosed) return;
                         // User ne cancel kiya — modal band karo, loading nahi
-                        try {
-                            database.ref("payments/" + orderId).update({ status: "cancelled" });
-                        } catch(e) {}
+                        database.ref("payments/" + orderId).update({ status: "cancelled" }).catch(function (e) { logFailedPayment(meta, e); });
                         document.body.style.overflow = '';
                         document.body.style.position = '';
                         document.documentElement.style.overflow = '';
@@ -3978,16 +4253,17 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             try {
                 var rzp = new Razorpay(options);
                 rzp.on('payment.failed', function(response) {
-                    try { database.ref("payments/" + orderId).update({ status: "failed", error: response.error.description }); } catch(e) {}
+                    database.ref("payments/" + orderId).update({ status: "failed", error: (response.error && response.error.description) || 'unknown' }).catch(function (e) { logFailedPayment(meta, e); });
                     document.body.style.overflow = '';
                     closePaymentModal();
-                    alert("❌ भुगतान असफल: " + (response.error.description || 'कृपया दोबारा कोशिश करें'));
+                    showSuccessToast("❌ भुगतान असफल: " + ((response.error && response.error.description) || 'कृपया दोबारा कोशिश करें'), true);
                 });
                 rzp.open();
             } catch(e) {
                 console.error('Razorpay error:', e);
+                logFailedPayment(meta, e);
                 closePaymentModal();
-                alert('❌ Payment gateway error. Kripaya baad mein try karein.');
+                showSuccessToast('❌ Payment gateway error. Kripaya baad mein try karein.', true);
             }
         }
 
@@ -4006,14 +4282,74 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         }
 
         async function getUserLocation() {
+            // BUGFIX (#5 country detection): cache the result on window so the
+            // SAME lookup can be reused by detectCountryAndCurrency() and by
+            // recordPurchase()/startPayment() for the Country column, instead
+            // of calling the geo-IP API repeatedly or leaving 'country' blank
+            // everywhere except analytics.
+            if (window._userLocation) return window._userLocation;
             try {
                 const response = await fetch('https://ipapi.co/json/');
                 const data = await response.json();
-                return { city: data.city || 'Unknown', region: data.region || 'Unknown', country: data.country_name || 'India' };
+                const loc = { city: data.city || 'Unknown', region: data.region || 'Unknown', country: data.country_name || 'India', countryCode: data.country_code || '' };
+                window._userLocation = loc;
+                return loc;
             } catch(e) {
-                return { city: 'Unknown', region: 'Unknown', country: 'India' };
+                const loc = { city: 'Unknown', region: 'Unknown', country: 'India', countryCode: 'IN' };
+                window._userLocation = loc;
+                return loc;
             }
         }
+
+        // ── BUGFIX (#5 country detection) ──
+        // Automatically sets language+currency from the visitor's country on
+        // their very first visit only. If the person has EVER manually
+        // changed the language (langSelectDropdown / bdLang already set
+        // before this runs), their choice is always respected and never
+        // overridden — this only fills in a sensible default, it doesn't
+        // fight with the existing manual language switcher.
+        async function detectCountryAndCurrency() {
+            try {
+                var alreadyChosen = localStorage.getItem('bdLangManual') === '1';
+                if (alreadyChosen) return; // user already picked a language themselves — never override
+                var loc = await getUserLocation();
+                var isIndia = (loc.countryCode === 'IN') || (loc.country === 'India');
+                var lang = isIndia ? 'hi' : 'en';
+                var currency = isIndia ? 'INR' : 'USD';
+                localStorage.setItem('bdLang', lang);
+                setCurrentCurrency(currency);
+                var dd = document.getElementById('langSelectDropdown');
+                if (dd && dd.value !== lang) {
+                    dd.value = lang;
+                    // Let any existing language-switch logic on the page (if
+                    // wired to this dropdown's change/input event) pick this
+                    // up too, without us needing to know its internal name.
+                    dd.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+                // Refresh prices/currency immediately for this same page load.
+                if (window._adminPricing || window._adminPricingUSD) applyPricingEverywhere(window._adminPricing, window._adminPricingUSD);
+                console.log('🌍 Auto-detected:', loc.country, '→', lang, currency);
+            } catch (e) { console.error('[BD] Country auto-detect failed:', e); }
+        }
+        // If the site's language dropdown calls a function when the user
+        // manually switches language, it should also call markLanguageManual()
+        // (or simply set localStorage 'bdLangManual'='1') so auto-detect never
+        // overrides a deliberate choice on the next visit.
+        function markLanguageManual(lang, currency) {
+            localStorage.setItem('bdLangManual', '1');
+            if (lang) localStorage.setItem('bdLang', lang);
+            if (currency) setCurrentCurrency(currency);
+            else setCurrentCurrency(lang === 'en' ? 'USD' : 'INR');
+            if (window._adminPricing || window._adminPricingUSD) applyPricingEverywhere(window._adminPricing, window._adminPricingUSD);
+        }
+        // Convenience global hook the dropdown's onchange can call directly,
+        // e.g. onchange="onLangSelectChanged(this.value)" — included so the
+        // currency/pricing side is guaranteed to refresh even if the
+        // existing page markup only swaps visible text and doesn't know
+        // about this script's pricing functions.
+        window.onLangSelectChanged = function (lang) {
+            markLanguageManual(lang);
+        };
 
         async function trackVisitor() {
             try {
@@ -4055,42 +4391,61 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             } catch(e) {}
         }
 
-        function trackBasicKundli(userName, rashi, amount) {
+        function trackBasicKundli(userName, rashi, amount, currency) {
             try {
+                currency = currency || 'INR';
                 const userId = getUserId();
                 const today = new Date().toISOString().split('T')[0];
+                const amt = amount || 19;
+                const revKey = currency === 'USD' ? 'stats/totalRevenueUSD' : 'stats/totalRevenue';
+                const dailyRevKey = currency === 'USD' ? 'dailyStats/' + today + '/revenueUSD' : 'dailyStats/' + today + '/revenue';
                 database.ref('stats/basicKundliCount').transaction(curr => (curr || 0) + 1);
-                database.ref('stats/totalRevenue').transaction(curr => (curr || 0) + (amount || 19));
-                database.ref('users/' + userId + '/kundlis').push({ type: 'basic', name: userName, rashi: rashi, amount: amount || 19, timestamp: Date.now() });
+                database.ref(revKey).transaction(curr => (curr || 0) + amt);
+                database.ref('users/' + userId + '/kundlis').push({ type: 'basic', name: userName, rashi: rashi, amount: amt, currency: currency, timestamp: Date.now() });
                 database.ref('dailyStats/' + today + '/basicKundli').transaction(curr => (curr || 0) + 1);
-                database.ref('dailyStats/' + today + '/revenue').transaction(curr => (curr || 0) + (amount || 19));
-            } catch(e) {}
+                database.ref(dailyRevKey).transaction(curr => (curr || 0) + amt);
+            } catch(e) { logFailedPayment({ type: 'basic', amount: amount, currency: currency }, e); }
         }
 
-        function trackPremiumKundli(userName, rashi, amount) {
+        function trackPremiumKundli(userName, rashi, amount, currency) {
             try {
+                currency = currency || 'INR';
                 const userId = getUserId();
                 const today = new Date().toISOString().split('T')[0];
+                const amt = amount || 49;
+                const revKey = currency === 'USD' ? 'stats/totalRevenueUSD' : 'stats/totalRevenue';
+                const dailyRevKey = currency === 'USD' ? 'dailyStats/' + today + '/revenueUSD' : 'dailyStats/' + today + '/revenue';
                 database.ref('stats/premiumKundliCount').transaction(curr => (curr || 0) + 1);
-                database.ref('stats/totalRevenue').transaction(curr => (curr || 0) + (amount || 49));
-                database.ref('users/' + userId + '/kundlis').push({ type: 'premium', name: userName, rashi: rashi, amount: amount || 49, timestamp: Date.now() });
+                database.ref(revKey).transaction(curr => (curr || 0) + amt);
+                database.ref('users/' + userId + '/kundlis').push({ type: 'premium', name: userName, rashi: rashi, amount: amt, currency: currency, timestamp: Date.now() });
                 database.ref('dailyStats/' + today + '/premiumKundli').transaction(curr => (curr || 0) + 1);
-                database.ref('dailyStats/' + today + '/revenue').transaction(curr => (curr || 0) + (amount || 49));
-            } catch(e) {}
+                database.ref(dailyRevKey).transaction(curr => (curr || 0) + amt);
+            } catch(e) { logFailedPayment({ type: 'premium', amount: amount, currency: currency }, e); }
         }
 
-        function trackPremiumPurchase(userName, plan, amount) {
+        function trackPremiumPurchase(userName, plan, amount, currency, paymentId, orderId) {
             try {
+                currency = currency || 'INR';
                 const userId = getUserId();
                 const today = new Date().toISOString().split('T')[0];
                 const expiry = Date.now() + (plan === 'monthly' ? 30 : plan === '6months' ? 180 : 365) * 86400000;
+                const revKey = currency === 'USD' ? 'stats/totalRevenueUSD' : 'stats/totalRevenue';
+                const dailyRevKey = currency === 'USD' ? 'dailyStats/' + today + '/revenueUSD' : 'dailyStats/' + today + '/revenue';
                 database.ref('stats/premiumPurchases').transaction(curr => (curr || 0) + 1);
-                database.ref('stats/totalRevenue').transaction(curr => (curr || 0) + amount);
-                database.ref('users/' + userId).update({ isPremium: true, premiumPlan: plan, premiumExpiry: expiry, premiumSince: Date.now() });
-                database.ref('payments').push({ userId: userId, userName: userName, type: 'premium_package', plan: plan, amount: amount, status: 'success', timestamp: Date.now() });
+                database.ref(revKey).transaction(curr => (curr || 0) + amount);
+                // BUGFIX (#7 data persistence): this is the ONE place that
+                // marks a user premium in Firebase — restorePremiumFromFirebase()
+                // reads it back on future visits/devices so premium status is
+                // never lost just because localStorage was cleared.
+                database.ref('users/' + userId).update({ isPremium: true, premiumPlan: plan, premiumExpiry: expiry, premiumSince: Date.now(), lastPaymentId: paymentId || '' })
+                    .catch(function (e) { logFailedPayment({ type: 'premium_package', plan: plan, amount: amount, currency: currency, paymentId: paymentId }, e); });
+                // NOTE: the admin-visible payment record itself is written by
+                // recordPurchase()/startPayment() (keyed by orderId) — NOT
+                // duplicated here, to avoid every premium purchase showing
+                // up twice in the admin Payments table.
                 database.ref('dailyStats/' + today + '/premiumPurchases').transaction(curr => (curr || 0) + 1);
-                database.ref('dailyStats/' + today + '/revenue').transaction(curr => (curr || 0) + amount);
-            } catch(e) {}
+                database.ref(dailyRevKey).transaction(curr => (curr || 0) + amount);
+            } catch(e) { logFailedPayment({ type: 'premium_package', plan: plan, amount: amount, currency: currency, paymentId: paymentId }, e); }
         }
 
         function trackShare(shareType) {
@@ -4165,74 +4520,108 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
         }
 
         async function getPricingFromAdmin() {
+            var fallbackInr = { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
+            var fallbackUsd = { basic: 0.25, premium: 0.60, rashi: 0.07, monthly: 1.20, sixMonth: 6.00, yearly: 12.00 };
             try {
-                const snap = await database.ref('settings/pricing').once('value');
-                const p = snap.val() || { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
+                const [inrSnap, usdSnap] = await Promise.all([
+                    database.ref('settings/pricing').once('value'),
+                    database.ref('settings/usdPricing').once('value')
+                ]);
+                const p = inrSnap.val() || fallbackInr;
+                const pUsd = usdSnap.val() || fallbackUsd;
                 window._adminPricing = p;
-                applyPricingEverywhere(p);
+                window._adminPricingUSD = pUsd;
+                applyPricingEverywhere(p, pUsd);
                 return p;
             } catch(e) {
-                return { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
+                console.error('[BD] getPricingFromAdmin failed, using fallback pricing:', e);
+                window._adminPricing = window._adminPricing || fallbackInr;
+                window._adminPricingUSD = window._adminPricingUSD || fallbackUsd;
+                return window._adminPricing;
             }
         }
 
-        function applyPricingEverywhere(p) {
-            const b  = p.basic    || 19;
-            const pr = p.premium  || 49;
-            const r  = p.rashi    || 5;
-            const m  = p.monthly  || 99;
-            const s  = p.sixMonth || 499;
-            const y  = p.yearly   || 999;
+        function applyPricingEverywhere(p, pUsd) {
+            p = p || window._adminPricing || { basic: 19, premium: 49, rashi: 5, monthly: 99, sixMonth: 499, yearly: 999 };
+            pUsd = pUsd || window._adminPricingUSD || { basic: 0.25, premium: 0.60, rashi: 0.07, monthly: 1.20, sixMonth: 6.00, yearly: 12.00 };
+            window._adminPricing = p;
+            window._adminPricingUSD = pUsd;
+
+            // BUGFIX (#4): pick prices from the SAME currency the visitor is
+            // actually viewing — this is the single most important fix for
+            // the currency bug. Previously this always used the INR object
+            // ("p") no matter what, which is why an English/USD visitor's
+            // payment modal ended up showing the raw INR number misread as
+            // dollars (₹999 → "$999 (₹83916)").
+            var currency = getCurrentCurrency();
+            var active = currency === 'USD' ? pUsd : p;
+            var sym = currency === 'USD' ? '$' : '₹';
+            function fmt(n) { return currency === 'USD' ? ('$' + (Math.round(n * 100) / 100)) : ('₹' + Math.round(n)); }
+
+            const b  = active.basic    !== undefined ? active.basic    : (currency === 'USD' ? 0.25 : 19);
+            const pr = active.premium  !== undefined ? active.premium  : (currency === 'USD' ? 0.60 : 49);
+            const r  = active.rashi    !== undefined ? active.rashi    : (currency === 'USD' ? 0.07 : 5);
+            const m  = active.monthly  !== undefined ? active.monthly  : (currency === 'USD' ? 1.20 : 99);
+            const s  = active.sixMonth !== undefined ? active.sixMonth : (currency === 'USD' ? 6.00 : 499);
+            const y  = active.yearly   !== undefined ? active.yearly   : (currency === 'USD' ? 12.00 : 999);
 
             // ── 1. Basic Kundli ──
             const setTxt = (id, txt) => { const el = document.getElementById(id); if(el) el.innerText = txt; };
-            setTxt('basicKundliPrice',   '₹' + b);
-            setTxt('basicKundliBadge',   '₹' + b);
-            setTxt('basicKundliBtnText', '₹' + b + ' में रिपोर्ट खरीदें');
+            setTxt('basicKundliPrice',   fmt(b));
+            setTxt('basicKundliBadge',   fmt(b));
+            setTxt('basicKundliBtnText', currency === 'USD' ? ('Buy Report — ' + fmt(b)) : (fmt(b) + ' में रिपोर्ट खरीदें'));
 
-            // Button onclick amount
+            // Button onclick amount — now also carries the currency explicitly
             const basicBtn = document.getElementById('basicKundliBtn');
-            if (basicBtn) basicBtn.setAttribute('onclick', 'processKundliPayment(' + b + ", 'basic')");
+            if (basicBtn) basicBtn.setAttribute('onclick', "processKundliPayment(" + b + ", 'basic', '" + currency + "')");
 
             // ── 2. Premium Kundli ──
-            setTxt('premiumKundliPrice',   '₹' + pr);
-            setTxt('premiumKundliBadge',   '₹' + pr);
-            setTxt('premiumKundliBtnText', '₹' + pr + ' में प्रीमियम रिपोर्ट खरीदें');
+            setTxt('premiumKundliPrice',   fmt(pr));
+            setTxt('premiumKundliBadge',   fmt(pr));
+            setTxt('premiumKundliBtnText', currency === 'USD' ? ('Buy Premium Report — ' + fmt(pr)) : (fmt(pr) + ' में प्रीमियम रिपोर्ट खरीदें'));
 
             const premBtn = document.getElementById('premiumKundliBtn');
-            if (premBtn) premBtn.setAttribute('onclick', 'processKundliPayment(' + pr + ", 'premium')");
+            if (premBtn) premBtn.setAttribute('onclick', "processKundliPayment(" + pr + ", 'premium', '" + currency + "')");
 
             // ── 3. Premium Packages (Monthly/6Month/Yearly) ──
-            // Find all premium-card divs and update them
             const premCards = document.querySelectorAll('.premium-card');
             premCards.forEach(card => {
                 const onclick = card.getAttribute('onclick') || '';
                 const priceEl = card.querySelector('.premium-price');
                 if (onclick.includes("'monthly'")) {
-                    if (priceEl) priceEl.innerHTML = '₹' + m + '<small>/माह</small>';
-                    card.setAttribute('onclick', "showPremiumPayment(" + m + ", 'monthly')");
+                    if (priceEl) priceEl.innerHTML = fmt(m) + '<small>' + (currency === 'USD' ? '/mo' : '/माह') + '</small>';
+                    card.setAttribute('onclick', "showPremiumPayment(" + m + ", 'monthly', '" + currency + "')");
                 } else if (onclick.includes("'6months'")) {
-                    if (priceEl) priceEl.innerHTML = '₹' + s + '<small>/6 माह</small>';
-                    card.setAttribute('onclick', "showPremiumPayment(" + s + ", '6months')");
+                    if (priceEl) priceEl.innerHTML = fmt(s) + '<small>' + (currency === 'USD' ? '/6mo' : '/6 माह') + '</small>';
+                    card.setAttribute('onclick', "showPremiumPayment(" + s + ", '6months', '" + currency + "')");
                 } else if (onclick.includes("'yearly'")) {
-                    if (priceEl) priceEl.innerHTML = '₹' + y + '<small>/साल</small>';
-                    card.setAttribute('onclick', "showPremiumPayment(" + y + ", 'yearly')");
+                    if (priceEl) priceEl.innerHTML = fmt(y) + '<small>' + (currency === 'USD' ? '/yr' : '/साल') + '</small>';
+                    card.setAttribute('onclick', "showPremiumPayment(" + y + ", 'yearly', '" + currency + "')");
                 }
             });
 
-            // ── 4. Comparison section prices ──
+            // ── 4. Comparison section prices ── (only touched if still
+            // showing a ₹ amount while the visitor is in USD mode — i.e. we
+            // only ever correct a wrong symbol, never overwrite text that
+            // some other part of the page has already localized correctly)
             document.querySelectorAll('.comparison-price').forEach(el => {
-                if (el.innerText.includes('19') || el.innerText.includes('' + b)) el.innerText = '₹' + b;
-                if (el.innerText.includes('49') || el.innerText.includes('' + pr)) el.innerText = '₹' + pr;
+                if (currency === 'USD' && el.innerText.indexOf('₹') !== -1) {
+                    if (el.innerText.includes('19') || el.innerText.includes('' + p.basic)) el.innerText = fmt(b);
+                    if (el.innerText.includes('49') || el.innerText.includes('' + p.premium)) el.innerText = fmt(pr);
+                } else if (currency === 'INR') {
+                    if (el.innerText.includes('19') || el.innerText.includes('' + b)) el.innerText = '₹' + b;
+                    if (el.innerText.includes('49') || el.innerText.includes('' + pr)) el.innerText = '₹' + pr;
+                }
             });
 
-            // ── 5. Upsell buttons ──
+            // ── 5. Upsell buttons ── (same hedge as above)
             document.querySelectorAll('.upsell-btn').forEach(el => {
-                if (el.getAttribute('onclick') && el.getAttribute('onclick').includes('showKundliSection') && el.innerText.includes('विस्तृत')) {
-                    el.innerText = '📜 ₹' + b + ' विस्तृत कुंडली';
+                var oc = el.getAttribute('onclick') || '';
+                if (oc.includes('showKundliSection') && el.innerText.includes('विस्तृत')) {
+                    el.innerText = '📜 ' + fmt(b) + ' विस्तृत कुंडली';
                 }
-                if (el.getAttribute('onclick') && el.getAttribute('onclick').includes('showPremiumKundliSection')) {
-                    el.innerText = '👑 ₹' + pr + ' प्रीमियम कुंडली';
+                if (oc.includes('showPremiumKundliSection') && el.innerText.includes('प्रीमियम')) {
+                    el.innerText = '👑 ' + fmt(pr) + ' प्रीमियम कुंडली';
                 }
             });
 
@@ -4240,30 +4629,43 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
             document.querySelectorAll('#loveRashiBuyMsg, #horoRashiBuyMsg, #rashiBuyHint').forEach(container => {
                 const badge = container.querySelector('span[style*="border-radius:20px"]');
                 const text  = container.querySelector('div[style*="ffd700"]');
-                if (badge) badge.innerText = '₹' + r;
-                if (text && text.innerText.includes('राशि')) text.innerText = 'सिर्फ ₹' + r + ' में सटीक राशि जानें';
-                // Update onclick amount
+                if (badge) badge.innerText = fmt(r);
+                if (text && (text.innerText.includes('राशि') || text.innerText.includes('zodiac'))) {
+                    text.innerText = currency === 'USD' ? ('Know your exact zodiac for just ' + fmt(r)) : ('सिर्फ ' + fmt(r) + ' में सटीक राशि जानें');
+                }
                 container.setAttribute('onclick', 'triggerRashiPurchase()');
             });
 
-            // ── 7. Payment modal amount display ──
-            // paymentAmount div update (shown in payment modal)
+            // ── 7. Payment modal amount display — keep it correct even if
+            // admin edits pricing WHILE the modal is open, using the SAME
+            // currency the user started this purchase in (never silently
+            // flips a USD customer's modal back to ₹). ──
             const payAmt = document.getElementById('paymentAmount');
             if (payAmt && window._currentPaymentType) {
-                const type = window._currentPaymentType;
-                if (type === 'basic') payAmt.innerText = '₹' + b;
-                else if (type === 'premium') payAmt.innerText = '₹' + pr;
-                else if (type === 'rashi') payAmt.innerText = '₹' + r;
+                var type = window._currentPaymentType;
+                var payCur = currentPaymentCurrency || currency;
+                var payPricing = payCur === 'USD' ? pUsd : p;
+                var newAmt = null;
+                if (type === 'basic') newAmt = payPricing.basic;
+                else if (type === 'premium') newAmt = payPricing.premium;
+                else if (type === 'rashi') newAmt = payPricing.rashi;
+                else if (type.indexOf('premium_') === 0) {
+                    var plan2 = type.replace('premium_', '');
+                    newAmt = plan2 === 'monthly' ? payPricing.monthly : plan2 === '6months' ? payPricing.sixMonth : payPricing.yearly;
+                }
+                if (newAmt !== undefined && newAmt !== null) {
+                    currentPaymentAmount = newAmt;
+                    showPaymentAmount(newAmt, payCur);
+                }
             }
 
-            // ── 8. Comparison h4 text ──
+            // ── 8. Comparison h4 text ── (same hedge as #4/#5)
             document.querySelectorAll('h4').forEach(el => {
-                if (el.innerText.includes('विस्तृत कुंडली')) el.innerText = 'विस्तृत कुंडली (₹' + b + ')';
-                if (el.innerText.includes('प्रीमियम कुंडली')) el.innerText = 'प्रीमियम कुंडली (₹' + pr + ')';
+                if (el.innerText.includes('विस्तृत कुंडली')) el.innerText = 'विस्तृत कुंडली (' + fmt(b) + ')';
+                if (el.innerText.includes('प्रीमियम कुंडली')) el.innerText = 'प्रीमियम कुंडली (' + fmt(pr) + ')';
             });
 
-            // ── 9. pAmt in processKundliPayment — use window._adminPricing ──
-            console.log('✅ Pricing applied everywhere:', p);
+            console.log('✅ Pricing applied everywhere [' + currency + ']:', active);
         }
 
         async function initializeTracking() {
@@ -4274,6 +4676,17 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                 checkAndDisplayAnnouncement();
                 applySEOSettings();
                 await getPricingFromAdmin(); // yeh sab prices update kar deta hai
+
+                // BUGFIX (#5 country detection): auto-pick language+currency
+                // by country on first visit only (never overrides a manual
+                // choice). Runs after pricing loads so the refreshed currency
+                // immediately re-applies correct prices.
+                detectCountryAndCurrency();
+                // BUGFIX (#7 data persistence): Firebase is now the source of
+                // truth for premium/rashi status, restored here so clearing
+                // localStorage / switching devices never loses an active
+                // purchase.
+                restorePremiumFromFirebase();
 
                 // ── Admin se data load karo ──
                 loadRashifalFromAdmin();
@@ -4437,14 +4850,36 @@ Rules: NEAR_FUTURE mein sirf "${nearTheme}" batao. MID_FUTURE mein sirf "${midTh
                         if (ov) ov.remove();
                     }
                 });
-                // Pricing listener
+                // Pricing listener (INR) — BUGFIX: previously wrote into
+                // window._adminPriceRashi/_adminPriceBasic/_adminPricePremium,
+                // three variables nothing else in the file ever reads. Admin
+                // price changes therefore never reached the live site without
+                // a full reload. Now it updates the actual object the rest of
+                // the app uses (window._adminPricing) and re-applies it live.
                 database.ref('settings/pricing').on('value', function(snap) {
                     var data = snap.val();
                     if (!data) return;
-                    if (data.rashi)   window._adminPriceRashi   = parseFloat(data.rashi);
-                    if (data.basic)   window._adminPriceBasic   = parseFloat(data.basic);
-                    if (data.premium) window._adminPricePremium = parseFloat(data.premium);
-                    console.log('🔄 Pricing updated live:', data);
+                    window._adminPricing = data;
+                    applyPricingEverywhere(window._adminPricing, window._adminPricingUSD);
+                    console.log('🔄 INR Pricing updated live:', data);
+                });
+                // BUGFIX (#1, #4): the USD pricing node existed in the admin
+                // panel already but the website never listened to it at all
+                // — this is the other half of the currency fix.
+                database.ref('settings/usdPricing').on('value', function(snap) {
+                    var data = snap.val();
+                    if (!data) return;
+                    window._adminPricingUSD = data;
+                    applyPricingEverywhere(window._adminPricing, window._adminPricingUSD);
+                    console.log('🔄 USD Pricing updated live:', data);
+                });
+                // Admin-configurable USD→INR conversion rate used only to
+                // compute the actual Razorpay charge for USD customers
+                // (Razorpay here settles in INR). Defaults to 84 if the
+                // admin hasn't set one yet.
+                database.ref('settings/exchangeRate').on('value', function(snap) {
+                    var v = snap.val();
+                    if (v && parseFloat(v) > 0) window._adminExchangeRate = parseFloat(v);
                 });
             } catch(e) {}
         }
