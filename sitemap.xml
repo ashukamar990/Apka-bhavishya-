@@ -1,63 +1,751 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  =====================================================================
+  BHAVISHYA DEKHO — COMPREHENSIVE SEO SITEMAP
+  Website: https://bhavishyadekho.online
+  Updated: 2026-07-05
+  COVERS: 12 Rashis, 9 Grahas, Festivals, Future topics,
+          Rashifal types, Kundli, Numerology, Nakshatra, Vastu
+  =====================================================================
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-  <!-- Homepage -->
+  <!-- ============================
+       HOMEPAGE
+       bhavishya dekho | free kundli | vedic astrology | jyotish
+       ============================ -->
   <url>
     <loc>https://bhavishyadekho.online/</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-07-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="hi" href="https://bhavishyadekho.online/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://bhavishyadekho.online/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/"/>
   </url>
 
-  <!-- Free Kundli -->
+  <!-- ============================
+       DAILY RASHIFAL
+       aaj ka rashifal | daily horoscope | aaj ka bhavishya | today horoscope hindi
+       ============================ -->
   <url>
-    <loc>https://bhavishyadekho.online/#kundli</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Rashifal / Horoscope -->
-  <url>
-    <loc>https://bhavishyadekho.online/#rashifal</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://bhavishyadekho.online/rashifal</loc>
+    <lastmod>2026-07-05</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.9</priority>
+    <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashifal"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashifal"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashifal"/>
   </url>
 
-  <!-- Love Calculator -->
+  <!-- Weekly / Monthly / Yearly Rashifal -->
   <url>
-    <loc>https://bhavishyadekho.online/#love</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://bhavishyadekho.online/rashifal/weekly</loc>
+    <lastmod>2026-07-05</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashifal/weekly"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashifal/weekly"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashifal/weekly"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashifal/monthly</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.87</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashifal/monthly"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashifal/monthly"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashifal/monthly"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashifal/yearly</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.87</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashifal/yearly"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashifal/yearly"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashifal/yearly"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashifal/2026</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.90</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashifal/2026"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashifal/2026"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashifal/2026"/>
   </url>
 
-  <!-- Gemstones -->
+  <!-- ============================
+       FREE KUNDLI
+       free kundli online | janam kundli | birth chart | kundli banao | janm patrika
+       ============================ -->
   <url>
-    <loc>https://bhavishyadekho.online/#gemstones</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://bhavishyadekho.online/kundli</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/kundli"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/kundli"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/kundli"/>
   </url>
 
-  <!-- Remedies -->
+  <!-- Kundli Milan / Matching -->
   <url>
-    <loc>https://bhavishyadekho.online/#remedies</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://bhavishyadekho.online/kundli-milan</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/kundli-milan"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/kundli-milan"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/kundli-milan"/>
   </url>
 
-  <!-- Premium -->
+  <!-- ============================
+       12 RASHIS — HINDI + ENGLISH
+       [rashi] rashifal | [rashi] ka bhavishya | [sign] horoscope hindi
+       ============================ -->
+
+  <!-- MESH / ARIES -->
   <url>
-    <loc>https://bhavishyadekho.online/#premium</loc>
-    <lastmod>2026-04-10</lastmod>
+    <loc>https://bhavishyadekho.online/rashi/mesh</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/mesh"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/mesh"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/aries"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/aries</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/aries"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/mesh"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/aries"/>
+  </url>
+
+  <!-- VRISHABH / TAURUS -->
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/vrishabh</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/vrishabh"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/vrishabh"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/taurus"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/taurus</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/taurus"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/vrishabh"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/taurus"/>
+  </url>
+
+  <!-- MITHUN / GEMINI -->
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/mithun</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/mithun"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/mithun"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/gemini"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/gemini</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/gemini"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/mithun"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/gemini"/>
+  </url>
+
+  <!-- KARK / CANCER -->
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/kark</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/kark"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/kark"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/cancer"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/cancer</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/cancer"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/kark"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/cancer"/>
+  </url>
+
+  <!-- SINGH / LEO -->
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/singh</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/singh"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/singh"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/leo"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/leo</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/leo"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/singh"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/leo"/>
+  </url>
+
+  <!-- KANYA / VIRGO -->
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/kanya</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/kanya"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/kanya"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/virgo"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/virgo</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/virgo"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/kanya"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/virgo"/>
+  </url>
+
+  <!-- TULA / LIBRA -->
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/tula</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/tula"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/tula"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/libra"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/libra</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/libra"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/tula"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/libra"/>
+  </url>
+
+  <!-- VRISHCHIK / SCORPIO -->
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/vrishchik</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/vrishchik"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/vrishchik"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/scorpio"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/scorpio</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/scorpio"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/vrishchik"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/scorpio"/>
+  </url>
+
+  <!-- DHANU / SAGITTARIUS -->
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/dhanu</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/dhanu"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/dhanu"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/sagittarius"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/sagittarius</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/sagittarius"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/dhanu"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/sagittarius"/>
+  </url>
+
+  <!-- MAKAR / CAPRICORN -->
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/makar</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/makar"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/makar"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/capricorn"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/capricorn</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/capricorn"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/makar"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/capricorn"/>
+  </url>
+
+  <!-- KUMBH / AQUARIUS -->
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/kumbh</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/kumbh"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/kumbh"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/aquarius"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/aquarius</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/aquarius"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/kumbh"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/aquarius"/>
+  </url>
+
+  <!-- MEEN / PISCES -->
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/meen</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/meen"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/meen"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/pisces"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/rashi/pisces</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/rashi/pisces"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/rashi/meen"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/rashi/pisces"/>
+  </url>
+
+  <!-- ============================
+       9 NAVAGRAHAS
+       [grah] ka prabhav | [grah] dasha | [grah] transit | [grah] shanti upay
+       ============================ -->
+
+  <url>
+    <loc>https://bhavishyadekho.online/grah/surya</loc>
+    <lastmod>2026-07-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/grah/surya"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/grah/surya"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/grah/sun"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/grah/sun</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <url>
+    <loc>https://bhavishyadekho.online/grah/chandra</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/grah/chandra"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/grah/chandra"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/grah/moon"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/grah/moon</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <url>
+    <loc>https://bhavishyadekho.online/grah/mangal</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/grah/mangal"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/grah/mangal"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/grah/mars"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/grah/mars</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <url>
+    <loc>https://bhavishyadekho.online/grah/budh</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/grah/budh"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/grah/budh"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/grah/mercury"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/grah/mercury</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <url>
+    <loc>https://bhavishyadekho.online/grah/guru</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/grah/guru"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/grah/guru"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/grah/jupiter"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/grah/jupiter</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+  </url>
+
+  <url>
+    <loc>https://bhavishyadekho.online/grah/shukra</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/grah/shukra"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/grah/shukra"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/grah/venus"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/grah/venus</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- SHANI — high search volume -->
+  <url>
+    <loc>https://bhavishyadekho.online/grah/shani</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/grah/shani"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/grah/shani"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/grah/saturn"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/grah/saturn</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- RAHU — very high search volume -->
+  <url>
+    <loc>https://bhavishyadekho.online/grah/rahu</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/grah/rahu"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/grah/rahu"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/grah/rahu"/>
+  </url>
+
+  <!-- KETU -->
+  <url>
+    <loc>https://bhavishyadekho.online/grah/ketu</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/grah/ketu"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/grah/ketu"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/grah/ketu"/>
+  </url>
+
+  <!-- ============================
+       INDIAN FESTIVALS — ASTROLOGY ANGLE
+       [festival] rashifal | [festival] puja muhurat | [festival] 2026 | [festival] ka bhavishya
+       ============================ -->
+
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/diwali</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.87</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/diwali"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/diwali"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/diwali"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/holi</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/holi"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/holi"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/holi"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/navratri</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/navratri"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/navratri"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/navratri"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/janmashtami</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.82</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/janmashtami"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/janmashtami"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/janmashtami"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/makar-sankranti</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.82</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/makar-sankranti"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/makar-sankranti"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/makar-sankranti"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/shivratri</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.82</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/shivratri"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/shivratri"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/shivratri"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/ram-navami</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/ram-navami"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/ram-navami"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/ram-navami"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/ganesh-chaturthi</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/ganesh-chaturthi"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/ganesh-chaturthi"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/ganesh-chaturthi"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/raksha-bandhan</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/raksha-bandhan"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/raksha-bandhan"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/raksha-bandhan"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/karwa-chauth</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/karwa-chauth"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/karwa-chauth"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/karwa-chauth"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/pongal</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/pongal"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/pongal"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/pongal"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/tyohar/baisakhi</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/tyohar/baisakhi"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/tyohar/baisakhi"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/tyohar/baisakhi"/>
+  </url>
+
+  <!-- ============================
+       BHAVISHYA / FUTURE TOPIC PAGES
+       mera bhavishya | career bhavishya | love bhavishya | future prediction hindi
+       ============================ -->
+
+  <url>
+    <loc>https://bhavishyadekho.online/bhavishya/career</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.87</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/bhavishya/career"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/bhavishya/career"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/bhavishya/career"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/bhavishya/prem-vivah</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.87</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/bhavishya/prem-vivah"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/bhavishya/prem-vivah"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/bhavishya/love-marriage"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/bhavishya/swasthya</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.82</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/bhavishya/swasthya"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/bhavishya/swasthya"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/bhavishya/health"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/bhavishya/dhan</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.82</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/bhavishya/dhan"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/bhavishya/dhan"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/bhavishya/money"/>
+  </url>
+
+  <!-- ============================
+       OTHER ASTROLOGY TOPICS
+       ============================ -->
+
+  <url>
+    <loc>https://bhavishyadekho.online/panchang</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.83</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/panchang"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/panchang"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/panchang"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/nakshatra</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/nakshatra"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/nakshatra"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/nakshatra"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/numerology</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/numerology"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/numerology"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/numerology"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/vastu</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/vastu"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/vastu"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/vastu"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/ratna</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/ratna"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/ratna"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/gemstones"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/upay</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/upay"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/upay"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/remedies"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/love-calculator</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/love-calculator"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/love-calculator"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/love-calculator"/>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/premium</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bhavishyadekho.online/premium"/>
+    <xhtml:link rel="alternate" hreflang="hi"        href="https://bhavishyadekho.online/premium"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://bhavishyadekho.online/premium"/>
+  </url>
+
+  <!-- ============================
+       STATIC PAGES
+       ============================ -->
+  <url>
+    <loc>https://bhavishyadekho.online/about</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/contact</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.45</priority>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/privacy-policy</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.30</priority>
+  </url>
+  <url>
+    <loc>https://bhavishyadekho.online/terms</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.30</priority>
   </url>
 
 </urlset>
